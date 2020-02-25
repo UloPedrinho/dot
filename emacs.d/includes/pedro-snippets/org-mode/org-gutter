@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: org-gutter
+# key: org-gutter
+# --
+# -*- mode: Org; eval: (git-gutter-mode 1) -*-

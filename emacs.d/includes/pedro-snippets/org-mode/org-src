@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: org-src
+# key: src
+# --
+#+begin_src ${2:$$(yas/choose-value '("org" "emacs-lisp" "css" "html" "java" "js" "python" "sh"))}
+$0
+#+end_src
+

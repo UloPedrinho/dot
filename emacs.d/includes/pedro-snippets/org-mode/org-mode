@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: org-mode
+# key: orgm
+# --
+# -*- mode: Org; fill-column: ${1:100};eval: (auto-fill-mode) -*-
+#+DATE: $2
+#+STARTUP: hidestars indent overview
+
+$0

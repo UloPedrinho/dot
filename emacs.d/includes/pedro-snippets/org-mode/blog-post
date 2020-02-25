@@ -1,0 +1,16 @@
+# -*- mode: snippet -*-
+# name: blog-post
+# key: bpost
+# --
+# -*- mode: Org -*-     
+#+STARTUP: hidestars indent overview
+#+DATE: `(format-time-string "%Y-%m-%d-%H-%M-%S")`
+#+TITLE: $1
+#+FILETAGS: :$2:
+#+BEGIN_HTML
+TITLE:$1
+DATE:`(format-time-string "%Y-%m-%d-%H-%M-%S")`
+;;--
+#+END_HTML
+
+$0

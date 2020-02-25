@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+# name: receita
+# key: receita
+# --
+* $0
+** ingredentes
+   - 
+** preparación
+   1) 
+** notas
+   - 
+** melloras [/]
+   - [ ] 

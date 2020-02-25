@@ -1,0 +1,37 @@
+# contributor: 
+# name: org-project.old
+# key: org-project.old
+# --
+# -*- mode: Org -*-
+#+TODO: BUG(b@) CAUSE(c@) | FIXED(f@) 
+#+TODO: OBJECTIVE(o@) STARTED(s!) | DONE(d!) ABORTED(@) 
+#+TODO: TODO(t!)
+#+STARTUP: hidestars indent overview
+#+FILETAGS: :project:$3:
+
+#+TITLE: $1
+#+DATE: `(current-time-string)`
+#+DESCRIPTION: $2
+
+
+* objectives [/]
+** $0
+* fix [/]
+  - [ ]
+* bugs [/]
+** 
+* doc
+** API 
+** libs
+** software
+** schema
+*** files
+    - auto genterate tree
+      #+begin_src sh :results output :exports results
+        tree  $4
+      #+end_src
+    - manual tree
+      -
+*** design 
+** design
+* notes 

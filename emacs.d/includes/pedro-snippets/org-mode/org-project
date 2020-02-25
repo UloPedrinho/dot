@@ -1,0 +1,23 @@
+# contributor:
+# name: org-project
+# key: org-project
+# --
+# -*- mode: Org -*-
+#+TODO: NEXT(n!) WAITING(w@) TODO(t)  | DONE(d!) ABORTED(a@)
+#+STARTUP: hidestars indent overview
+#+FILETAGS: :project:
+
+#+TITLE: $1
+#+DATE: `(current-time-string)`
+#+DESCRIPTION: $2
+
+* Project
+** Purpose
+   $0
+* TODO [/]
+* code
+** code
+** test
+*** data
+*** scratch
+* doc

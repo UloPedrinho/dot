@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: move
+# key: move
+# --
+`(format-time-string "%Y/%m/%d")` move
+    assets:wallet                                 $1
+    assets:phonebox
+
+$0

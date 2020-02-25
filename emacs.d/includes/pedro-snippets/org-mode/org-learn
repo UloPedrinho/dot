@@ -1,0 +1,28 @@
+# -*- mode: snippet -*-
+# name: org-learn
+# key: org-learn
+# --
+# -*- mode: Org -*-    
+#+TODO: OBJETIVE(o@) STARTED(s!) | DONE(d) ABORTED(@) 
+#+TODO: TODO(t)
+#+STARTUP: hidestars indent overview
+#+FILETAGS: :learn:$3:
+
+#+TITLE: $1
+#+DATE: `(current-time-string)`
+#+DESCRIPTION: $2
+
+$0
+* tools                                                               :tools:
+  - 
+* doc                                                                   :doc:
+** books
+** tutorials
+
+* work 
+** where
+** exercisesg
+* reference                                                       :reference:
+* TODO [/]
+
+* notes 

@@ -1,0 +1,16 @@
+# -*- mode: snippet -*-
+# name: word
+# key: word
+# --
+*** word                                                            :drill:
+    $1
+**** pronunciation
+     $2
+**** meaning
+     $3
+**** synonymous
+     $4
+**** translation
+     $5
+**** examples
+     $0

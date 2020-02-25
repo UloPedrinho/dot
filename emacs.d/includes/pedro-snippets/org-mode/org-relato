@@ -1,0 +1,36 @@
+# -*- mode: snippet -*-
+# name: org-relato
+# key: org-relato
+# --
+# -*- mode: Org; fill-column: 110; -*-
+#+TODO: TEMA(t!) POSIBLE(p!) IMPROBABLE(i!) DESENROLAR(e!) | DONE(d) ABORTED(a)
+#+TODO: TODO(!) STARTED(s!) | DONE(d) ABORTED(a)
+#+STARTUP: hidestars indent overview
+#+FILETAGS: :relato:$1:
+
+
+* Tema                                                                 :tema:
+  - $0
+* Argumento                                                       :argumento:
+** premisas
+** consecuencias
+** evolución
+** background
+** argumento [/]
+* Persoaxes                                                       :persoaxes:
+* Relacións                                                       :relacións:
+* Localizacións                                               :localizacións:
+* Obxetos                                                           :obxetos:
+* Mapas                                                               :mapas:
+* Linha temporal                                             :linha:temporal:
+* Capítulos                                                       :capítulos:
+** 1.
+** 2.
+** 3.
+* Ideas [/]                                                           :ideas:
+* TODO [/]                                                             :todo:
+  - [ ]
+* doc
+* Investigación [/]                                           :investigación:
+* lab
+

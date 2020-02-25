@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: course
+# key: course
+# --
+`(format-time-string "%Y/%m/%d")` coffe
+    expenses:food:course                             $1
+    assets:wallet
+
+$0

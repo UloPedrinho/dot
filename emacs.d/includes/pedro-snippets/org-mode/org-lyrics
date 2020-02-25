@@ -1,0 +1,21 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: org-lyrics
+# key: org-lyrics
+# --
+#+TITLE: 
+#+AUTHOR: 
+#+DATE: 
+#+OPTIONS: H:6 num:nil toc:nil \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS: TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:nil
+#+LATEX_HEADER: \usepackage{setspace,geometry}
+#+LATEX_HEADER: \doublespacing
+#+LaTeX_CLASS_OPTIONS: [twocolumn]
+
+#+BEGIN_LaTeX
+\\${1:$$(yas-choose-value '("tiny" "scriptsize" "footnotesize" "small" "normalsize" "large" "Large" "LARGE" "huge" "Huge"))}
+\newgeometry{top=0.4cm,bottom=0.4cm,left=1cm, right=1cm}
+
+\begin{verbatim}
+$0
+\end{verbatim}
+#+END_LaTeX

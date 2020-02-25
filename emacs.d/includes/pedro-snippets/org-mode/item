@@ -1,0 +1,9 @@
+# key: item
+# name: item
+# --
+*** item   :drill:
+    $1
+**** definition
+     $2
+**** doc
+     $0

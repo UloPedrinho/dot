@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: palabra
+# key: palabra
+# --
+*** palabra                             :drill:
+    $1
+**** significado
+     $0
