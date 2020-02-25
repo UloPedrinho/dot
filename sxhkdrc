@@ -1,0 +1,17 @@
+mod4 + alt + e
+     i3-msg "[title=\"emacs@montgomery\"] scratchpad show"
+
+mod4 + alt + l
+     i3-msg "[class=\"glances\"] scratchpad show"
+
+mod4 + alt + k
+     i3-msg "[class=\"krusader\"] scratchpad show"
+
+mod4 + alt + j
+     snapfly-show
+
+mod4 + alt + o
+     i3-msg "[title=\"eclojure\"] scratchpad show"
+
+mod4 + alt + i
+     i3-msg "[title=\"eclang\"] scratchpad show"
