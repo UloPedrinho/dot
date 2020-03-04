@@ -15,3 +15,6 @@ mod4 + alt + o
 
 mod4 + alt + i
      i3-msg "[title=\"eclang\"] scratchpad show"
+
+mod4 + alt + u
+     i3-msg "[class=\"qutebrowser\"] scratchpad show"
