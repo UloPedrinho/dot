@@ -999,3 +999,6 @@
 ;; testing packages
 (use-package symbol-overlay
   :ensure t)
+
+(use-package fzf
+  :ensure t)
