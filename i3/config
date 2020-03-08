@@ -214,7 +214,7 @@ bindsym $mod+u border normal
 #assign workspaces 
 # assign [class="Emacs"] 1
 # assign [class="Firefox-esr"] 3
-assign [class="Virt-manager"] 4
+# assign [class="Virt-manager"] 4
 # assign [class="Caja"] 2
 # assign [class="glances"] 2
 
@@ -226,7 +226,7 @@ for_window [class="glances"] move window to scratchpad
 for_window [title="Radio*"] move window to scratchpad # TODO to bedeleted ,, no use anymore
 
 # floating
-for_window [class="Kmetronome"] floating enable
+for_window [class="kmetronome"] floating enable
 for_window [class="TelegramDesktop"] floating enable
 for_window [class="mpv"] floating enable
 
@@ -261,8 +261,18 @@ mode "$mode_resize_window" {
 }
 bindsym $mod+Shift+P mode "$mode_resize_window"
 
-bindsym $mod+Shift+U exec i3-res-mov-ne.zsh
-bindsym $mod+Shift+Y exec i3-res-mov-nw.zsh
+
+
+bindsym $mod+Shift+U exec i3-rmq.zsh "r" "ne"
+bindsym $mod+Shift+Y exec i3-rmq.zsh "r" "nw"
+bindsym $mod+Shift+n exec i3-rmq.zsh "r" "se"
+bindsym $mod+Shift+b exec i3-rmq.zsh "r" "sw"
+
+bindsym $mod+Control+U exec i3-rmq.zsh "m" "ne"
+bindsym $mod+Control+Y exec i3-rmq.zsh "m" "nw"
+bindsym $mod+Control+n exec i3-rmq.zsh "m" "se"
+bindsym $mod+Control+b exec i3-rmq.zsh "m" "sw"
+
 
 # Launcher apps
 set $mode_launcher Launch: [f]irefox [v]irt-manager [k]rusader [c]aja [g]lances
