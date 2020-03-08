@@ -801,6 +801,9 @@
      " "))
 
   (setq eshell-prompt-function #'pedro-eprompt-prompt-function)
+
+  (use-package eshell-z
+    :ensure t)
 #+END_SRC
 ** themes
 #+NAME: themes-config
