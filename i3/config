@@ -262,17 +262,15 @@ mode "$mode_resize_window" {
 bindsym $mod+Shift+P mode "$mode_resize_window"
 
 
+bindsym $mod+Shift+U exec i3-rmq.zsh "q" "ne"
+bindsym $mod+Shift+Y exec i3-rmq.zsh "q" "nw"
+bindsym $mod+Shift+n exec i3-rmq.zsh "q" "se"
+bindsym $mod+Shift+b exec i3-rmq.zsh "q" "sw"
 
-bindsym $mod+Shift+U exec i3-rmq.zsh "r" "ne"
-bindsym $mod+Shift+Y exec i3-rmq.zsh "r" "nw"
-bindsym $mod+Shift+n exec i3-rmq.zsh "r" "se"
-bindsym $mod+Shift+b exec i3-rmq.zsh "r" "sw"
-
-bindsym $mod+Control+U exec i3-rmq.zsh "m" "ne"
-bindsym $mod+Control+Y exec i3-rmq.zsh "m" "nw"
-bindsym $mod+Control+n exec i3-rmq.zsh "m" "se"
-bindsym $mod+Control+b exec i3-rmq.zsh "m" "sw"
-
+bindsym $mod+Control+U exec i3-rmq.zsh "v" "ne"
+bindsym $mod+Control+Y exec i3-rmq.zsh "v" "nw"
+bindsym $mod+Control+n exec i3-rmq.zsh "h" "nw"
+bindsym $mod+Control+b exec i3-rmq.zsh "h" "sw"
 
 # Launcher apps
 set $mode_launcher Launch: [f]irefox [v]irt-manager [k]rusader [c]aja [g]lances
@@ -285,11 +283,13 @@ mode "$mode_launcher" {
     bindsym f exec firefox
     # bindsym v exec virt-manager
     bindsym g exec xterm -fa "Monospace" -fs 14 -rv -class "glances" -e glances
+    bindsym q exec qutebrowser            
 
     bindsym --release c mode "default"
     bindsym --release k mode "default"
     bindsym --release f mode "default"
     bindsym --release g mode "default"       
+    bindsym --release q mode "default"       
 
     bindsym Escape mode "default"
 #     bindsym Return mode "default"
