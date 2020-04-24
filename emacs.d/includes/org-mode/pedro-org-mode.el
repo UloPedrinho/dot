@@ -11,6 +11,24 @@
 
 (setq org-hide-emphasis-markers t)
 
+(setq org-enforce-todo-dependencies t)
+(setq org-enforce-todo-checkbox-dependencies t)
+(setq org-cycle-separator-lines 0)
+(setq org-blank-before-new-entry (quote ((heading)
+                                         (plain-list-item . auto))))
+(setq org-agenda-tags-column -110)
+(setq org-habit-graph-column 50)
+
+(setq org-log-into-drawer t)
+
+(setq org-id-method (quote uuidgen))
+(setq org-cycle-include-plain-lists 'integrate ) ; t
+(setq org-src-fontify-natively t)
+(setq org-agenda-window-setup 'only-window) ; 'current-window
+
+(add-to-list 'org-file-apps '(directory . emacs))
+(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
+
 ;; * org-modules
 (setq org-modules '(org-habit org-info org-drill))  ;org-gnus
 
@@ -37,23 +55,6 @@
 ;; add contrib dir (have to be udpated ofen)
 ;; (add-to-list 'load-path (concat user-emacs-directory "plugins/org-contrib-7.9.2/lisp")
 
-(setq org-enforce-todo-dependencies t)
-(setq org-enforce-todo-checkbox-dependencies t)
-(setq org-cycle-separator-lines 0)
-(setq org-blank-before-new-entry (quote ((heading)
-                                         (plain-list-item . auto))))
-(setq org-agenda-tags-column -110)
-(setq org-habit-graph-column 50)
-
-(setq org-log-into-drawer t)
-
-(setq org-id-method (quote uuidgen))
-(setq org-cycle-include-plain-lists 'integrate ) ; t
-(setq org-src-fontify-natively t)
-(setq org-agenda-window-setup 'only-window) ; 'current-window
-
-(add-to-list 'org-file-apps '(directory . emacs))
-(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
 (define-key global-map "\C-cl" 'org-store-link)
 (define-key global-map "\C-ca" 'org-agenda)
 (define-key global-map "\C-cm" 'org-agenda-month-view)
@@ -74,6 +75,7 @@
                                ("TODO" . (:foreground "#4169e1" :weight bold))
                                ("STARTED" . (:foreground "dark orange" :weight bold))
                                ("CURRENT" . (:foreground "#00bfff" :weight bold))
+                               ("CONTINUED" . (:foreground "#00bfff" :weight bold))
                                ("WAITING" . (:foreground "#cd2626" :weight bold))
                                ("DONE" . (:foreground "green4" :weight bold))
                                ("ABORTED" . (:foreground "gray" :weight bold))

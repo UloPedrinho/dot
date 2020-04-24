@@ -161,6 +161,7 @@
 	       ("org" ;; all org-related buffers
 		(or
 		 (mode . org-mode)
+                 (mode . org-journal-mode)
 		 ))
                ("pdf/epub"
                 (or

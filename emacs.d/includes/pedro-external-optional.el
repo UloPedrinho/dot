@@ -514,6 +514,8 @@
 (use-package org-sidebar
   :ensure t)
 
-
 (use-package disk-usage
+  :ensure t)
+
+(use-package highlight-thing
   :ensure t)

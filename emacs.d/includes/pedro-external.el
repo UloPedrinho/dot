@@ -902,10 +902,19 @@
              ("M-i p" . symbol-overlay-switch-backward)
 
              ;; eyebrowse
+             ("C-1" . eyebrowse-switch-to-window-config-1)
+             ("C-2" . eyebrowse-switch-to-window-config-2)
+             ("C-3" . eyebrowse-switch-to-window-config-3)
+             ("C-4" . eyebrowse-switch-to-window-config-4)
+             ("C-5" . eyebrowse-switch-to-window-config-5)
+             ("C-6" . eyebrowse-switch-to-window-config-6)
+             ("C-7" . eyebrowse-switch-to-window-config-7)
+             ("C-8" . eyebrowse-switch-to-window-config-8)
+             ("C-9" . eyebrowse-switch-to-window-config-9)
+             ("C-0" . eyebrowse-switch-to-window-config-0)
              ("C-c C-w C-w" . eyebrowse-last-window-config)
-             ("C-c C-w C-j" . eyebrowse-prev-window-config)
-             ("C-c C-w C-ñ" . eyebrowse-next-window-config)
-             )
+             ("C-c C-w C-h" . eyebrowse-prev-window-config)
+             ("C-c C-w C-l" . eyebrowse-next-window-config))
 
 	     :ensure t)
 
