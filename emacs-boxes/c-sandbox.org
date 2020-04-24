@@ -326,6 +326,18 @@
   (add-to-list 'load-path (concat user-emacs-directory "var/lisp/dired+"))
   (require 'dired+)
 
+
+  (use-package dired-git-info
+    :ensure t
+    :config
+    (add-hook 'dired-after-readin-hook 'dired-git-info-auto-enable))
+
+  (use-package dired-k
+               :config
+               (setq dired-k-style 'git)
+               (add-hook 'dired-initial-position-hook 'dired-k)
+               (add-hook 'dired-after-readin-hook #'dired-k-no-revert)
+               :ensure t)
 #+END_SRC
 ** help
 #+BEGIN_SRC emacs-lisp
@@ -351,7 +363,7 @@
   (global-set-key (kbd "C-x C-c") 'ask-before-closing)
   (global-set-key (kbd "M-o") 'other-window)
   (global-set-key (kbd "C-x o") 'other-frame)
-  (global-set-key (kbd "C-x C-b") 'ibuffer)
+  ;; (global-set-key (kbd "C-x C-b") 'ibuffer)
   (global-set-key (kbd "C-c k") 'browse-kill-ring)
 
   (use-package bind-key
@@ -363,18 +375,29 @@
      ("M-m =" . indent-region)
      ("M-m g" . hydra-go/body)
      ("M-m f" . hydra-folding/body)
-     ("M-m v a " . counsel-ag)
-     ("C-c C-w C-w" . eyebrowse-last-window-config)
-     ("C-1" . eyebrowse-switch-to-window-config-1)
-     ("C-2" . eyebrowse-switch-to-window-config-2)
-     ("C-3" . eyebrowse-switch-to-window-config-3)
-     ("C-4" . eyebrowse-switch-to-window-config-4)
-     ("C-5" . eyebrowse-switch-to-window-config-5)
-     ("C-6" . eyebrowse-switch-to-window-config-6)
-     ("C-7" . eyebrowse-switch-to-window-config-7)
-     ("C-8" . eyebrowse-switch-to-window-config-8)
-     ("C-9" . eyebrowse-switch-to-window-config-9)
-     ("C-0" . eyebrowse-switch-to-window-config-0)))
+     ("M-m v" . hydra-various/body)
+     ("C-0" . (lambda () (interactive) (persp-switch "0")))
+     ("C-1" . (lambda () (interactive) (persp-switch "1")))
+     ("C-2" . (lambda () (interactive) (persp-switch "2")))
+     ("C-3" . (lambda () (interactive) (persp-switch "3")))
+     ("C-4" . (lambda () (interactive) (persp-switch "4")))
+     ("C-5" . (lambda () (interactive) (persp-switch "5")))
+     ("C-6" . (lambda () (interactive) (persp-switch "6")))
+     ("C-7" . (lambda () (interactive) (persp-switch "7")))
+     ("C-8" . (lambda () (interactive) (persp-switch "8")))
+     ("C-9" . (lambda () (interactive) (persp-switch "9")))))
+
+     ;; ("C-c C-w C-w" . eyebrowse-last-window-config)
+     ;; ("C-1" . eyebrowse-switch-to-window-config-1)
+     ;; ("C-2" . eyebrowse-switch-to-window-config-2)
+     ;; ("C-3" . eyebrowse-switch-to-window-config-3)
+     ;; ("C-4" . eyebrowse-switch-to-window-config-4)
+     ;; ("C-5" . eyebrowse-switch-to-window-config-5)
+     ;; ("C-6" . eyebrowse-switch-to-window-config-6)
+     ;; ("C-7" . eyebrowse-switch-to-window-config-7)
+     ;; ("C-8" . eyebrowse-switch-to-window-config-8)
+     ;; ("C-9" . eyebrowse-switch-to-window-config-9)
+  ;   ("C-0" . eyebrowse-switch-to-window-config-0)))
 
   (use-package hydra
     :ensure t
@@ -393,6 +416,12 @@
     ("O" origami-open-all-nodes "open all")
     ("c" origami-close-node "close")
     ("o" origami-open-node "open"))
+
+  (defhydra hydra-various ()
+    "various"
+    ("a" counsel-ag "ag")
+    ("t" git-timemachine "timemachine")
+    ("i" iedit-mode "iedit"))
 #+END_SRC
 ** mode-line
 #+NAME: mode-line-config
@@ -614,43 +643,43 @@
 #+END_SRC
 ** windows
 #+BEGIN_SRC emacs-lisp
-  (use-package eyebrowse
-    :ensure t
-    ;; :bind (("C-c C-w C-w" . eyebrowse-last-window-config)
-    ;;        ("C-c C-w C-h" . eyebrowse-prev-window-config)
-    ;;        ("C-c C-w C-l" . eyebrowse-next-window-config))
-    :config
-    (add-to-list 'window-persistent-parameters '(window-side . writable))
-    (add-to-list 'window-persistent-parameters '(window-slot . writable))
-    (set-face-attribute 'eyebrowse-mode-line-active nil :foreground "#d2691e" :weight 'bold)
-    (set-face-attribute 'eyebrowse-mode-line-inactive nil :foreground "#000000")
-    (setq eyebrowse-mode-line-separator " ")
+   ;; (use-package eyebrowse
+   ;;   :ensure t
+   ;;   ;; :bind (("C-c C-w C-w" . eyebrowse-last-window-config)
+   ;;   ;;        ("C-c C-w C-h" . eyebrowse-prev-window-config)
+   ;;   ;;        ("C-c C-w C-l" . eyebrowse-next-window-config))
+   ;;   :config
+   ;;   (add-to-list 'window-persistent-parameters '(window-side . writable))
+   ;;   (add-to-list 'window-persistent-parameters '(window-slot . writable))
+   ;;   (set-face-attribute 'eyebrowse-mode-line-active nil :foreground "#d2691e" :weight 'bold)
+   ;;   (set-face-attribute 'eyebrowse-mode-line-inactive nil :foreground "#000000")
+   ;;   (setq eyebrowse-mode-line-separator " ")
 
-    (eyebrowse-mode t));;;; windows
-  (use-package zoom
-               :config
-               (zoom-mode 1)
-               :diminish zoom-mode
-               :ensure t)
-  (use-package zoom-window
-               :config
-               (setq zoom-window-mode-line-color "#27408b") ; "#a2cd5a")
-               :bind ("C-x C-z" . zoom-window-zoom)
-               :ensure t)
- 
- (use-package window-numbering
-               :config
-               (setq window-numbering-assign-func
-                     (lambda () (when (equal (buffer-name) "*Calculator*") 9)))
-               (window-numbering-mode 1)
-               :ensure t)
+   ;;   (eyebrowse-mode t));;;; windows
+   (use-package zoom
+                :config
+                (zoom-mode 1)
+                :diminish zoom-mode
+                :ensure t)
+   (use-package zoom-window
+                :config
+                (setq zoom-window-mode-line-color "#27408b") ; "#a2cd5a")
+                :bind ("C-x C-z" . zoom-window-zoom)
+                :ensure t)
 
-  (use-package winner
-               :config
-               (winner-mode 1)
-               (windmove-default-keybindings 'meta)
-               (global-set-key (kbd "<f9>") 'winner-undo)
-               (global-set-key (kbd "<f10>") 'winner-redo))
+  (use-package window-numbering
+                :config
+                (setq window-numbering-assign-func
+                      (lambda () (when (equal (buffer-name) "*Calculator*") 9)))
+                (window-numbering-mode 1)
+                :ensure t)
+
+   (use-package winner
+                :config
+                (winner-mode 1)
+                (windmove-default-keybindings 'meta)
+                (global-set-key (kbd "<f9>") 'winner-undo)
+                (global-set-key (kbd "<f10>") 'winner-redo))
 #+END_SRC
 ** fonts & faces
 #+BEGIN_SRC emacs-lisp
@@ -893,32 +922,48 @@
 ** org-mode
 #+NAME: org-mode-config
 #+BEGIN_SRC emacs-lisp
-    ;;;; org-mode
-    (define-key global-map "\C-cl" 'org-store-link)
+  ;;;; org-mode
+  (setq org-enforce-todo-dependencies t)
+  (setq org-enforce-todo-checkbox-dependencies t)
+  (setq org-cycle-separator-lines 0)
+  (setq org-blank-before-new-entry (quote ((heading)
+                                           (plain-list-item . auto))))
 
-    (setq org-src-window-setup 'current-window)
+  (setq org-log-into-drawer t)
 
-    (org-babel-do-load-languages
-     'org-babel-load-languages
-     '((shell . t)
-       (C . t)
-       (plantuml . t)))
+  (setq org-id-method (quote uuidgen))
+  (setq org-cycle-include-plain-lists 'integrate ) ; t
+  (setq org-src-fontify-natively t)
 
-    (setq org-plantuml-jar-path
-        (expand-file-name "~/lib/plantuml.jar"))
 
-    (diminish 'org-indent-mode)
+  (define-key global-map "\C-cl" 'org-store-link)
 
-    (setq org-log-into-drawer t)
-    (setq org-todo-keyword-faces '(("TODO" . (:foreground "#4169e1" :weight bold))
-                                   ("NEXT" . (:foreground "#ff6347" :weight bold))
-                                   ("STARTED" . (:foreground "dark orange" :weight bold))
-                                   ("CURRENT" . (:foreground "#00bfff" :weight bold))
-                                   ("WAITING" . (:foreground "#cd2626" :weight bold))
-                                   ("DONE" . (:foreground "green4" :weight bold))
-                                   ("ABORTED" . (:foreground "gray" :weight bold))
-                                   ("STOPPED" . (:foreground "#d3d3d3" :weight bold))
-                                   ("IMPROVE" . (:foreground "#d02090" :weight bold))))
+  (setq org-src-window-setup 'current-window)
+
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((shell . t)
+     (C . t)
+     (plantuml . t)))
+
+  (setq org-plantuml-jar-path
+      (expand-file-name "~/lib/plantuml.jar"))
+
+  (diminish 'org-indent-mode)
+
+  (setq org-log-into-drawer t)
+  (setq org-todo-keyword-faces '(("TODO" . (:foreground "#4169e1" :weight bold))
+                                 ("NEXT" . (:foreground "#ff6347" :weight bold))
+                                 ("STARTED" . (:foreground "dark orange" :weight bold))
+                                 ("CURRENT" . (:foreground "#00bfff" :weight bold))
+                                 ("WAITING" . (:foreground "#cd2626" :weight bold))
+                                 ("DONE" . (:foreground "green4" :weight bold))
+                                 ("ABORTED" . (:foreground "gray" :weight bold))
+                                 ("STOPPED" . (:foreground "#d3d3d3" :weight bold))
+                                 ("IMPROVE" . (:foreground "#d02090" :weight bold))
+                                 ("BUG" . (:foreground "#ff0000" :weight bold))
+                                 ("TEST" . (:foreground "#adff2f" :weight bold))
+                                 ("FIXED" . (:foreground "green4" :weight bold))))
 #+END_SRC
 ** various
 #+NAME: various-config
@@ -1157,6 +1202,7 @@
             ("NEXT" . "#dca3a3")
             ("NOTE"   . "#d0bf8f")
             ("TAG" ."#8a2be2")
+            ("TEST" . "#adff2f")
             ("TEMP"   . "#d0bf8f")
             ("FIXME"  . "#cc9393")
             ("BENCHMARK" . "#aaefbf")))
@@ -1265,10 +1311,32 @@
 #+BEGIN_SRC emacs-lisp
   (use-package git-gutter
     :ensure t
+    :diminish 'git-gutter-mode
     :config
     (global-git-gutter-mode t))
 #+END_SRC
 
+** org-pomodoro
+#+BEGIN_SRC emacs-lisp
+  (use-package org-pomodoro
+               :ensure t)
+#+END_SRC
 ** TESTING PACKAGES
 #+BEGIN_SRC emacs-lisp
+  (use-package iedit
+    :ensure t)
+
+  (use-package perspective
+    :ensure t
+    :config
+    (persp-mode)
+    (global-set-key (kbd "C-x C-b") 'persp-ibuffer)
+    (global-set-key (kbd "C-x b") 'persp-ivy-switch-buffer))
+
+  (use-package org-noter
+    :ensure t
+    :config
+    (setq org-noter-always-create-frame nil
+          org-noter-set-auto-save-last-location t)
+    )
 #+END_SRC
