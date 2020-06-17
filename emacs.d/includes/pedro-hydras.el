@@ -289,7 +289,7 @@ _h_   _l_
              (kill-buffer sandbox-org-buffer)))) "mandarin"))
 
 
-  (defhydra hydra-buffers (:color blue :hint nil)
+(defhydra hydra-buffers (:color blue :hint nil)
               "
 
 Move to Window
@@ -307,13 +307,26 @@ Move to Window
               ("j" buf-move-down  :color red)
               ("l" buf-move-right :color red))
 
+;; chronos
+(defhydra hydra-chronos (:hint nil :exit t)
+  "
+_C_: custom timer  _a_: 15m
+_q_: quit          _b_: 30m
+                 _c_: 1h
+"
+  ("a" (lambda (u) (interactive "p") (pedro-my-chronos-repeat "15m" "15m!" (* 1 u))))
+  ("b" (lambda (u) (interactive "p") (pedro-my-chronos-repeat "30m" "30m!" (* 1 u))))
+  ("c" (lambda (u) (interactive "p") (pedro-my-chronos-repeat "1h" "1h!" (* 1 u))))
+  ("C" chronos-add-timer)
+  ("q" nil))
+
 ;;;;; various to test
 (defhydra hydra-testing (:columns 5 :exit t :hint nil)
   "testing"
-  ("F" feebleline-mode "feebleline")
+  ;; ("F" feebleline-mode "feebleline")
   ("W" writeroom-mode "writeroom")
   ("t" ztree-dir "ztree")
-  ("s" treemacs "treemacs")
+  ;; ("s" treemacs "treemacs")
   ("a" helm-do-ag "helm-do-ag")
   ("g" git-timemachine "timemachine")
   ("z" zoom-mode "zoom")

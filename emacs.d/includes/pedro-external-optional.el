@@ -320,9 +320,6 @@
 (use-package all-the-icons
              :ensure t)
 
-(use-package org-board
-	     :ensure t)
-
 (use-package helm-ag
 	     :ensure t
              :config
@@ -335,8 +332,8 @@
 (use-package speed-type
 	     :ensure t)
 
-(use-package treemacs
-	     :ensure t)
+;; (use-package treemacs
+;; 	     :ensure t)
 
 (use-package helpful
   :ensure t
@@ -471,13 +468,13 @@
 
 
 ;; FIXME: or org-drill?
-(use-package pamparam
-  :ensure t
-  :config
-  (setq pamparam-alist
-        '(("~/org/learn/brain/music.org"
-           . "~/org/learn/brain/music.pam"))
-        pamparam-path "~/org/learn/brain/music.pam"))
+;; (use-package pamparam
+;;   :ensure t
+;;   :config
+;;   (setq pamparam-alist
+;;         '(("~/org/learn/brain/music.org"
+;;            . "~/org/learn/brain/music.pam"))
+;;         pamparam-path "~/org/learn/brain/music.pam"))
 
 (use-package hungry-delete
   :diminish hungry-delete-mode
@@ -497,7 +494,18 @@
         ;; chronos-text-to-speech-program-parameters "-s 100"
         chronos-expiry-functions '(chronos-buffer-notify
                                    chronos-desktop-notifications-notify
-                                   chronos-shell-notify)))
+                                   chronos-shell-notify))
+
+  (defun pedro-my-chronos-repeat (time message repetitions)
+    (let  ((time-unit (substring time -1 nil))
+           (time-integer (string-to-number (substring time 0 -1))))
+      (dotimes (n repetitions)
+        (chronos-add-timer (concat (number-to-string (* (if (string-equalo time-unit "h")
+                                                            (* time-integer 60)
+                                                          time-integer)
+                                                        (1+ n)))
+                                   "m")
+                           message nil)))))
 
 (use-package focus
   :ensure t
@@ -517,5 +525,9 @@
 (use-package disk-usage
   :ensure t)
 
-(use-package highlight-thing
+(use-package auto-highlight-symbol
   :ensure t)
+
+(use-package org-board
+	     :ensure t)
+
