@@ -500,7 +500,7 @@
     (let  ((time-unit (substring time -1 nil))
            (time-integer (string-to-number (substring time 0 -1))))
       (dotimes (n repetitions)
-        (chronos-add-timer (concat (number-to-string (* (if (string-equalo time-unit "h")
+        (chronos-add-timer (concat (number-to-string (* (if (string-equal time-unit "h")
                                                             (* time-integer 60)
                                                           time-integer)
                                                         (1+ n)))
