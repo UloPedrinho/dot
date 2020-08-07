@@ -12,6 +12,7 @@ HISTFILE=~/.zsh_history
 
 # include user path
 PATH=$PATH:$HOME/bin
+PATH=$PATH:$HOME/lib/gradle/gradle-6.5.1/bin
 
 ### Alias
 

@@ -1,5 +1,5 @@
 # -*- mode: Org -*-
-#+TITLE: pythonsandbox
+#+TITLE: ePython
 #+DATE: Wed Nov 15 18:27:36 2017
 #+STARTUP: hidestars indent overview
 * TODO [1/5]
@@ -66,7 +66,7 @@
 #+HEADER: :var FILE_PATH=(concat (file-name-sans-extension (buffer-file-name)) ".el")
 #+BEGIN_SRC elisp  :results silent :tangle no :dir (file-name-directory (buffer-file-name)) :noweb eval
 ;; (call-process EMACS_BIN nil 0 nil "-Q" "-l" <<file-path>>) ; not load `user-emacs-directory'
-   (async-shell-command (concat EMACS_BIN " -Q -l " FILE_PATH))
+   (async-shell-command (concat EMACS_BIN " -Q " "--chdir=<<sandbox-dir()>>" " -l " FILE_PATH))
 #+END_SRC
 * -------------------------
 * main configuration
@@ -182,6 +182,12 @@
     (savehist-mode 1)
 
 #+END_SRC
+** dired
+#+NAME: dired-config
+#+begin_src emacs-lisp
+  (setq dired-guess-shell-alist-user '(("\\.mp[34]\\|\\.mkv\\|\\.avi\\|\\.m4a\\|\\.wav\\|\\.ogg\\|\\.webm\\|\\.mpeg" "nohup mpv --force-window=yes"))
+        dired-guess-shell-case-fold-search t)
+#+end_src
 ** ibuffer
 #+NAME: ibuffer-config
 #+BEGIN_SRC emacs-lisp
@@ -338,11 +344,20 @@
      ("C-M-2" . eyebrowse-switch-to-window-config-2)
      ("C-M-3" . eyebrowse-switch-to-window-config-3)
      ("C-M-4" . eyebrowse-switch-to-window-config-4)
+     ("C-0" . (lambda () (interactive) (persp-switch "0")))
+     ("C-1" . (lambda () (interactive) (persp-switch "1")))
+     ("C-2" . (lambda () (interactive) (persp-switch "2")))
+     ("C-3" . (lambda () (interactive) (persp-switch "3")))
+     ("C-4" . (lambda () (interactive) (persp-switch "4")))
+     ("C-5" . (lambda () (interactive) (persp-switch "5")))
+     ("C-6" . (lambda () (interactive) (persp-switch "6")))
+     ("C-7" . (lambda () (interactive) (persp-switch "7")))
+     ("C-8" . (lambda () (interactive) (persp-switch "8")))
+     ("C-9" . (lambda () (interactive) (persp-switch "9")))
      ;; swiper
      ("C-c f" . counsel-recentf)
      ("M-i" . swiper-isearch)
      ("M-g t" . counsel-org-goto)))
-
 #+END_SRC
 ** mode-line
 #+NAME: mode-line-config
@@ -769,6 +784,19 @@
 ;;;; org-mode
 (define-key global-map "\C-cl" 'org-store-link)
 #+END_SRC
+** workspaces
+#+NAME: workspaces
+#+begin_src emacs-lisp
+    (use-package perspective
+      :ensure t
+      :config
+      (setq persp-initial-frame-name "1")
+      (set-face-attribute 'persp-selected-face nil  :foreground "#4876ff" :underline t)
+      (persp-mode)
+      (global-set-key (kbd "C-x C-b") 'persp-ibuffer)
+      (global-set-key (kbd "C-x b") 'persp-ivy-switch-buffer))
+#+end_src
+
 ** various
 #+NAME: various-config
 #+BEGIN_SRC emacs-lisp
@@ -781,6 +809,9 @@
 #+NAME: packages-config
 #+BEGIN_SRC emacs-lisp
   ;;; packages
+
+  ;; install python packages: 
+  ;; $  pip3 install flake8 pylint mypy jedi jupyter
 
   (use-package elpy
     :ensure t

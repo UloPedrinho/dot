@@ -72,7 +72,7 @@
                            ("melpa" . "http://melpa.org/packages/")
                            ("org" . "http://orgmode.org/elpa/")))
   (package-initialize)
-  (package-refresh-contents)
+  ;; (package-refresh-contents)
 
   ;; install `use-package'
   (when (not (package--user-selected-p 'use-package))
@@ -153,6 +153,9 @@
   ;; better performance
   (setq gc-cons-threshold 10000000)
 
+  ;; open large files without ask
+  (setq large-file-warning-threshold 100000000)
+
   ;;;; recentf
   (require 'recentf)
   (setq recentf-max-menu-items 100000)
@@ -174,6 +177,7 @@
   (use-package diminish
     :ensure t)
 #+END_SRC
+
 ** ibuffer
 #+NAME: ibuffer-config
 #+BEGIN_SRC emacs-lisp
@@ -293,6 +297,10 @@
 
   (use-package eww-lnum
                :ensure t)
+
+  ;; set Qutebrowser as generic browser
+  (setq browse-url-generic-program  "qutebrowser")
+
 #+END_SRC
 ** dired
 #+BEGIN_SRC emacs-lisp
@@ -339,6 +347,11 @@
                (add-hook 'dired-after-readin-hook #'dired-k-no-revert)
                :ensure t)
 #+END_SRC
+** helpers
+#+begin_src emacs-lisp
+  (show-paren-mode 1)
+  (setq show-paren-style 'parenthesis)
+#+end_src
 ** help
 #+BEGIN_SRC emacs-lisp
   (use-package which-key
@@ -376,6 +389,9 @@
      ("M-m g" . hydra-go/body)
      ("M-m f" . hydra-folding/body)
      ("M-m v" . hydra-various/body)
+     ("M-m i" . imenu)
+     ("M-m h" . hydra-transpose/body)
+     ("M-m m" . er/expand-region)
      ("C-0" . (lambda () (interactive) (persp-switch "0")))
      ("C-1" . (lambda () (interactive) (persp-switch "1")))
      ("C-2" . (lambda () (interactive) (persp-switch "2")))
@@ -385,7 +401,18 @@
      ("C-6" . (lambda () (interactive) (persp-switch "6")))
      ("C-7" . (lambda () (interactive) (persp-switch "7")))
      ("C-8" . (lambda () (interactive) (persp-switch "8")))
-     ("C-9" . (lambda () (interactive) (persp-switch "9")))))
+     ("C-9" . (lambda () (interactive) (persp-switch "9")))
+     ("M-0" . (lambda () (interactive) (winum-select-window-0-or-10)))
+     ("M-1" . (lambda () (interactive) (winum-select-window-1)))
+     ("M-2" . (lambda () (interactive) (winum-select-window-2)))
+     ("M-3" . (lambda () (interactive) (winum-select-window-3)))
+     ("M-4" . (lambda () (interactive) (winum-select-window-4)))
+     ("M-5" . (lambda () (interactive) (winum-select-window-5)))
+     ("M-6" . (lambda () (interactive) (winum-select-window-6)))
+     ("M-7" . (lambda () (interactive) (winum-select-window-7)))
+     ("M-8" . (lambda () (interactive) (winum-select-window-8)))))
+
+
 
      ;; ("C-c C-w C-w" . eyebrowse-last-window-config)
      ;; ("C-1" . eyebrowse-switch-to-window-config-1)
@@ -406,9 +433,11 @@
 
   (defhydra hydra-go (:exit t)
     "go"
+    ("s" (lambda () "switch to *scratch* buffer" (interactive) (switch-to-buffer "*scratch*" )) "*scratch*")
     ("e" (lambda () (interactive)
            (eshell current-prefix-arg)) "eshell")
-    ("s" (lambda () "switch to *scratch* buffer" (interactive) (switch-to-buffer "*scratch*" )) "*scratch*"))
+    ("v" (lambda () (interactive)
+           (vterm)) "vterm"))
 
   (defhydra hydra-folding ()
     "folding"
@@ -421,7 +450,20 @@
     "various"
     ("a" counsel-ag "ag")
     ("t" git-timemachine "timemachine")
-    ("i" iedit-mode "iedit"))
+    ("i" iedit-mode "iedit")
+    ("k" browse-kill-ring "killring")
+    ("f" follow-mode "follow")
+    ("d" counsel-dash "dash")
+    ("D" counsel-dash-at-point "dast-at-point"))
+
+  (defhydra hydra-transpose ()
+    "transpose,flip,rotate windows"
+    ("h" flop-frame "flip-h")
+    ("j" flip-frame "flip-v")
+    ("k" rotate-frame-clockwise "rot-cw")
+    ("l" rotate-frame-anticlockwise "rot-acw")
+    ("q" nil "quit"))
+
 #+END_SRC
 ** mode-line
 #+NAME: mode-line-config
@@ -434,6 +476,8 @@
 
 ** completition
 #+BEGIN_SRC emacs-lisp
+  (electric-pair-mode 1)
+
   ;;;; completition
   ;; (use-package company
   ;;   :ensure t
@@ -569,7 +613,11 @@
 *** swiper/ivy/counsel
 #+begin_src emacs-lisp
   (use-package swiper
-    :ensure t)
+    :ensure t
+    :config
+    (define-key isearch-mode-map (kbd "M-i") (lambda() (interactive) (swiper-isearch isearch-string))))
+  
+  
 
   (use-package ivy :demand
     :ensure ivy-hydra
@@ -667,12 +715,18 @@
                 :bind ("C-x C-z" . zoom-window-zoom)
                 :ensure t)
 
-  (use-package window-numbering
-                :config
-                (setq window-numbering-assign-func
-                      (lambda () (when (equal (buffer-name) "*Calculator*") 9)))
-                (window-numbering-mode 1)
-                :ensure t)
+  ;; (use-package window-numbering
+  ;;               :config
+  ;;               (setq window-numbering-assign-func
+  ;;                     (lambda () (when (equal (buffer-name) "*Calculator*") 9)))
+  ;;               (window-numbering-mode 1)
+  ;;               :ensure t)
+
+  (use-package winum
+    :ensure t
+    :config
+    (winum-mode))
+
 
    (use-package winner
                 :config
@@ -842,10 +896,10 @@
                :ensure t
                :config
                (load-theme 'sanityinc-solarized-dark t))
-  (use-package load-theme-buffer-local
-    :ensure t
-    :config
-    (add-hook 'eww-mode-hook (lambda () (load-theme-buffer-local 'tango (current-buffer)))))
+  ;; (use-package load-theme-buffer-local
+  ;;   :ensure t
+  ;;   :config
+  ;;   (add-hook 'eww-mode-hook (lambda () (load-theme-buffer-local 'tango (current-buffer)))))
 #+END_SRC
 ** versioning
 #+NAME: versioning-config
@@ -957,6 +1011,7 @@
                                  ("STARTED" . (:foreground "dark orange" :weight bold))
                                  ("CURRENT" . (:foreground "#00bfff" :weight bold))
                                  ("WAITING" . (:foreground "#cd2626" :weight bold))
+                                 ("CONTINUED". (:foreground "dark orange" :weight bold))
                                  ("DONE" . (:foreground "green4" :weight bold))
                                  ("ABORTED" . (:foreground "gray" :weight bold))
                                  ("STOPPED" . (:foreground "#d3d3d3" :weight bold))
@@ -964,6 +1019,13 @@
                                  ("BUG" . (:foreground "#ff0000" :weight bold))
                                  ("TEST" . (:foreground "#adff2f" :weight bold))
                                  ("FIXED" . (:foreground "green4" :weight bold))))
+
+  ;; latex preview
+  (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
+
+  ;; org-board
+  (use-package org-board
+               :ensure t)
 #+END_SRC
 ** various
 #+NAME: various-config
@@ -1012,7 +1074,7 @@
   ;;   (use-package flycheck
   ;;     :ensure t)
 
-  ;;   (use-package lsp-mode 
+  ;;   (use-package lsp-mode
   ;;     :commands lsp
   ;;     :ensure t
   ;;     :config
@@ -1119,6 +1181,19 @@
     :hook ((java-mode python-mode go-mode
             js-mode js2-mode typescript-mode web-mode
             c-mode c++-mode objc-mode) . lsp))
+
+  ;; (use-package lsp-mode
+  ;;   :ensure t
+  ;;   :hook (prog-mode . lsp-deferred)
+  ;;   :custom
+  ;;   (lsp-prefer-capf t)
+  ;;   (lsp-auto-guess-root t)
+  ;;   (lsp-keep-workspace-alive nil))
+
+  ;; (use-package lsp-clients
+  ;;   :after lsp-mode
+  ;;   :config
+  ;;   (setq lsp-clients-clangd-args '("--j=4" "--background-index=false")))
 
   (use-package lsp-ui
     :ensure t
@@ -1243,8 +1318,8 @@
 
                ;; http://babbagefiles.blogspot.com.es/2017/11/more-pdf-tools-tricks.html
                ;; midnite mode hook
-               (add-hook 'pdf-view-mode-hook (lambda ()
-                                               (pdf-view-midnight-minor-mode))) ; automatically turns on midnight-mode for pdfs
+               ;; (add-hook 'pdf-view-mode-hook (lambda ()
+               ;;                                 (pdf-view-midnight-minor-mode))) ; automatically turns on midnight-mode for pdfs
 
                (setq pdf-view-midnight-colors '("#ff9900" . "#0a0a12" )) ; set the amber profile as default (see below)
 
@@ -1284,6 +1359,20 @@
 
                (add-hook 'pdf-view-mode-hook 'bms/pdf-midnite-colour-schemes)
 
+               ;; annotations
+               (setq pdf-annot-default-annotation-properties '((t
+                                                                (label . "pedro"))
+                                                               (text
+                                                                (icon . "Note")
+                                                                (color . "#ff0000"))
+                                                               (highlight
+                                                                (color . "#87ceff")) ;; #4682b4"))
+                                                               (squiggly
+                                                                (color . "orange"))
+                                                               (strike-out
+                                                                (color . "red"))
+                                                               (underline
+                                                                (color . "blue"))))
                :ensure t)
 #+end_src
 
@@ -1321,7 +1410,7 @@
   (use-package org-pomodoro
                :ensure t)
 #+END_SRC
-** TESTING PACKAGES
+** TODO TESTING PACKAGES
 #+BEGIN_SRC emacs-lisp
   (use-package iedit
     :ensure t)
@@ -1329,6 +1418,8 @@
   (use-package perspective
     :ensure t
     :config
+    (setq persp-initial-frame-name "1")
+    (set-face-attribute 'persp-selected-face nil  :foreground "#4876ff" :underline t)
     (persp-mode)
     (global-set-key (kbd "C-x C-b") 'persp-ibuffer)
     (global-set-key (kbd "C-x b") 'persp-ivy-switch-buffer))
@@ -1337,6 +1428,20 @@
     :ensure t
     :config
     (setq org-noter-always-create-frame nil
-          org-noter-set-auto-save-last-location t)
-    )
+          org-noter-set-auto-save-last-location t))
+
+  (use-package counsel-dash
+    :ensure t
+    :config
+    (setq counsel-dash-common-docsets '("C++")
+          counsel-dash-docsets-path "~/.docsets"
+          ;; (setq browse-url-browser-function 'browse-url-generic-program)
+          ;; dash-docs-browser-func 'browse-url-generic)
+          counsel-dash-browser-func 'browse-url-generic)) ;; eww))
+
+  (use-package transpose-frame
+    :ensure t)
+
+  (use-package expand-region
+    :ensure t)
 #+END_SRC

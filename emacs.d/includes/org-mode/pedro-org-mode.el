@@ -78,6 +78,7 @@
                                ("CONTINUED" . (:foreground "#00bfff" :weight bold))
                                ("WAITING" . (:foreground "#cd2626" :weight bold))
                                ("DONE" . (:foreground "green4" :weight bold))
+                               ("ENDED" . (:foreground "green4" :weight bold))
                                ("ABORTED" . (:foreground "gray" :weight bold))
 			       ("STOPPED" . (:foreground "#d3d3d3" :weight bold))
                                ("EVENTO" . (:background "red" :foreground "white" :weight bold))

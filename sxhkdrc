@@ -14,7 +14,7 @@ mod4 + alt + o
      i3-msg "[title=\"eclojure\"] scratchpad show"
 
 mod4 + alt + i
-     i3-msg "[title=\"eclang\"] scratchpad show"
+     i3-msg "[title=\"epython\"] scratchpad show"
 
 mod4 + alt + u
      i3-msg "[class=\"qutebrowser\"] scratchpad show"

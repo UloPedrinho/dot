@@ -222,6 +222,22 @@
 	     :diminish rainbow-mode
 	     :ensure t)
 
+
+;; (use-package evil
+;;   :ensure t
+;;   :init
+;;   (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
+;;   (setq evil-want-keybinding t) ;; nil)
+;;   :config
+;;   (evil-mode 1))
+
+;; (use-package evil-collection
+;;   :after evil
+;;   :ensure t
+;;   :config
+;;   (evil-collection-init))
+
+
 (use-package smartparens
   :config
   (require 'smartparens-config)
@@ -764,6 +780,7 @@
 	     (general-define-key
 	      (general-chord "kj") 'info
 	      ;; ?
+              ;;(general-chord "ff") 'evil-normal-state
 	      ;; (general-chord "qw") '(lambda () (interactive) (load-theme 'solarized-dark t))
 	      ;; (general-chord "wq") '(lambda () (interactive) (disable-theme 'solarized-dark))
 	      ;;
@@ -868,6 +885,9 @@
 
               ;; buffers
               ("M-m b" . hydra-buffers/body)
+
+              ;; chronos
+              ("M-m c" . hydra-chronos/body)
 
               ;; various testing
               ("M-m v" . hydra-testing/body)

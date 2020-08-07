@@ -231,6 +231,10 @@ for_window [class="TelegramDesktop"] floating enable
 for_window [class="mpv"] floating enable
 for_window [class="PPSSPPSDL"] floating enable
 
+# dev
+for_window [class="snake"] floating enable
+
+
 # move
 set $mode_move_float move float
 

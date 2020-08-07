@@ -2,7 +2,7 @@
 #+TITLE: init sandbox
 #+DATE: Wed Nov 15 18:27:36 2017
 #+STARTUP: hidestars indent overview
-* TODO [1/6]
+* TODO [1/7]
 - [-] add helm and make optional helm, ido, ivy
   - [X] configurations
   - [ ] make selectable (?)
@@ -31,6 +31,7 @@
   - [ ] change header variables to use noweb or :var(?)
   - [ ] chdir
 - [ ] shell script. allow user pass options from command line
+- [ ] set frame title in 'Generate shell script'
 * sandbox code
 ** Variables
 *** Emacs executable
@@ -180,6 +181,12 @@
     (savehist-mode 1)
 
 #+END_SRC
+** dired
+#+NAME: dired-config
+#+begin_src emacs-lisp
+  (setq dired-guess-shell-alist-user '(("\\.mp[34]\\|\\.mkv\\|\\.avi\\|\\.m4a\\|\\.wav\\|\\.ogg\\|\\.webm\\|\\.mpeg" "nohup mpv --force-window=yes"))
+        dired-guess-shell-case-fold-search t)
+#+end_src
 ** ibuffer
 #+NAME: ibuffer-config
 #+BEGIN_SRC emacs-lisp
@@ -323,46 +330,57 @@
 #+END_SRC
 ** keybindings
 #+BEGIN_SRC emacs-lisp
-  ;;;; keybindings
-  (global-set-key (kbd "C-x C-c") 'ask-before-closing)
-  (global-set-key (kbd "M-o") 'other-window)
-  (global-set-key (kbd "C-x o") 'other-frame)
-  (global-set-key (kbd "C-x C-b") 'ibuffer)
-  (global-set-key (kbd "C-c k") 'browse-kill-ring)
+    ;;;; keybindings
+    (global-set-key (kbd "C-x C-c") 'ask-before-closing)
+    (global-set-key (kbd "M-o") 'other-window)
+    (global-set-key (kbd "C-x o") 'other-frame)
+    (global-set-key (kbd "C-x C-b") 'ibuffer)
+    (global-set-key (kbd "C-c k") 'browse-kill-ring)
 
-  (use-package bind-key
-    :config
-    (global-unset-key [(control z)]) ; disable ^Z
+    (use-package bind-key
+      :config
+      (global-unset-key [(control z)]) ; disable ^Z
 
-    (bind-keys*
-     ("M-m w" . delete-trailing-whitespace)
-     ("M-m =" . indent-region)
-     ("M-m g" . hydra-go/body)
-     ("M-m f" . hydra-folding/body)
-     ("C-c C-w C-w" . eyebrowse-last-window-config)
-     ("C-1" . eyebrowse-switch-to-window-config-1)
-     ("C-2" . eyebrowse-switch-to-window-config-2)
-     ("C-3" . eyebrowse-switch-to-window-config-3)
-     ("C-4" . eyebrowse-switch-to-window-config-4)
-     ("C-5" . eyebrowse-switch-to-window-config-5)))
+      (bind-keys*
+       ("M-m w" . delete-trailing-whitespace)
+       ("M-m =" . indent-region)
+       ("M-m g" . hydra-go/body)
+       ("M-m f" . hydra-folding/body)
+       ("C-0" . (lambda () (interactive) (persp-switch "0")))
+       ("C-1" . (lambda () (interactive) (persp-switch "1")))
+       ("C-2" . (lambda () (interactive) (persp-switch "2")))
+       ("C-3" . (lambda () (interactive) (persp-switch "3")))
+       ("C-4" . (lambda () (interactive) (persp-switch "4")))
+       ("C-5" . (lambda () (interactive) (persp-switch "5")))
+       ("C-6" . (lambda () (interactive) (persp-switch "6")))
+       ("C-7" . (lambda () (interactive) (persp-switch "7")))
+       ("C-8" . (lambda () (interactive) (persp-switch "8")))
+       ("C-9" . (lambda () (interactive) (persp-switch "9")))
+       ;; ("C-c C-w C-w" . eyebrowse-last-window-config)
+       ;; ("C-1" . eyebrowse-switch-to-window-config-1)
+       ;; ("C-2" . eyebrowse-switch-to-window-config-2)
+       ;; ("C-3" . eyebrowse-switch-to-window-config-3)
+       ;; ("C-4" . eyebrowse-switch-to-window-config-4)
+       ;; ("C-5" . eyebrowse-switch-to-window-config-5)
+       ))
 
-  (use-package hydra
-    :ensure t
-    :config
-    (setq lv-use-separator t))
+    (use-package hydra
+      :ensure t
+      :config
+      (setq lv-use-separator t))
 
-  (defhydra hydra-go (:exit t)
-    "go"
-    ("e" (lambda () (interactive)
-           (eshell current-prefix-arg)) "eshell")
-    ("s" (lambda () "switch to *scratch* buffer" (interactive) (switch-to-buffer "*scratch*" )) "*scratch*"))
+    (defhydra hydra-go (:exit t)
+      "go"
+      ("e" (lambda () (interactive)
+             (eshell current-prefix-arg)) "eshell")
+      ("s" (lambda () "switch to *scratch* buffer" (interactive) (switch-to-buffer "*scratch*" )) "*scratch*"))
 
-  (defhydra hydra-folding ()
-    "folding"
-    ("C" origami-close-all-nodes "close all")
-    ("O" origami-open-all-nodes "open all")
-    ("c" origami-close-node "close")
-    ("o" origami-open-node "open"))
+    (defhydra hydra-folding ()
+      "folding"
+      ("C" origami-close-all-nodes "close all")
+      ("O" origami-open-all-nodes "open all")
+      ("c" origami-close-node "close")
+      ("o" origami-open-node "open"))
 #+END_SRC
 ** mode-line
 #+NAME: mode-line-config
@@ -590,20 +608,6 @@
     (windmove-default-keybindings 'meta)
     (global-set-key (kbd "<f9>") 'winner-undo)
     (global-set-key (kbd "<f10>") 'winner-redo))
-
-  (use-package eyebrowse
-    :ensure t
-    ;; :bind (("C-c C-w C-w" . eyebrowse-last-window-config)
-    ;;        ("C-c C-w C-h" . eyebrowse-prev-window-config)
-    ;;        ("C-c C-w C-l" . eyebrowse-next-window-config))
-    :config
-    (add-to-list 'window-persistent-parameters '(window-side . writable))
-    (add-to-list 'window-persistent-parameters '(window-slot . writable))
-    (set-face-attribute 'eyebrowse-mode-line-active nil :foreground "#d2691e" :weight 'bold)
-    (set-face-attribute 'eyebrowse-mode-line-inactive nil :foreground "#000000")
-    (setq eyebrowse-mode-line-separator " ")
-
-    (eyebrowse-mode t))
 #+END_SRC
 ** fonts & faces
 #+BEGIN_SRC emacs-lisp
@@ -921,6 +925,32 @@
 ;;;; org-mode
 (define-key global-map "\C-cl" 'org-store-link)
 #+END_SRC
+** workspaces
+#+NAME: workspaces
+#+begin_src emacs-lisp
+  (use-package perspective
+    :ensure t
+    :config
+    (setq persp-initial-frame-name "1")
+    (set-face-attribute 'persp-selected-face nil  :foreground "#4876ff" :underline t)
+    (persp-mode)
+    (global-set-key (kbd "C-x C-b") 'persp-ibuffer)
+    (global-set-key (kbd "C-x b") 'persp-ivy-switch-buffer))
+
+  ;; (use-package eyebrowse
+  ;;     :ensure t
+  ;;     ;; :bind (("C-c C-w C-w" . eyebrowse-last-window-config)
+  ;;     ;;        ("C-c C-w C-h" . eyebrowse-prev-window-config)
+  ;;     ;;        ("C-c C-w C-l" . eyebrowse-next-window-config))
+  ;;     :config
+  ;;     (add-to-list 'window-persistent-parameters '(window-side . writable))
+  ;;     (add-to-list 'window-persistent-parameters '(window-slot . writable))
+  ;;     (set-face-attribute 'eyebrowse-mode-line-active nil :foreground "#d2691e" :weight 'bold)
+  ;;     (set-face-attribute 'eyebrowse-mode-line-inactive nil :foreground "#000000")
+  ;;     (setq eyebrowse-mode-line-separator " ")
+
+  ;;     (eyebrowse-mode t))
+#+end_src
 ** various
 #+NAME: various-config
 #+BEGIN_SRC emacs-lisp

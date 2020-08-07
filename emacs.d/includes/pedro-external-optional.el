@@ -529,5 +529,6 @@
   :ensure t)
 
 (use-package org-board
-	     :ensure t)
+  :ensure t)
+
 

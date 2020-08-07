@@ -29,18 +29,19 @@
 #+HEADER: :var EMACS_BIN=emacs-bin
 #+HEADER: :var FILE_PATH=(concat (file-name-sans-extension (buffer-file-name)) ".el")
 #+BEGIN_SRC elisp  :results silent :tangle no :dir (file-name-directory (buffer-file-name)) :noweb eval
-;; (call-process EMACS_BIN nil 0 nil "-Q" "-l" <<file-path>>) ; not load `user-emacs-directory'
-   (async-shell-command (concat EMACS_BIN " -Q -l " FILE_PATH))
+  ;; (call-process EMACS_BIN nil 0 nil "-Q" "-l" <<file-path>>) ; not load `user-emacs-directory'
+     (async-shell-command (concat EMACS_BIN " --name \"eR\" -Q --chdir=/home/pedro/dev/computer/emacs/boxes/R -l " FILE_PATH))
 #+END_SRC
-
 
 *Generate shell script*
 #+BEGIN_SRC shell :eval no :tangle (concat (file-name-sans-extension (buffer-file-name)) ".sh") :tangle-mode (identity #o755) :noweb tangle :shebang "#!/bin/zsh"
-  <<emacs-bin()>> -Q -l <<file-path()>>
+  <<emacs-bin()>> -Q --name "eR" --chdir=/home/pedro/dev/computer/emacs/boxes/C -l <<file-path()>>
 #+END_SRC
 
 * TODO [0/3]
-- [ ] add helm and make optional helm or ido
+- [ ] add helm and make optional helm, ido, ivy
+  - [ ] configurations
+  - [ ] make selectable (?)
 - [ ] not close started emacs when host emacs quits
   https://oremacs.com/2015/01/04/dired-nohup/
 - [ ] create source block launch and other functions
@@ -71,7 +72,7 @@
                            ("melpa" . "http://melpa.org/packages/")
                            ("org" . "http://orgmode.org/elpa/")))
   (package-initialize)
-  (package-refresh-contents)
+  ;; (package-refresh-contents)
 
   ;; install `use-package'
   (when (not (package--user-selected-p 'use-package))
@@ -102,81 +103,169 @@
 ** basic
 #+NAME: user-config
 #+BEGIN_SRC emacs-lisp
-    ;;; user config
+  ;;; user config
 
-    ;;;; hide bars
-    (menu-bar-mode 0)
-    (tool-bar-mode 0)
+  ;;;; hide bars
+  (menu-bar-mode 0)
+  (tool-bar-mode 0)
 
-    ;;;; hide scrollbars
-    (scroll-bar-mode 0)
+  ;;;; hide scrollbars
+  (scroll-bar-mode 0)
 
-    ;;;; no bell ring
-    (setq ring-bell-function 'ignore)
+  ;;;; no bell ring
+  (setq ring-bell-function 'ignore)
 
-    ;;;; C-n add new line when is at bottom
-    (setq next-line-add-newlines t)
+  ;;;; C-n add new line when is at bottom
+  (setq next-line-add-newlines t)
 
-    ;;;; Closing
-    (defun ask-before-closing ()
-      "Ask whether or not to close, and then close if y was pressed"
-      (interactive)
-      (if (y-or-n-p (format "Are you sure you want to exit Emacs? "))
-          (save-buffers-kill-emacs)
-        (message "Canceled exit")))
+  ;;;; Closing
+  (defun ask-before-closing ()
+    "Ask whether or not to close, and then close if y was pressed"
+    (interactive)
+    (if (y-or-n-p (format "Are you sure you want to exit Emacs? "))
+        (save-buffers-kill-emacs)
+      (message "Canceled exit")))
 
-    ;;;; coding system
-    (prefer-coding-system 'utf-8)
-    (set-language-environment "UTF-8")
+  ;;;; coding system
+  (prefer-coding-system 'utf-8)
+  (set-language-environment "UTF-8")
 
-    ;;;; modeline 
-    ;; time
-    (setq display-time-day-and-date nil
-          display-time-24hr-format t
-          display-time-default-load-average nil)
-    ;; show file size 
-    (size-indication-mode t)
-    ;; show cursor position
-    (setq column-number-mode t)
-    (setq line-number-mode t)
+  ;;;; modeline 
+  ;; time
+  (setq display-time-day-and-date nil
+        display-time-24hr-format t
+        display-time-default-load-average nil)
+  ;; show file size 
+  (size-indication-mode t)
+  ;; show cursor position
+  (setq column-number-mode t)
+  (setq line-number-mode t)
 
-    ;;;; spaces and tabs
-    ;; whitespaces
-    (require 'whitespace)
-    (add-hook 'prog-mode-hook '(lambda () (setq show-trailing-whitespace t)))
+  ;;;; spaces and tabs
+  ;; whitespaces
+  (require 'whitespace)
+  (add-hook 'prog-mode-hook '(lambda () (setq show-trailing-whitespace t)))
 
-    ;; no tabs, only spaces
-    (setq-default indent-tabs-mode nil)
+  ;; no tabs, only spaces
+  (setq-default indent-tabs-mode nil)
 
-    ;;;; performance
-    ;; better performance
-    (setq gc-cons-threshold 10000000)
+  ;;;; performance
+  ;; better performance
+  (setq gc-cons-threshold 10000000)
 
-    ;;;; recentf
-    (require 'recentf)
-    (setq recentf-max-menu-items 100000)
-    (setq recentf-max-saved-items nil)
-    (setq recentf-auto-cleanup 'never)
-    (setq recentf-save-file (concat user-emacs-directory "var/recentf"))
-    (add-to-list 'recentf-exclude "var/lisp")
-    (add-to-list 'recentf-exclude "var/bookmarks")
+  ;; open large files without ask
+  (setq large-file-warning-threshold 100000000)
 
-    ;; https://www.reddit.com/r/emacs/comments/21a4p9/use_recentf_and_ido_together/
-    (defun recentf-ido-find-file ()
-      "Use ido to select a recently opened file from the `recentf-list'"
-      (interactive)
-      (find-file
-       (ido-completing-read "Recentf open: "
-                            (mapcar 'abbreviate-file-name recentf-list)
-                            nil t)))
-    (recentf-mode 1)
+  ;;;; recentf
+  (require 'recentf)
+  (setq recentf-max-menu-items 100000)
+  (setq recentf-max-saved-items nil)
+  (setq recentf-auto-cleanup 'never)
+  (setq recentf-save-file (concat user-emacs-directory "var/recentf"))
+  (add-to-list 'recentf-exclude "var/lisp")
+  (add-to-list 'recentf-exclude "var/bookmarks")
 
-    ;;;; persistent history
-    (setq savehist-additional-variables '(kill-ring search-ring regexp-search-ring)
-          savehist-file (concat user-emacs-directory "var/history")
-          kill-ring-max 1000)
-    (setq-default history-length 1000)
-    (savehist-mode 1)
+  (recentf-mode 1)
+
+  ;;;; persistent history
+  (setq savehist-additional-variables '(kill-ring search-ring regexp-search-ring)
+        savehist-file (concat user-emacs-directory "var/history")
+        kill-ring-max 1000)
+  (setq-default history-length 1000)
+  (savehist-mode 1)
+
+  (use-package diminish
+    :ensure t)
+#+END_SRC
+
+** ibuffer
+#+NAME: ibuffer-config
+#+BEGIN_SRC emacs-lisp
+  (defalias 'list-buffers 'ibuffer)
+  (autoload 'ibuffer "ibuffer" "List buffers." t)
+  (global-set-key (kbd "C-x C-b") 'ibuffer)
+  (require 'ibuffer)
+  (require 'ibuf-ext)
+  (add-to-list 'ibuffer-never-show-predicates "\\*.*helm.*\\*")
+  (setq ibuffer-show-empty-filter-groups nil)
+
+  ;; show human-size readable
+  ;; https://www.emacswiki.org/emacs/IbufferMode
+
+  (setq ibuffer-saved-filter-groups
+        (quote (("default"
+                 ("programming"
+                  (or
+                   (mode . c-mode)
+                   (mode . c++-mode)
+                   (mode . sh-mode)
+                   (mode . conf-space-mode)
+                   (mode . conf-unix-mode)
+                   (name . "Makefile")))
+                 ("                         lisp"
+                  (or
+                   (mode . lisp-mode)
+                   (mode . emacs-lisp-mode)
+                   ))
+                 ("org" ;; all org-related buffers
+                  (or
+                   (mode . org-mode)
+                   ))
+                 ("pdf/epub"
+                  (or
+                   (mode . pdf-view-mode)))
+                 ("dired"
+                  (or
+                   (mode . dired-mode)))
+                 ("www"
+                  (or
+                   (name . "^\\*w3m" )
+                   (mode . eww-mode)
+                   ))
+                 ("shell"
+                  (or
+                   (name . "^\\*eshell")
+                   (name . "^\\*terminal")
+                   (name . "^\\*zsh")
+                   (name . "^\\*ansi-term")
+                   (name . "^\\*Shell*")
+                   (name . "^\\vterm*")
+                   ))
+                 ("magit"
+                  (or
+                   (name . "^magit*")))
+                 ("info"
+                  (or
+                   (name . "^\\*Messages\\*$")
+                   (name . "^\\*Warnings\\*$")
+                   (name . "^\\*Compile*")
+                   (mode . Info-mode)
+                   (mode . help-mode)
+                   (mode . helpful-mode)))))))
+
+  (add-hook 'ibuffer-mode-hook
+            (lambda ()
+              (ibuffer-switch-to-saved-filter-groups "default")))
+
+
+  (define-ibuffer-column size-h
+    (:name "Size" :inline t)
+    (cond
+     ((> (buffer-size) 1000000) (format "%7.1fM" (/ (buffer-size) 1000000.0)))
+     ((> (buffer-size) 100000) (format "%7.0fk" (/ (buffer-size) 1000.0)))
+     ((> (buffer-size) 1000) (format "%7.1fk" (/ (buffer-size) 1000.0)))
+     (t (format "%8d" (buffer-size)))))
+
+  ;; name column to 30 witdh
+  (setq ibuffer-formats
+          '((mark modified read-only " "
+                  (name 30 30 :left :elide)
+                  " "
+                  (size-h 9 -1 :right)
+                  " "
+                  (mode 16 16 :left :elide)
+                  " "
+                  filename-and-process)))
 
 #+END_SRC
 ** undo
@@ -208,7 +297,61 @@
 
   (use-package eww-lnum
                :ensure t)
+
+  ;; set Qutebrowser as generic browser
+  (setq browse-url-generic-program  "qutebrowser")
+
 #+END_SRC
+** dired
+#+BEGIN_SRC emacs-lisp
+  ;; dired+
+  ;; ;; install if not installed
+  ;; ;; [[https://www.emacswiki.org/emacs/DiredPlus]]
+  (defun pedro/download-and-save-files-to-dir (urls dir)
+        "Download and save files to DIR. URLS is a list of urls strings."
+        (let ((old-buffer (current-buffer))
+              (buffer-name "*download-and-save-temp-buffer*")
+              filename)
+          (get-buffer-create buffer-name)
+
+          (save-excursion
+            (set-buffer buffer-name)
+            (dolist (url urls)
+              (setq filename (concat dir "/" (file-name-nondirectory (url-unhex-string
+                                                                      (url-filename
+                                                                       (url-generic-parse-url url))))))
+              (delete-region (point-min) (point-max))
+              (url-insert-file-contents url)
+              (write-region (point-min) (point-max) filename))
+            (set-buffer old-buffer))))
+
+
+
+  (when (not (file-exists-p (concat user-emacs-directory "var/lisp/dired+")))
+    (make-directory (concat user-emacs-directory "var/lisp/dired+"))
+    (pedro/download-and-save-files-to-dir '("https://www.emacswiki.org/emacs/download/dired%2b.el")
+                                          (concat user-emacs-directory "var/lisp/dired+")))
+  (add-to-list 'load-path (concat user-emacs-directory "var/lisp/dired+"))
+  (require 'dired+)
+
+
+  (use-package dired-git-info
+    :ensure t
+    :config
+    (add-hook 'dired-after-readin-hook 'dired-git-info-auto-enable))
+
+  (use-package dired-k
+               :config
+               (setq dired-k-style 'git)
+               (add-hook 'dired-initial-position-hook 'dired-k)
+               (add-hook 'dired-after-readin-hook #'dired-k-no-revert)
+               :ensure t)
+#+END_SRC
+** helpers
+#+begin_src emacs-lisp
+  (show-paren-mode 1)
+  (setq show-paren-style 'parenthesis)
+#+end_src
 ** help
 #+BEGIN_SRC emacs-lisp
   (use-package which-key
@@ -225,11 +368,7 @@
     (global-unset-key (kbd "C-h h")) ; original "C-h h" displays "hello world" in different languages
     (define-key 'help-command (kbd "h m") 'discover-my-major)
     :ensure t)
-
-  (use-package ido-describe-bindings
-    :ensure t
-    :config
-    (define-key help-map (kbd "b") 'ido-describe-bindings))
+ 
 #+END_SRC
 ** keybindings
 #+BEGIN_SRC emacs-lisp
@@ -237,9 +376,94 @@
   (global-set-key (kbd "C-x C-c") 'ask-before-closing)
   (global-set-key (kbd "M-o") 'other-window)
   (global-set-key (kbd "C-x o") 'other-frame)
-  (global-set-key (kbd "C-x C-b") 'ibuffer)
+  ;; (global-set-key (kbd "C-x C-b") 'ibuffer)
   (global-set-key (kbd "C-c k") 'browse-kill-ring)
-  (global-set-key (kbd "C-c f") 'recentf-ido-find-file)
+
+  (use-package bind-key
+    :config
+    (global-unset-key [(control z)]) ; disable ^Z
+
+    (bind-keys*
+     ("M-m w" . delete-trailing-whitespace)
+     ("M-m =" . indent-region)
+     ("M-m g" . hydra-go/body)
+     ("M-m f" . hydra-folding/body)
+     ("M-m v" . hydra-various/body)
+     ("M-m i" . imenu)
+     ("M-m h" . hydra-transpose/body)
+     ("M-m m" . er/expand-region)
+     ("C-0" . (lambda () (interactive) (persp-switch "0")))
+     ("C-1" . (lambda () (interactive) (persp-switch "1")))
+     ("C-2" . (lambda () (interactive) (persp-switch "2")))
+     ("C-3" . (lambda () (interactive) (persp-switch "3")))
+     ("C-4" . (lambda () (interactive) (persp-switch "4")))
+     ("C-5" . (lambda () (interactive) (persp-switch "5")))
+     ("C-6" . (lambda () (interactive) (persp-switch "6")))
+     ("C-7" . (lambda () (interactive) (persp-switch "7")))
+     ("C-8" . (lambda () (interactive) (persp-switch "8")))
+     ("C-9" . (lambda () (interactive) (persp-switch "9")))
+     ("M-0" . (lambda () (interactive) (winum-select-window-0-or-10)))
+     ("M-1" . (lambda () (interactive) (winum-select-window-1)))
+     ("M-2" . (lambda () (interactive) (winum-select-window-2)))
+     ("M-3" . (lambda () (interactive) (winum-select-window-3)))
+     ("M-4" . (lambda () (interactive) (winum-select-window-4)))
+     ("M-5" . (lambda () (interactive) (winum-select-window-5)))
+     ("M-6" . (lambda () (interactive) (winum-select-window-6)))
+     ("M-7" . (lambda () (interactive) (winum-select-window-7)))
+     ("M-8" . (lambda () (interactive) (winum-select-window-8)))))
+
+
+
+     ;; ("C-c C-w C-w" . eyebrowse-last-window-config)
+     ;; ("C-1" . eyebrowse-switch-to-window-config-1)
+     ;; ("C-2" . eyebrowse-switch-to-window-config-2)
+     ;; ("C-3" . eyebrowse-switch-to-window-config-3)
+     ;; ("C-4" . eyebrowse-switch-to-window-config-4)
+     ;; ("C-5" . eyebrowse-switch-to-window-config-5)
+     ;; ("C-6" . eyebrowse-switch-to-window-config-6)
+     ;; ("C-7" . eyebrowse-switch-to-window-config-7)
+     ;; ("C-8" . eyebrowse-switch-to-window-config-8)
+     ;; ("C-9" . eyebrowse-switch-to-window-config-9)
+  ;   ("C-0" . eyebrowse-switch-to-window-config-0)))
+
+  (use-package hydra
+    :ensure t
+    :config
+    (setq lv-use-separator t))
+
+  (defhydra hydra-go (:exit t)
+    "go"
+    ("s" (lambda () "switch to *scratch* buffer" (interactive) (switch-to-buffer "*scratch*" )) "*scratch*")
+    ("e" (lambda () (interactive)
+           (eshell current-prefix-arg)) "eshell")
+    ("v" (lambda () (interactive)
+           (vterm)) "vterm"))
+
+  (defhydra hydra-folding ()
+    "folding"
+    ("C" origami-close-all-nodes "close all")
+    ("O" origami-open-all-nodes "open all")
+    ("c" origami-close-node "close")
+    ("o" origami-open-node "open"))
+
+  (defhydra hydra-various ()
+    "various"
+    ("a" counsel-ag "ag")
+    ("t" git-timemachine "timemachine")
+    ("i" iedit-mode "iedit")
+    ("k" browse-kill-ring "killring")
+    ("f" follow-mode "follow")
+    ("d" counsel-dash "dash")
+    ("D" counsel-dash-at-point "dast-at-point"))
+
+  (defhydra hydra-transpose ()
+    "transpose,flip,rotate windows"
+    ("h" flop-frame "flip-h")
+    ("j" flip-frame "flip-v")
+    ("k" rotate-frame-clockwise "rot-cw")
+    ("l" rotate-frame-anticlockwise "rot-acw")
+    ("q" nil "quit"))
+
 #+END_SRC
 ** mode-line
 #+NAME: mode-line-config
@@ -248,30 +472,58 @@
   ;; (use-package doom-modeline
   ;;   :ensure t
   ;;   :config (doom-modeline-init))
-
 #+END_SRC
 
 ** completition
 #+BEGIN_SRC emacs-lisp
+  (electric-pair-mode 1)
+
   ;;;; completition
-  (use-package company
-               :ensure t
-               :config
-               (add-hook 'after-init-hook 'global-company-mode))
+  ;; (use-package company
+  ;;   :ensure t
+  ;;   :config
+  ;;   (setq company-idle-delay 0.01  ;; 0.3
+  ;;         company-show-numbers t
+  ;;         company-tooltip-limit 10
+  ;;         company-tooltip-align-annotations t
+  ;;         company-minimum-prefix-length 2
+  ;;         company-selection-wrap-around t
+  ;;         company-selection-changed t
+  ;;         company-tooltip-flip-when-above nil
+  ;;         company-require-match nil
+  ;;         company-quickhelp-max-lines 60
+  ;;         company-dabbrev-downcase nil ;; case-replace
+  ;;         company-dabbrev-ignore-case t
+  ;;         company-dabbrev-code-ignore-case t
+  ;;         company-dabbrev-code-everywhere t
+  ;;         company-dabbrev-other-buffers nil
+  ;;         pos-tip-border-width 0)
+  ;;   (add-hook 'after-init-hook 'global-company-mode))
 
   (use-package company-posframe
     :ensure t
+    :diminish company-posframe-mode
     :config
     (company-posframe-mode 1))
 #+END_SRC
-** speed packages
-#+BEGIN_SRC emacs-lisp
-  ;;;; speed packages
+** ido/helm/swiper
+*** ido 
+#+begin_src emacs-lisp :tangle no
   (use-package ido
-               :config
-               (setq ido-enable-flex-matching t)
-               (setq ido-everywhere t)
-               (ido-mode 1))
+    :config
+    (setq ido-enable-flex-matching t)
+    (setq ido-everywhere t)
+    (setq ido-use-faces t)
+    (setq ido-default-buffer-method 'selected-window)
+    ;; https://www.reddit.com/r/emacs/comments/21a4p9/use_recentf_and_ido_together/
+    (defun recentf-ido-find-file ()
+      "Use ido to select a recently opened file from the `recentf-list'"
+      (interactive)
+      (find-file
+       (ido-completing-read "Recentf open: "
+                            (mapcar 'abbreviate-file-name recentf-list)
+                            nil t)))
+    (ido-mode 1))
 
   (use-package ido-vertical-mode
     :ensure t
@@ -290,14 +542,128 @@
     (setq ido-use-faces nil))
 
   (use-package smex
-               :ensure t
-               :config
-               (smex-initialize)
-               (global-set-key (kbd "M-x") 'smex)
-               (global-set-key (kbd "M-X") 'smex-major-mode-commands)
-               ;; This is your old M-x.
-               (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command))
+    :ensure t
+    :config
+    (smex-initialize)
+    (global-set-key (kbd "M-x") 'smex)
+    (global-set-key (kbd "M-X") 'smex-major-mode-commands)
+    ;; This is your old M-x.
+    (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command))
 
+
+  (use-package ido-describe-bindings
+    :ensure t
+    :config
+    (eval-after-load 'help
+      (define-key help-map (kbd "b") 'ido-describe-bindings)))
+
+  (global-set-key (kbd "C-c f") 'recentf-ido-find-file)
+#+end_src
+
+*** helm
+#+begin_src emacs-lisp :tangle no
+  (use-package helm
+    :config
+    (require 'helm)
+    (require 'helm-config)
+    (helm-mode t)
+    (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
+    (global-set-key (kbd "M-x") 'helm-M-x)
+    (global-set-key (kbd "C-c f") 'helm-recentf)
+    (global-set-key (kbd "C-x C-f") 'helm-find-files)
+    (global-set-key (kbd "C-M-y") 'helm-show-kill-ring)
+    (global-set-key (kbd "C-x b") 'helm-buffers-list)
+
+    (setq helm-M-x-fuzzy-match nil
+          helm-M-x-always-save-history t
+          helm-quick-update t
+          helm-ff-skip-boring-files t)
+
+    (add-hook 'eshell-mode-hook
+              #'(lambda ()
+                  (define-key eshell-mode-map (kbd "C-c C-l") 'helm-eshell-history)))
+    :diminish helm-mode
+    :ensure t)
+
+  (use-package helm-flx
+    :ensure t
+    :config
+    (helm-flx-mode +1))
+
+  (use-package helm-swoop
+    :config
+    (setq helm-swoop-pre-input-function
+          (lambda () ""))
+    ;; (global-set-key "\C-s" 'helm-swoop)
+    :ensure t)
+
+  (use-package helm-projectile
+    :config
+    (setq projectile-completion-system 'helm)
+    (helm-projectile-on)
+    :ensure t)
+
+
+  (use-package helm-ag
+    :ensure t
+    :config
+    (setq helm-grep-ag-command "rg --color=always --smart-case --no-heading --line-number %s %s %s")
+    (setq dumb-jump-prefer-searcher 'ag))
+#+end_src
+*** swiper/ivy/counsel
+#+begin_src emacs-lisp
+  (use-package swiper
+    :ensure t
+    :config
+    (define-key isearch-mode-map (kbd "M-i") (lambda() (interactive) (swiper-isearch isearch-string))))
+  
+  
+
+  (use-package ivy :demand
+    :ensure ivy-hydra
+    :diminish ivy-mode
+    :config
+    (setq ivy-use-virtual-buffers t
+          ivy-count-format "%d/%d ")
+    (ivy-mode 1))
+
+  (use-package ivy-posframe
+    :ensure t
+    :diminish ivy-posframe-mode
+    :config
+    (cl-defun my/window-size-change (&optional _)
+      "My very own resize defun for modifying the posframe size"
+      (unless (= (window-pixel-width-before-size-change) (window-pixel-width))
+        (let ((body-width (window-body-width)))
+          (set-variable 'ivy-posframe-width body-width)
+          (set-variable 'ivy-posframe-min-width body-width)
+          (set-variable 'which-key-posframe-width body-width)
+          (set-variable 'which-key-posframe-min-width body-width))))
+
+    (add-hook 'window-size-change-functions 'my/window-size-change)
+
+    (setq ivy-posframe-parameters
+          '((left-fringe . 8)
+            (right-fringe . 8)))
+
+    (ivy-posframe-mode 1))
+
+  (use-package counsel
+    :ensure t
+    :config
+    (global-set-key (kbd "M-x") 'counsel-M-x)
+    (global-set-key (kbd "C-c f") 'counsel-recentf))
+
+  (use-package counsel-projectile
+    :ensure t
+    :config
+    (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+    (counsel-projectile-mode 1))
+#+end_src
+
+** speed packages
+#+BEGIN_SRC emacs-lisp
+  ;;;; speed packages
   (use-package avy
                :ensure t
                :config
@@ -307,49 +673,67 @@
                            (local-set-key (kbd "\C-c SPC") 'avy-goto-char-timer)))
                :ensure t)
 
-  (use-package smartparens
-    :config
-    (require 'smartparens-config)
-    (smartparens-global-mode)
-    (show-smartparens-global-mode t)
-    ;; keybindings
-    (define-key smartparens-mode-map (kbd "C-M-f") 'sp-forward-sexp)
-    (define-key smartparens-mode-map (kbd "C-M-b") 'sp-backward-sexp)
-    (define-key smartparens-mode-map (kbd "M-(") 'sp-wrap-round)
-    (define-key smartparens-mode-map (kbd "C-") 'sp-wrap-round)
-    (define-key smartparens-mode-map (kbd "C-<right>") 'sp-forward-slurp-sexp)
-    (define-key smartparens-mode-map (kbd "C-<left>") 'sp-forward-barf-sexp)
-    (define-key smartparens-mode-map (kbd "C-M-<left>") 'sp-backward-slurp-sexp)
-    (define-key smartparens-mode-map (kbd "C-M-<right>") 'sp-backward-barf-sexp)
-    :ensure t)
+  ;; (use-package smartparens
+  ;;   :config
+  ;;   (require 'smartparens-config)
+  ;;   (smartparens-global-mode)
+  ;;   (show-smartparens-global-mode t)
+  ;;   ;; keybindings
+  ;;   (define-key smartparens-mode-map (kbd "C-M-f") 'sp-forward-sexp)
+  ;;   (define-key smartparens-mode-map (kbd "C-M-b") 'sp-backward-sexp)
+  ;;   (define-key smartparens-mode-map (kbd "M-(") 'sp-wrap-round)
+  ;;   ;;(define-key smartparens-mode-map (kbd "C-") 'sp-wrap-round)
+  ;;   (define-key smartparens-mode-map (kbd "C-<right>") 'sp-forward-slurp-sexp)
+  ;;   (define-key smartparens-mode-map (kbd "C-<left>") 'sp-forward-barf-sexp)
+  ;;   (define-key smartparens-mode-map (kbd "C-M-<left>") 'sp-backward-slurp-sexp)
+  ;;   (define-key smartparens-mode-map (kbd "C-M-<right>") 'sp-backward-barf-sexp)
+  ;;   :ensure t)
 #+END_SRC
 ** windows
 #+BEGIN_SRC emacs-lisp
-  ;;;; windows
-  (use-package zoom
-               :config
-               (zoom-mode 1)
-               :diminish zoom-mode
-               :ensure t)
-  (use-package zoom-window
-               :config
-               (setq zoom-window-mode-line-color "#ffdead") ; "#a2cd5a")
-               :bind ("C-x C-z" . zoom-window-zoom)
-               :ensure t)
+   ;; (use-package eyebrowse
+   ;;   :ensure t
+   ;;   ;; :bind (("C-c C-w C-w" . eyebrowse-last-window-config)
+   ;;   ;;        ("C-c C-w C-h" . eyebrowse-prev-window-config)
+   ;;   ;;        ("C-c C-w C-l" . eyebrowse-next-window-config))
+   ;;   :config
+   ;;   (add-to-list 'window-persistent-parameters '(window-side . writable))
+   ;;   (add-to-list 'window-persistent-parameters '(window-slot . writable))
+   ;;   (set-face-attribute 'eyebrowse-mode-line-active nil :foreground "#d2691e" :weight 'bold)
+   ;;   (set-face-attribute 'eyebrowse-mode-line-inactive nil :foreground "#000000")
+   ;;   (setq eyebrowse-mode-line-separator " ")
 
-  (use-package window-numbering
-               :config
-               (setq window-numbering-assign-func
-                     (lambda () (when (equal (buffer-name) "*Calculator*") 9)))
-               (window-numbering-mode 1)
-               :ensure t)
+   ;;   (eyebrowse-mode t));;;; windows
+   (use-package zoom
+                :config
+                (zoom-mode 1)
+                :diminish zoom-mode
+                :ensure t)
+   (use-package zoom-window
+                :config
+                (setq zoom-window-mode-line-color "#27408b") ; "#a2cd5a")
+                :bind ("C-x C-z" . zoom-window-zoom)
+                :ensure t)
 
-  (use-package winner
-               :config
-               (winner-mode 1)
-               (windmove-default-keybindings 'meta)
-               (global-set-key (kbd "<f9>") 'winner-undo)
-               (global-set-key (kbd "<f10>") 'winner-redo))
+  ;; (use-package window-numbering
+  ;;               :config
+  ;;               (setq window-numbering-assign-func
+  ;;                     (lambda () (when (equal (buffer-name) "*Calculator*") 9)))
+  ;;               (window-numbering-mode 1)
+  ;;               :ensure t)
+
+  (use-package winum
+    :ensure t
+    :config
+    (winum-mode))
+
+
+   (use-package winner
+                :config
+                (winner-mode 1)
+                (windmove-default-keybindings 'meta)
+                (global-set-key (kbd "<f9>") 'winner-undo)
+                (global-set-key (kbd "<f10>") 'winner-redo))
 #+END_SRC
 ** fonts & faces
 #+BEGIN_SRC emacs-lisp
@@ -363,6 +747,147 @@
 
 
 #+END_SRC
+** shell
+*** eshell
+#+NAME: themes-config
+#+BEGIN_SRC emacs-lisp
+  (defun eshell/clear ()
+    (open-line (window-height))
+    (eshell-send-input))
+
+  ;; eshell ls file type colours
+  (require 'em-ls)
+  (set-face-attribute 'eshell-ls-directory nil  :foreground "#61afef")
+  (set-face-attribute 'eshell-ls-symlink nil  :foreground "#1f5582" :weight 'bold)
+  (set-face-attribute 'eshell-ls-archive nil  :foreground "#ff6c6b")
+
+  (setq pedro-eshell--ls-video-regexp "\\.\\(mkv\\|avi\\|mpeg\\|mpg\\|webm\\|flv\\|mp4\\)")
+  (setq pedro-eshell--ls-audio-regexp "\\.\\(ogg\\|wav\\|mp3\\|flack\\|ape\\|mid\\)")
+  (setq pedro-eshell--ls-image-regexp "\\.\\(jpg\\|jpeg\\|png\\|gif\\|xpm\\|svg\\)")
+  (setq pedro-eshell--ls-doc-regexp "\\.\\(pdf\\|epub\\|mobi\\)")
+
+  (setq eshell-ls-highlight-alist nil)
+  (add-to-list 'eshell-ls-highlight-alist
+               (cons `(lambda (file attr)
+                        (string-match ,pedro-eshell--ls-video-regexp file))
+                     'bmkp-man))
+  (add-to-list 'eshell-ls-highlight-alist
+               (cons `(lambda (file attr)
+                        (string-match ,pedro-eshell--ls-audio-regexp file))
+                     'bmkp-no-jump))
+  (add-to-list 'eshell-ls-highlight-alist
+               (cons `(lambda (file attr)
+                        (string-match ,pedro-eshell--ls-image-regexp file))
+                     'bmkp-non-file))
+  (add-to-list 'eshell-ls-highlight-alist
+               (cons `(lambda (file attr)
+                        (string-match ,pedro-eshell--ls-doc-regexp file))
+                     'completions-annotations))
+
+  ;; eshell prompt
+  (defun pedro-eprompt--is-a-git-dir ()
+    "RETURN A STRING IF TRUE AND A NUMBER IF FALSE.
+       If is a git dir returns a string with the branch name, in other way a number with the status output of git command"
+    (let* ((output-buffer "*git-eshell-prompt")
+           (output-status (call-process "git" nil output-buffer nil "rev-parse" "--abbrev-ref" "HEAD"))
+           (current-branch (car (split-string (with-current-buffer output-buffer
+                                                (buffer-substring (point-min) (point-max)))
+                                              "\n"))))
+      (kill-buffer output-buffer)
+      (if (= output-status 0)
+          current-branch
+        output-status)))
+
+  (defun pedro-eprompt--git-status-verbose()
+    "RETURN 0 IF WORKING TREE CLEAN, OTHERWISE RETURN A STRING LIST WITH STAGGED/UNTRACKED..."
+    (let* ((output-buffer "*git-eshell-prompt")
+           (output-status (call-process "git" nil output-buffer nil "status" "--porcelain"))
+           (git-status (with-current-buffer output-buffer
+                         (buffer-substring (point-min) (point-max))))
+           (status-list (mapcar #'(lambda(s)
+                                    (if (not (string-empty-p s))
+                                        (substring s 0 2)))
+                                (split-string git-status "\n")))
+           (status-keys (delq nil (seq-uniq status-list)))
+           (verbose-list (mapcar #'(lambda(k)
+                                     (cons (seq-count #'(lambda(e)
+                                                          (string= e k))
+                                                      status-list)
+                                           k))
+                                 status-keys)))
+
+      (kill-buffer output-buffer)
+
+      (mapconcat #'(lambda (e)
+                     (concat
+                      (propertize (number-to-string (car e)) 'face `(:background "##ff7256" :foreground "#ffffff"))
+                      (propertize (cdr e) 'face `(:foreground "#8b3e2f" :weight bold :underline t))))
+                 verbose-list
+                 "")))
+
+  (defun pedro-eprompt--shorten-path ()
+    "SHORT THE PATH WHEN PATH LENGTH GREATER THAN `WINDOW-MAX-CHARS-PER-LINE' / 2"
+    (let ((path (abbreviate-file-name (eshell/pwd))))
+      (if (> (length path) (/ (window-max-chars-per-line) 2 )) ;; TODO max-size-path (?)
+          (let* ((max-size-path (/ (window-max-chars-per-line) 2))
+                 (path-split (split-string (abbreviate-file-name (eshell/pwd)) "/"))
+                 (shorten-list (mapcar (lambda (dir)
+                                         (if (string-empty-p dir )
+                                             "/"
+                                           (substring dir 0 1)))
+                                       (butlast path-split))))
+            (mapconcat (lambda (p)
+                         (if (string= p "/") "" p))
+                       (append shorten-list (last path-split))
+                       "/"))
+        path)))
+
+  (defun pedro-eprompt--git-status()
+    "RETURN 0 IF WORKING TREE CLEAN, OTHERWISE 1."
+    (let* ((output-buffer "*git-eshell-prompt")
+           (output-status (call-process "git" nil output-buffer nil "status" "-s"))
+           (git-status (with-current-buffer output-buffer
+                         (buffer-substring (point-min) (point-max)))))
+      (kill-buffer output-buffer)
+      (if (string-empty-p git-status)
+          0
+        1)))
+
+  (defun pedro-eprompt-prompt-function ()
+    (setq eshell-prompt-regexp "^$ ")
+    (concat
+     "\n"
+     "# "                             ;TODO
+     (propertize user-login-name 'face `(:foreground "#1f5582"))
+     "@"
+     (propertize system-name 'face `(:foreground "#9acd32" ))
+     ": "
+     (propertize (pedro-eprompt--shorten-path) 'face `(:foreground "#cd8500" :weight bold))
+     (let ((output (pedro-eprompt--is-a-git-dir))
+           (git-status (pedro-eprompt--git-status)))
+       (if (numberp output)
+           ""
+         (concat (propertize " on git:" 'face `(:foreground "#ffffff"))
+                 (propertize output 'face `(:foreground "#1f5582")) " "
+                 (if (= git-status 0)
+                     (propertize "o" 'face `(:foreground "#9acd32"))
+                   ;;(propertize "x" 'face `(:foreground "#ff6347"))))))
+                   (pedro-eprompt--git-status-verbose)))))
+     " "
+     (let ((output eshell-last-command-status)
+           (current-time (propertize (format-time-string "[%-H:%M:%S]") 'face `(:foreground "#ffffff" ))))
+       (if  (= output 0)
+           current-time
+         (concat current-time  " C:" (propertize (number-to-string output) 'face `(:foreground "#ff6347")))))
+     "\n"
+     (propertize "$" 'face `(:foreground "#ff6347"))
+     " "))
+
+  (setq eshell-prompt-function #'pedro-eprompt-prompt-function)
+
+  (use-package eshell-z
+    :ensure t)
+#+END_SRC
 ** themes
 #+NAME: themes-config
 #+BEGIN_SRC emacs-lisp
@@ -371,6 +896,10 @@
                :ensure t
                :config
                (load-theme 'sanityinc-solarized-dark t))
+  ;; (use-package load-theme-buffer-local
+  ;;   :ensure t
+  ;;   :config
+  ;;   (add-hook 'eww-mode-hook (lambda () (load-theme-buffer-local 'tango (current-buffer)))))
 #+END_SRC
 ** versioning
 #+NAME: versioning-config
@@ -414,14 +943,15 @@
          (url-insert-file-contents url)
          (write-region (point-min) (point-max) filename))
        (set-buffer old-buffer))))
-
+  
   ;;config
   (setq bookmark-default-file (concat user-emacs-directory "var/bookmarks/main.bmk") ;; # TODO
         bmkp-bmenu-state-file (concat user-emacs-directory "var/bookmarks/emacs-bmk-state-file.el")
         bmkp-last-bookmark-file (concat user-emacs-directory "var/bookmarks/main.bmk")
         bmkp-current-bookmark-file (concat user-emacs-directory "var/bookmarks/main.bmk"))
-
+  
   (require 'bookmark+)
+
 
   ;;(setq bookmark-save-flag nil)
   (setq bookmark-save-flag 1)
@@ -444,107 +974,272 @@
         auto-save-file-name-transforms `((".*" ,(concat user-emacs-directory "var/auto-save-list/") t)))
 #+END_SRC
 ** org-mode
-#+BEGIN_SRC elisp
+#+NAME: org-mode-config
+#+BEGIN_SRC emacs-lisp
   ;;;; org-mode
+  (setq org-enforce-todo-dependencies t)
+  (setq org-enforce-todo-checkbox-dependencies t)
+  (setq org-cycle-separator-lines 0)
+  (setq org-blank-before-new-entry (quote ((heading)
+                                           (plain-list-item . auto))))
+
+  (setq org-log-into-drawer t)
+
+  (setq org-id-method (quote uuidgen))
+  (setq org-cycle-include-plain-lists 'integrate ) ; t
+  (setq org-src-fontify-natively t)
+
+
   (define-key global-map "\C-cl" 'org-store-link)
+
+  (setq org-src-window-setup 'current-window)
 
   (org-babel-do-load-languages
    'org-babel-load-languages
-   '((R . t)))
+   '((shell . t)
+     (C . t)
+     (plantuml . t)))
+
+  (setq org-plantuml-jar-path
+      (expand-file-name "~/lib/plantuml.jar"))
+
+  (diminish 'org-indent-mode)
+
+  (setq org-log-into-drawer t)
+  (setq org-todo-keyword-faces '(("TODO" . (:foreground "#4169e1" :weight bold))
+                                 ("NEXT" . (:foreground "#ff6347" :weight bold))
+                                 ("STARTED" . (:foreground "dark orange" :weight bold))
+                                 ("CURRENT" . (:foreground "#00bfff" :weight bold))
+                                 ("WAITING" . (:foreground "#cd2626" :weight bold))
+                                 ("CONTINUED". (:foreground "dark orange" :weight bold))
+                                 ("DONE" . (:foreground "green4" :weight bold))
+                                 ("ABORTED" . (:foreground "gray" :weight bold))
+                                 ("STOPPED" . (:foreground "#d3d3d3" :weight bold))
+                                 ("IMPROVE" . (:foreground "#d02090" :weight bold))
+                                 ("BUG" . (:foreground "#ff0000" :weight bold))
+                                 ("TEST" . (:foreground "#adff2f" :weight bold))
+                                 ("FIXED" . (:foreground "green4" :weight bold))))
+
+  ;; latex preview
+  (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
+
+  ;; org-board
+  (use-package org-board
+               :ensure t)
 #+END_SRC
 ** various
 #+NAME: various-config
 #+BEGIN_SRC emacs-lisp
   (use-package beacon
                :ensure t
+               :diminish beacon-mode
                :config
                (beacon-mode +1))
+
+  (use-package vi-tilde-fringe
+               :ensure t
+               :diminish vi-tilde-fringe-mode
+               :config
+               (global-vi-tilde-fringe-mode nil))
 #+END_SRC
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 * packages configuration
 #+NAME: packages-config
+** ess
 #+BEGIN_SRC emacs-lisp
     ;;; packages
     (use-package ess
       :ensure t
       :init (require 'ess-r-mode)
       )
+#+END_SRC
+** viewers
+#+NAME: viewers-config
+#+begin_src emacs-lisp
   (use-package pdf-tools
+               :config
+               (pdf-tools-install)
+               ;; chage 'pdf-view-bookmark-jump-handler' to 'pdf-view-bookmark-jump'
+               (defun pdf-view-bookmark-make-record  (&optional no-page no-slice no-size no-origin)
+                 ;; TODO: add NO-PAGE, NO-SLICE, NO-SIZE, NO-ORIGIN to the docstring.
+                 "Create a bookmark PDF record. The optional, boolean args exclude certain attributes."
+                 (let ((displayed-p (eq (current-buffer)
+                                        (window-buffer))))
+                   (cons (buffer-name)
+                         (append (bookmark-make-record-default nil t 1)
+                                 `(,(unless no-page
+                                      (cons 'page (pdf-view-current-page)))
+                                   ,(unless no-slice
+                                      (cons 'slice (and displayed-p
+                                                        (pdf-view-current-slice))))
+                                   ,(unless no-size
+                                      (cons 'size pdf-view-display-size))
+                                   ,(unless no-origin
+                                      (cons 'origin
+                                            (and displayed-p
+                                                 (let ((edges (pdf-util-image-displayed-edges nil t)))
+                                                   (pdf-util-scale-pixel-to-relative
+                                                    (cons (car edges) (cadr edges)) nil t)))))
+                                   (handler . pdf-view-bookmark-jump))))))
+
+               ;; http://pragmaticemacs.com/emacs/more-pdf-tools-tweaks/
+               ;; (setq pdf-view-resize-factor 1.1)
+
+               ;; http://babbagefiles.blogspot.com.es/2017/11/more-pdf-tools-tricks.html
+               ;; midnite mode hook
+               ;; (add-hook 'pdf-view-mode-hook (lambda ()
+               ;;                                 (pdf-view-midnight-minor-mode))) ; automatically turns on midnight-mode for pdfs
+
+               (setq pdf-view-midnight-colors '("#ff9900" . "#0a0a12" )) ; set the amber profile as default (see below)
+
+               (defun bms/pdf-no-filter ()
+                 "View pdf without colour filter."
+                 (interactive)
+                 (pdf-view-midnight-minor-mode -1)
+                 )
+
+               ;; change midnite mode colours functions
+               (defun bms/pdf-midnite-original ()
+                 "Set pdf-view-midnight-colors to original colours."
+                 (interactive)
+                 (setq pdf-view-midnight-colors '("#839496" . "#002b36" )) ; original values
+                 (pdf-view-midnight-minor-mode)
+                 )
+
+               (defun bms/pdf-midnite-amber ()
+                 "Set pdf-view-midnight-colors to amber on dark slate blue."
+                 (interactive)
+                 (setq pdf-view-midnight-colors '("#ff9900" . "#0a0a12" )) ; amber
+                 (pdf-view-midnight-minor-mode)
+                 )
+
+               (defun bms/pdf-midnite-green ()
+                 "Set pdf-view-midnight-colors to green on black."
+                 (interactive)
+                 (setq pdf-view-midnight-colors '("#00B800" . "#000000" )) ; green
+                 (pdf-view-midnight-minor-mode))
+
+               (defun bms/pdf-midnite-colour-schemes ()
+                 "Midnight mode colour schemes bound to keys"
+                 (local-set-key (kbd "!") (quote bms/pdf-no-filter))
+                 (local-set-key (kbd "@") (quote bms/pdf-midnite-amber))
+                 (local-set-key (kbd "#") (quote bms/pdf-midnite-green))
+                 (local-set-key (kbd "$") (quote bms/pdf-midnite-original)))
+
+               (add-hook 'pdf-view-mode-hook 'bms/pdf-midnite-colour-schemes)
+
+               ;; annotations
+               (setq pdf-annot-default-annotation-properties '((t
+                                                                (label . "pedro"))
+                                                               (text
+                                                                (icon . "Note")
+                                                                (color . "#ff0000"))
+                                                               (highlight
+                                                                (color . "#87ceff")) ;; #4682b4"))
+                                                               (squiggly
+                                                                (color . "orange"))
+                                                               (strike-out
+                                                                (color . "red"))
+                                                               (underline
+                                                                (color . "blue"))))
+               :ensure t)
+#+end_src
+
+** folding
+#+BEGIN_SRC emacs-lisp
+  (use-package origami
+               :config
+               (global-origami-mode)
+               :ensure t)
+#+END_SRC
+** outorg
+#+BEGIN_SRC emacs-lisp
+  (use-package outshine
+    :ensure t
     :config
-    (pdf-tools-install)
-    ;; http://pragmaticemacs.com/emacs/more-pdf-tools-tweaks/
-    (setq pdf-view-resize-factor 1.1)
-
-
-    ;; around way to handler pdf bookmarks ;FIXME
-    ;; chage 'pdf-view-bookmark-jump-handler' to 'pdf-view-bookmark-jump'
-    (defun pdf-view-bookmark-make-record  (&optional no-page no-slice no-size no-origin)
-      ;; TODO: add NO-PAGE, NO-SLICE, NO-SIZE, NO-ORIGIN to the docstring.
-      "Create a bookmark PDF record. The optional, boolean args exclude certain attributes."
-      (let ((displayed-p (eq (current-buffer)
-                             (window-buffer))))
-        (cons (buffer-name)
-              (append (bookmark-make-record-default nil t 1)
-                      `(,(unless no-page
-                           (cons 'page (pdf-view-current-page)))
-                        ,(unless no-slice
-                           (cons 'slice (and displayed-p
-                                             (pdf-view-current-slice))))
-                        ,(unless no-size
-                           (cons 'size pdf-view-display-size))
-                        ,(unless no-origin
-                           (cons 'origin
-                                 (and displayed-p
-                                      (let ((edges (pdf-util-image-displayed-edges nil t)))
-                                        (pdf-util-scale-pixel-to-relative
-                                         (cons (car edges) (cadr edges)) nil t)))))
-                        (handler . pdf-view-bookmark-jump))))))
-
-
-    ;; http://babbagefiles.blogspot.com.es/2017/11/more-pdf-tools-tricks.html
-    ;; midnite mode hook
-    (add-hook 'pdf-view-mode-hook (lambda ()
-                                    (pdf-view-midnight-minor-mode))) ; automatically turns on midnight-mode for pdfs
-
-    (setq pdf-view-midnight-colors '("#ff9900" . "#0a0a12" )) ; set the amber profile as default (see below)
-
-    (defun bms/pdf-no-filter ()
-      "View pdf without colour filter."
-      (interactive)
-      (pdf-view-midnight-minor-mode -1)
-      )
-
-    ;; change midnite mode colours functions
-    (defun bms/pdf-midnite-original ()
-      "Set pdf-view-midnight-colors to original colours."
-      (interactive)
-      (setq pdf-view-midnight-colors '("#839496" . "#002b36" )) ; original values
-      (pdf-view-midnight-minor-mode)
-      )
-
-    (defun bms/pdf-midnite-amber ()
-      "Set pdf-view-midnight-colors to amber on dark slate blue."
-      (interactive)
-      (setq pdf-view-midnight-colors '("#ff9900" . "#0a0a12" )) ; amber
-      (pdf-view-midnight-minor-mode)
-      )
-
-    (defun bms/pdf-midnite-green ()
-      "Set pdf-view-midnight-colors to green on black."
-      (interactive)
-      (setq pdf-view-midnight-colors '("#00B800" . "#000000" )) ; green
-      (pdf-view-midnight-minor-mode)
-      )
-
-    (defun bms/pdf-midnite-colour-schemes ()
-      "Midnight mode colour schemes bound to keys"
-      (local-set-key (kbd "!") (quote bms/pdf-no-filter))
-      (local-set-key (kbd "@") (quote bms/pdf-midnite-amber))
-      (local-set-key (kbd "#") (quote bms/pdf-midnite-green))
-      (local-set-key (kbd "$") (quote bms/pdf-midnite-original))
-      )
-
-    (add-hook 'pdf-view-mode-hook 'bms/pdf-midnite-colour-schemes)
-
+    (require 'outshine)
+    (defvar outline-minor-mode-prefix "\M-#")
+    (add-hook 'outline-minor-mode-hook 'outshine-mode)
+    (add-hook 'prog-mode-hook 'outline-minor-mode)
+    (add-hook 'lisp-interaction-mode-hook 'outline-minor-mode)
+    :diminish outline-minor-mode
     :ensure t)
 #+END_SRC
+** git-gutter
+#+BEGIN_SRC emacs-lisp
+  (use-package git-gutter
+    :ensure t
+    :diminish 'git-gutter-mode
+    :config
+    (global-git-gutter-mode t))
+#+END_SRC
 
+** org-pomodoro
+#+BEGIN_SRC emacs-lisp
+  (use-package org-pomodoro
+               :ensure t)
+#+END_SRC
+** TODO TESTING PACKAGES
+#+BEGIN_SRC emacs-lisp
+    (use-package iedit
+      :ensure t)
+
+    (use-package perspective
+      :ensure t
+      :config
+      (setq persp-initial-frame-name "1")
+      (set-face-attribute 'persp-selected-face nil  :foreground "#4876ff" :underline t)
+      (persp-mode)
+      (global-set-key (kbd "C-x C-b") 'persp-ibuffer)
+      (global-set-key (kbd "C-x b") 'persp-ivy-switch-buffer))
+
+    (use-package org-noter
+      :ensure t
+      :config
+      (setq org-noter-always-create-frame nil
+            org-noter-set-auto-save-last-location t))
+
+    (use-package counsel-dash
+      :ensure t
+      :config
+    ;;   (setq counsel-dash-common-docsets '("C++")
+    ;;         counsel-dash-docsets-path "~/.docsets"
+    ;;         ;; (setq browse-url-browser-function 'browse-url-generic-program)
+    ;;         ;; dash-docs-browser-func 'browse-url-generic)
+      ;;         counsel-dash-browser-func 'browse-url-generic)) ;; eww))
+      )
+    (use-package transpose-frame
+      :ensure t)
+
+    (use-package expand-region
+      :ensure t)
+#+END_SRC

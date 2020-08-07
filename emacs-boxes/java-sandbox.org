@@ -350,7 +350,7 @@
 #+END_SRC
 ** ido/helm/swiper
 *** ido 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (use-package ido
     :config
     (setq ido-enable-flex-matching t)
@@ -403,7 +403,7 @@
 #+end_src
 
 *** helm
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (use-package helm
     :config
     (require 'helm)
@@ -442,7 +442,7 @@
   (use-package helm-projectile
     :config
     (setq projectile-completion-system 'helm)
-    (helm-projectile-on)n
+    (helm-projectile-on)
     :ensure t)
 
 
