@@ -883,8 +883,9 @@
                              (setq buffer-face-mode-face '(:family "Iosevka"))
                              (buffer-face-mode)))
   (set-face-attribute 'org-block nil :font "Iosevka")
+  (set-face-attribute 'org-block-begin-line nil :height 0.7)
+  (set-face-attribute 'org-block-end-line nil :height 0.7)
 #+END_SRC
-
 * packages configuration
 #+NAME: packages-config
 #+BEGIN_SRC emacs-lisp
@@ -900,7 +901,7 @@
     :config
     (setq elpy-rpc-python-command "python3")
 
-    ;; Use IPython for REPL
+    ;; Use IPython/Jupyter for REPL
     (setq python-shell-interpreter "jupyter"
           python-shell-interpreter-args "console --simple-prompt"
           python-shell-prompt-detect-failure-warning nil)

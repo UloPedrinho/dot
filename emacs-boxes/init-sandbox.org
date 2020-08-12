@@ -627,18 +627,6 @@
     (global-set-key (kbd "<f9>") 'winner-undo)
     (global-set-key (kbd "<f10>") 'winner-redo))
 #+END_SRC
-** fonts & faces
-#+BEGIN_SRC emacs-lisp
-  ;;;; fonts & faces
-  ;; set big font in iMac 27"
-  (when (string= system-name "zLusco")
-    (set-frame-font "Hack 22" t t)
-    ;; (set-frame-font "Hack 17" t t)
-    (add-to-list 'default-frame-alist (cons 'width 98))
-    (add-to-list 'default-frame-alist (cons 'height 200)))
-
-
-#+END_SRC
 ** shell
 *** eshell
 #+NAME: themes-config
@@ -1056,6 +1044,26 @@
 
   (use-package expand-region
     :ensure t)
+#+END_SRC
+** fonts & faces
+#+BEGIN_SRC emacs-lisp
+  ;;;; fonts & faces
+  ;; set big font in iMac 27"
+  ;; (when (string= system-name "zLusco")
+  ;;   (set-frame-font "Hack 22" t t)
+  ;;   ;; (set-frame-font "Hack 17" t t)
+  ;;   (add-to-list 'default-frame-alist (cons 'width 98))
+  ;;   (add-to-list 'default-frame-alist (cons 'height 200)))
+
+  ;;(add-to-list 'default-frame-alist '(font . "Hack"))
+  (add-to-list 'default-frame-alist '(font . "Hack"))
+  ;;(set-face-font 'org-code "Hack")
+  (add-hook 'prog-mode-hook (lambda ()
+                             (setq buffer-face-mode-face '(:family "Iosevka"))
+                             (buffer-face-mode)))
+  (set-face-attribute 'org-block nil :font "Iosevka")
+  (set-face-attribute 'org-block-begin-line nil :height 0.7)
+  (set-face-attribute 'org-block-end-line nil :height 0.7)
 #+END_SRC
 * packages configuration
 #+NAME: packages-config
