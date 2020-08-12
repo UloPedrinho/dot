@@ -330,57 +330,75 @@
 #+END_SRC
 ** keybindings
 #+BEGIN_SRC emacs-lisp
-    ;;;; keybindings
-    (global-set-key (kbd "C-x C-c") 'ask-before-closing)
-    (global-set-key (kbd "M-o") 'other-window)
-    (global-set-key (kbd "C-x o") 'other-frame)
-    (global-set-key (kbd "C-x C-b") 'ibuffer)
-    (global-set-key (kbd "C-c k") 'browse-kill-ring)
+  ;;;; keybindings
+  (global-set-key (kbd "C-x C-c") 'ask-before-closing)
+  (global-set-key (kbd "M-o") 'other-window)
+  (global-set-key (kbd "C-x o") 'other-frame)
+  (global-set-key (kbd "C-x C-b") 'ibuffer)
+  (global-set-key (kbd "C-c k") 'browse-kill-ring)
 
-    (use-package bind-key
-      :config
-      (global-unset-key [(control z)]) ; disable ^Z
+  (use-package bind-key
+    :config
+    (global-unset-key [(control z)]) ; disable ^Z
 
-      (bind-keys*
-       ("M-m w" . delete-trailing-whitespace)
-       ("M-m =" . indent-region)
-       ("M-m g" . hydra-go/body)
-       ("M-m f" . hydra-folding/body)
-       ("C-0" . (lambda () (interactive) (persp-switch "0")))
-       ("C-1" . (lambda () (interactive) (persp-switch "1")))
-       ("C-2" . (lambda () (interactive) (persp-switch "2")))
-       ("C-3" . (lambda () (interactive) (persp-switch "3")))
-       ("C-4" . (lambda () (interactive) (persp-switch "4")))
-       ("C-5" . (lambda () (interactive) (persp-switch "5")))
-       ("C-6" . (lambda () (interactive) (persp-switch "6")))
-       ("C-7" . (lambda () (interactive) (persp-switch "7")))
-       ("C-8" . (lambda () (interactive) (persp-switch "8")))
-       ("C-9" . (lambda () (interactive) (persp-switch "9")))
-       ;; ("C-c C-w C-w" . eyebrowse-last-window-config)
-       ;; ("C-1" . eyebrowse-switch-to-window-config-1)
-       ;; ("C-2" . eyebrowse-switch-to-window-config-2)
-       ;; ("C-3" . eyebrowse-switch-to-window-config-3)
-       ;; ("C-4" . eyebrowse-switch-to-window-config-4)
-       ;; ("C-5" . eyebrowse-switch-to-window-config-5)
-       ))
+    (bind-keys*
+     ("M-m w" . delete-trailing-whitespace)
+     ("M-m =" . indent-region)
+     ("M-m g" . hydra-go/body)
+     ("M-m f" . hydra-folding/body)
+     ("C-0" . (lambda () (interactive) (persp-switch "0")))
+     ("C-1" . (lambda () (interactive) (persp-switch "1")))
+     ("C-2" . (lambda () (interactive) (persp-switch "2")))
+     ("C-3" . (lambda () (interactive) (persp-switch "3")))
+     ("C-4" . (lambda () (interactive) (persp-switch "4")))
+     ("C-5" . (lambda () (interactive) (persp-switch "5")))
+     ("C-6" . (lambda () (interactive) (persp-switch "6")))
+     ("C-7" . (lambda () (interactive) (persp-switch "7")))
+     ("C-8" . (lambda () (interactive) (persp-switch "8")))
+     ("C-9" . (lambda () (interactive) (persp-switch "9")))
+     ;; ("C-c C-w C-w" . eyebrowse-last-window-config)
+     ;; ("C-1" . eyebrowse-switch-to-window-config-1)
+     ;; ("C-2" . eyebrowse-switch-to-window-config-2)
+     ;; ("C-3" . eyebrowse-switch-to-window-config-3)
+     ;; ("C-4" . eyebrowse-switch-to-window-config-4)
+     ;; ("C-5" . eyebrowse-switch-to-window-config-5)
+     ))
 
-    (use-package hydra
-      :ensure t
-      :config
-      (setq lv-use-separator t))
+  (use-package hydra
+    :ensure t
+    :config
+    (setq lv-use-separator t))
 
-    (defhydra hydra-go (:exit t)
-      "go"
-      ("e" (lambda () (interactive)
-             (eshell current-prefix-arg)) "eshell")
-      ("s" (lambda () "switch to *scratch* buffer" (interactive) (switch-to-buffer "*scratch*" )) "*scratch*"))
+  (defhydra hydra-go (:exit t)
+    "go"
+    ("e" (lambda () (interactive)
+           (eshell current-prefix-arg)) "eshell")
+    ("s" (lambda () "switch to *scratch* buffer" (interactive) (switch-to-buffer "*scratch*" )) "*scratch*"))
 
-    (defhydra hydra-folding ()
-      "folding"
-      ("C" origami-close-all-nodes "close all")
-      ("O" origami-open-all-nodes "open all")
-      ("c" origami-close-node "close")
-      ("o" origami-open-node "open"))
+  (defhydra hydra-folding ()
+    "folding"
+    ("C" origami-close-all-nodes "close all")
+    ("O" origami-open-all-nodes "open all")
+    ("c" origami-close-node "close")
+    ("o" origami-open-node "open"))
+
+  (defhydra hydra-various ()
+    "various"
+    ("a" counsel-ag "ag")
+    ("t" git-timemachine "timemachine")
+    ("i" iedit-mode "iedit")
+    ("k" browse-kill-ring "killring")
+    ("f" follow-mode "follow")
+    ("d" counsel-dash "dash")
+    ("D" counsel-dash-at-point "dast-at-point"))
+
+  (defhydra hydra-transpose ()
+    "transpose,flip,rotate windows"
+    ("h" flop-frame "flip-h")
+    ("j" flip-frame "flip-v")
+    ("k" rotate-frame-clockwise "rot-cw")
+    ("l" rotate-frame-anticlockwise "rot-acw")
+    ("q" nil "quit"))
 #+END_SRC
 ** mode-line
 #+NAME: mode-line-config
@@ -922,8 +940,49 @@
 #+END_SRC
 ** org-mode
 #+BEGIN_SRC elisp
-;;;; org-mode
-(define-key global-map "\C-cl" 'org-store-link)
+  ;;;; org-mode
+    ;;;; org-mode
+    (setq org-enforce-todo-dependencies t)
+    (setq org-enforce-todo-checkbox-dependencies t)
+    (setq org-cycle-separator-lines 0)
+    (setq org-blank-before-new-entry (quote ((heading)
+                                             (plain-list-item . auto))))
+
+    (setq org-log-into-drawer t)
+
+    (setq org-id-method (quote uuidgen))
+    (setq org-cycle-include-plain-lists 'integrate ) ; t
+    (setq org-src-fontify-natively t)
+
+
+    (define-key global-map "\C-cl" 'org-store-link)
+
+    (setq org-src-window-setup 'current-window)
+
+    ;; (org-babel-do-load-languages
+    ;;  'org-babel-load-languages
+    ;;  '((shell . t)))
+
+
+    ;;(diminish 'org-indent-mode)
+
+    (setq org-log-into-drawer t)
+    (setq org-todo-keyword-faces '(("TODO" . (:foreground "#4169e1" :weight bold))
+                                   ("NEXT" . (:foreground "#ff6347" :weight bold))
+                                   ("STARTED" . (:foreground "dark orange" :weight bold))
+                                   ("CURRENT" . (:foreground "#00bfff" :weight bold))
+                                   ("WAITING" . (:foreground "#cd2626" :weight bold))
+                                   ("UPDATED" . (:foreground "#d02090" :weight bold))
+                                   ("CONTINUED". (:foreground "dark orange" :weight bold))
+                                   ("DONE" . (:foreground "green4" :weight bold))
+                                   ("ABORTED" . (:foreground "gray" :weight bold))
+                                   ("STOPPED" . (:foreground "#d3d3d3" :weight bold))
+                                   ("IMPROVE" . (:foreground "#d02090" :weight bold))
+                                   ("BUG" . (:foreground "#ff0000" :weight bold))
+                                   ("TEST" . (:foreground "#adff2f" :weight bold))
+                                   ("FIXED" . (:foreground "green4" :weight bold))))
+
+
 #+END_SRC
 ** workspaces
 #+NAME: workspaces
@@ -982,6 +1041,21 @@
     :ensure t
     :config
     (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
+
+  (use-package counsel-dash
+    :ensure t
+    :config
+    (setq counsel-dash-common-docsets '()
+          counsel-dash-docsets-path "~/.docsets"
+          ;; (setq browse-url-browser-function 'browse-url-generic-program)
+          ;; dash-docs-browser-func 'browse-url-generic)
+          counsel-dash-browser-func 'browse-url-generic)) ;; eww))
+
+  (use-package transpose-frame
+    :ensure t)
+
+  (use-package expand-region
+    :ensure t)
 #+END_SRC
 * packages configuration
 #+NAME: packages-config

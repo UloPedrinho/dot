@@ -336,14 +336,15 @@
     :config
     (bind-keys*
      ;; eyebrowse
+     ("M-m w" . delete-trailing-whitespace)
+     ("M-m =" . indent-region)
+     ("M-m g" . hydra-go/body)
+     ("M-m f" . hydra-folding/body)
+     ("M-m v" . hydra-various/body)
+     ("M-m i" . imenu)
+     ("M-m h" . hydra-transpose/body)
+     ("M-m m" . er/expand-region)
      ("M-x" . counsel-M-x)
-     ("C-c C-w C-w" . eyebrowse-last-window-config)
-     ("C-c C-w C-j" . eyebrowse-prev-window-config)
-     ("C-c C-w C-ñ" . eyebrowse-next-window-config)
-     ("C-M-1" . eyebrowse-switch-to-window-config-1)
-     ("C-M-2" . eyebrowse-switch-to-window-config-2)
-     ("C-M-3" . eyebrowse-switch-to-window-config-3)
-     ("C-M-4" . eyebrowse-switch-to-window-config-4)
      ("C-0" . (lambda () (interactive) (persp-switch "0")))
      ("C-1" . (lambda () (interactive) (persp-switch "1")))
      ("C-2" . (lambda () (interactive) (persp-switch "2")))
@@ -358,6 +359,44 @@
      ("C-c f" . counsel-recentf)
      ("M-i" . swiper-isearch)
      ("M-g t" . counsel-org-goto)))
+
+  (use-package hydra
+    :ensure t
+    :config
+    (setq lv-use-separator t))
+
+  (defhydra hydra-go (:exit t)
+    "go"
+    ("s" (lambda () "switch to *scratch* buffer" (interactive) (switch-to-buffer "*scratch*" )) "*scratch*")
+    ("e" (lambda () (interactive)
+           (eshell current-prefix-arg)) "eshell")
+    ("v" (lambda () (interactive)
+           (vterm)) "vterm"))
+
+  (defhydra hydra-folding ()
+    "folding"
+    ("C" origami-close-all-nodes "close all")
+    ("O" origami-open-all-nodes "open all")
+    ("c" origami-close-node "close")
+    ("o" origami-open-node "open"))
+
+  (defhydra hydra-various ()
+    "various"
+    ("a" counsel-ag "ag")
+    ("t" git-timemachine "timemachine")
+    ("i" iedit-mode "iedit")
+    ("k" browse-kill-ring "killring")
+    ("f" follow-mode "follow")
+    ("d" counsel-dash "dash")
+    ("D" counsel-dash-at-point "dast-at-point"))
+
+  (defhydra hydra-transpose ()
+    "transpose,flip,rotate windows"
+    ("h" flop-frame "flip-h")
+    ("j" flip-frame "flip-v")
+    ("k" rotate-frame-clockwise "rot-cw")
+    ("l" rotate-frame-anticlockwise "rot-acw")
+    ("q" nil "quit"))
 #+END_SRC
 ** mode-line
 #+NAME: mode-line-config
@@ -551,7 +590,7 @@
     (define-key smartparens-mode-map (kbd "C-M-f") 'sp-forward-sexp)
     (define-key smartparens-mode-map (kbd "C-M-b") 'sp-backward-sexp)
     (define-key smartparens-mode-map (kbd "M-(") 'sp-wrap-round)
-    (define-key smartparens-mode-map (kbd "C-") 'sp-wrap-round)
+    ;; (define-key smartparens-mode-map (kbd "C-") 'sp-wrap-round)
     (define-key smartparens-mode-map (kbd "C-<right>") 'sp-forward-slurp-sexp)
     (define-key smartparens-mode-map (kbd "C-<left>") 'sp-forward-barf-sexp)
     (define-key smartparens-mode-map (kbd "C-M-<left>") 'sp-backward-slurp-sexp)
@@ -608,18 +647,6 @@
     ;; ("C-M-4" . eyebrowse-switch-to-window-config-4)
 
     (eyebrowse-mode t))
-#+END_SRC
-** fonts & faces
-#+BEGIN_SRC emacs-lisp
-  ;;;; fonts & faces
-  ;; set big font in iMac 27"
-  (when (string= system-name "zLusco")
-    (set-frame-font "Hack 22" t t)
-    ;; (set-frame-font "Hack 17" t t)
-    (add-to-list 'default-frame-alist (cons 'width 98))
-    (add-to-list 'default-frame-alist (cons 'height 200)))
-
-
 #+END_SRC
 ** themes
 #+NAME: themes-config
@@ -780,9 +807,28 @@
         auto-save-file-name-transforms `((".*" ,(concat user-emacs-directory "var/auto-save-list/") t)))
 #+END_SRC
 ** org-mode
-#+BEGIN_SRC elisp
-;;;; org-mode
-(define-key global-map "\C-cl" 'org-store-link)
+#+NAME: org-mode-config
+#+BEGIN_SRC emacs-lisp
+  ;;;; org-mode
+  (define-key global-map "\C-cl" 'org-store-link)
+
+  ;;(diminish 'org-indent-mode)
+
+  (setq org-log-into-drawer t)
+  (setq org-todo-keyword-faces '(("TODO" . (:foreground "#4169e1" :weight bold))
+                                 ("NEXT" . (:foreground "#ff6347" :weight bold))
+                                 ("STARTED" . (:foreground "dark orange" :weight bold))
+                                 ("CURRENT" . (:foreground "#00bfff" :weight bold))
+                                 ("WAITING" . (:foreground "#cd2626" :weight bold))
+                                 ("UPDATED" . (:foreground "#d02090" :weight bold))
+                                 ("CONTINUED". (:foreground "dark orange" :weight bold))
+                                 ("DONE" . (:foreground "green4" :weight bold))
+                                 ("ABORTED" . (:foreground "gray" :weight bold))
+                                 ("STOPPED" . (:foreground "#d3d3d3" :weight bold))
+                                 ("IMPROVE" . (:foreground "#d02090" :weight bold))
+                                 ("BUG" . (:foreground "#ff0000" :weight bold))
+                                 ("TEST" . (:foreground "#adff2f" :weight bold))
+                                 ("FIXED" . (:foreground "green4" :weight bold))))
 #+END_SRC
 ** workspaces
 #+NAME: workspaces
@@ -801,10 +847,44 @@
 #+NAME: various-config
 #+BEGIN_SRC emacs-lisp
   (use-package beacon
-               :ensure t
-               :config
-               (beacon-mode +1))
+    :ensure t
+    :config
+    (beacon-mode +1))
+
+  (use-package counsel-dash
+    :ensure t
+    :config
+    (setq counsel-dash-common-docsets '("Python 3")
+          counsel-dash-docsets-path "~/.docsets"
+          ;; (setq browse-url-browser-function 'browse-url-generic-program)
+          ;; dash-docs-browser-func 'browse-url-generic)
+          counsel-dash-browser-func 'browse-url-generic)) ;; eww))
+
+  (use-package transpose-frame
+    :ensure t)
+
+  (use-package expand-region
+    :ensure t)
 #+END_SRC
+** fonts & faces
+#+BEGIN_SRC emacs-lisp
+  ;;;; fonts & faces
+  ;; set big font in iMac 27"
+  ;; (when (string= system-name "zLusco")
+  ;;   (set-frame-font "Hack 22" t t)
+  ;;   ;; (set-frame-font "Hack 17" t t)
+  ;;   (add-to-list 'default-frame-alist (cons 'width 98))
+  ;;   (add-to-list 'default-frame-alist (cons 'height 200)))
+
+  ;;(add-to-list 'default-frame-alist '(font . "Hack"))
+  (add-to-list 'default-frame-alist '(font . "Hack"))
+  ;;(set-face-font 'org-code "Hack")
+  (add-hook 'prog-mode-hook (lambda ()
+                             (setq buffer-face-mode-face '(:family "Iosevka"))
+                             (buffer-face-mode)))
+  (set-face-attribute 'org-block nil :font "Iosevka")
+#+END_SRC
+
 * packages configuration
 #+NAME: packages-config
 #+BEGIN_SRC emacs-lisp
@@ -878,3 +958,5 @@
     (global-set-key [remap kill-ring-save] #'easy-kill)
     (global-set-key [remap mark-sexp] #'easy-mark))
 #+END_SRC
+
+
