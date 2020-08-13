@@ -810,6 +810,11 @@
 #+NAME: org-mode-config
 #+BEGIN_SRC emacs-lisp
   ;;;; org-mode
+  (use-package org-radiobutton
+    :ensure t
+    :config
+    (global-org-radiobutton-mode 1))
+
   (define-key global-map "\C-cl" 'org-store-link)
 
   ;;(diminish 'org-indent-mode)
@@ -870,7 +875,7 @@
 #+BEGIN_SRC emacs-lisp
   ;;;; fonts & faces
   ;; set big font in iMac 27"
-  ;; (when (string= system-name "zLusco")
+  ;; (when (string= system-name "")
   ;;   (set-frame-font "Hack 22" t t)
   ;;   ;; (set-frame-font "Hack 17" t t)
   ;;   (add-to-list 'default-frame-alist (cons 'width 98))
@@ -884,7 +889,7 @@
                              (buffer-face-mode)))
   (set-face-attribute 'org-block nil :font "Iosevka")
   (set-face-attribute 'org-block-begin-line nil :height 0.7)
-  (set-face-attribute 'org-block-end-line nil :height 0.7)
+  ;;(set-face-attribute 'org-block-end-line nil :height 0.9)
 #+END_SRC
 * packages configuration
 #+NAME: packages-config
@@ -959,5 +964,6 @@
     (global-set-key [remap kill-ring-save] #'easy-kill)
     (global-set-key [remap mark-sexp] #'easy-mark))
 #+END_SRC
+
 
 

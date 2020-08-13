@@ -942,6 +942,10 @@
     (setq org-cycle-include-plain-lists 'integrate ) ; t
     (setq org-src-fontify-natively t)
 
+    (use-package org-radiobutton
+      :ensure t
+      :config
+      (global-org-radiobutton-mode 1))
 
     (define-key global-map "\C-cl" 'org-store-link)
 

@@ -1,1 +1,4 @@
 /lein/self-installs/leiningen-2.9.1-standalone.jar
+/emacs-boxes/*.el
+/emacs-boxes/*.sh
+/emacs-boxes/noyes
