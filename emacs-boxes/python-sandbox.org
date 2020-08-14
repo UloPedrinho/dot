@@ -86,7 +86,8 @@
 
   ;; install `use-package'
   (when (not (package--user-selected-p 'use-package))
-    (package-install 'use-package))
+    (package-install 'use-package)
+    (package-install 'diminish))
 #+END_SRC
 * system configuration
 #+NAME: system-config
@@ -312,7 +313,7 @@
                      which-key-side-window-max-height 10)
                (which-key-mode)
                (which-key-setup-side-window-right-bottom)
-               :diminish which-key-mode
+               :diminish ""
                :ensure t)
 
   (use-package discover-my-major
@@ -419,7 +420,8 @@
   (use-package company-posframe
     :ensure t
     :config
-    (company-posframe-mode 1))
+    (company-posframe-mode 1)
+    :diminish "")
 #+END_SRC
 ** ido/helm/swiper
 *** ido 
@@ -532,6 +534,7 @@
 
   (use-package ivy :demand
     :ensure ivy-hydra
+    :diminish ivy-mode
     :config
     (setq ivy-use-virtual-buffers t
           ivy-count-format "%d/%d ")
@@ -539,6 +542,7 @@
 
   (use-package ivy-posframe
     :ensure t
+    :diminish ""
     :config
     (cl-defun my/window-size-change (&optional _)
       "My very own resize defun for modifying the posframe size"
@@ -603,7 +607,7 @@
   (use-package zoom
     :config
     (zoom-mode 1)
-    :diminish zoom-mode
+    :diminish ""
     :ensure t)
   (use-package zoom-window
     :config
@@ -817,7 +821,7 @@
 
   (define-key global-map "\C-cl" 'org-store-link)
 
-  ;;(diminish 'org-indent-mode)
+  (diminish 'org-indent-mode)
 
   (setq org-log-into-drawer t)
   (setq org-todo-keyword-faces '(("TODO" . (:foreground "#4169e1" :weight bold))
@@ -853,6 +857,7 @@
 #+BEGIN_SRC emacs-lisp
   (use-package beacon
     :ensure t
+    :diminish ""
     :config
     (beacon-mode +1))
 
@@ -881,6 +886,8 @@
   ;;   (add-to-list 'default-frame-alist (cons 'width 98))
   ;;   (add-to-list 'default-frame-alist (cons 'height 200)))
 
+  (diminish 'buffer-face-mode)
+
   ;;(add-to-list 'default-frame-alist '(font . "Hack"))
   (add-to-list 'default-frame-alist '(font . "Hack"))
   ;;(set-face-font 'org-code "Hack")
@@ -901,6 +908,7 @@
 
   (use-package highlight-indent-guides
     :ensure t
+    :diminish ""
     :config
     (setq highlight-indent-guides-method 'character))
 
