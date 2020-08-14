@@ -896,14 +896,23 @@
 #+BEGIN_SRC emacs-lisp
   ;;; packages
 
-  ;; install python packages: 
+  ;; install python packages:
   ;; $  pip3 install flake8 pylint mypy jedi jupyter
+
+  (use-package highlight-indent-guides
+    :ensure t
+    :config
+    (setq highlight-indent-guides-method 'character))
 
   (use-package elpy
     :ensure t
     :init
     (elpy-enable)
     :config
+    ;; disable highlight-identation module
+    ;; and enable highlight-ident-guides mode
+    (setq elpy-modules (delq 'elpy-module-highlight-indentation elpy-modules))
+    (add-hook 'elpy-mode-hook 'highlight-indent-guides-mode)
     (setq elpy-rpc-python-command "python3")
 
     ;; Use IPython/Jupyter for REPL
