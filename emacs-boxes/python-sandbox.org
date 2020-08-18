@@ -304,6 +304,8 @@
 
   (use-package eww-lnum
                :ensure t)
+
+  (setq browse-url-generic-program  "qutebrowser")
 #+END_SRC
 ** help
 #+BEGIN_SRC emacs-lisp
@@ -924,10 +926,14 @@
     (setq elpy-rpc-python-command "python3")
 
     ;; Use IPython/Jupyter for REPL
-    (setq python-shell-interpreter "jupyter"
-          python-shell-interpreter-args "console --simple-prompt"
-          python-shell-prompt-detect-failure-warning nil)
-    (add-to-list 'python-shell-completion-native-disabled-interpreters "jupyter")
+    (setq python-shell-interpreter "ipython"
+          python-shell-interpreter-args "-i --simple-prompt")
+
+    ;; (setq python-shell-interpreter "jupyter"
+    ;;       python-shell-interpreter-args "console --simple-prompt"
+    ;;       python-shell-prompt-detect-failure-warning nil)
+    ;; (add-to-list 'python-shell-completion-native-disabled-interpreters "jupyter")
+
     ;; completition
     ;; (setq elpy-get-info-from-shell t))
     (setq elpy-rpc-backend "jedi"))

@@ -19,5 +19,6 @@ mod4 + alt + i
 mod4 + alt + u
      i3-msg "[class=\"qutebrowser\"] scratchpad show"
 
-mod4 + alt + ntilde ; { ntilde, space, n, p}
+mod4 + alt + ntilde ; { mod4 + alt + ntilde, space, n, p}
      {i3-msg "[title=\"music.sh*\"] scratchpad show", music-mpv-commands play, music-mpv-commands next,music-mpv-commands prev}
+
