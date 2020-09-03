@@ -944,7 +944,7 @@
   (use-package pyvenv
     :ensure t
     :config
-    (pyvenv-activate "~/.virtualenvs/default3"))
+    (pyvenv-activate "~/.virtualenvs/default"))
 
   (use-package company-jedi
       :ensure t

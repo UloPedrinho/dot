@@ -225,6 +225,9 @@ for_window [class="glances"] move window to scratchpad
 # for_window [class="krusader"] move window to scratchpad
 for_window [title="Radio*"] move window to scratchpad # TODO to bedeleted ,, no use anymore
 
+for_window [title="music.sh"] move window to scratchpad
+
+
 # floating
 for_window [class="kmetronome"] floating enable
 for_window [class="TelegramDesktop"] floating enable
@@ -372,5 +375,5 @@ exec xterm -fa "Monospace" -fs 14 -rv -class "glances" -e glances
 exec krusader
 exec --no-startup-id i3-msg 'workspace 3; exec firefox; workspace 1'
 exec megasync
-exec i3-msg 'exec sxhkd'
+exec "sh -c 'sleep 10; exec sxhkd'"
 

@@ -20,6 +20,8 @@
 ;; FIXME https://debbugs.gnu.org/34341. It should be fixed in Emacs 26.3+
 (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
 
+;; (when (< emacs-major-version 27)
+;;   (package-initialize))
 (package-initialize)
 
 ;; use-package.el
