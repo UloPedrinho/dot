@@ -1,1 +1,2 @@
 # -f bestvideo[height<=?720]+bestaudio/best
+--mark-watched
