@@ -48,6 +48,7 @@
 ;; better performance
 ;; http://emacs.stackexchange.com/questions/19705/how-to-better-debug-emacs-cpu-management
 (setq gc-cons-threshold 10000000)
+(setq bidi-paragraph-direction 'left-to-right)
 
 ;; let use 'C-l', 'C-v'.. while isearch
 (setq isearch-allow-scroll t)
