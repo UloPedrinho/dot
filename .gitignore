@@ -2,3 +2,14 @@
 /emacs-boxes/*.el
 /emacs-boxes/*.sh
 /emacs-boxes/noyes
+/emacs.d/includes/_pedro-custom.el
+/emacs.d/includes/pedro-php.el
+/emacs.d/includes/pedro-android.el
+/emacs.d/includes/pedro-custom.el
+/emacs.d/includes/pedro-gnus.el
+/emacs.d/includes/pedro-java.el
+/emacs.d/includes/pedro-js.el
+/emacs.d/includes/pedro-macos.el
+/emacs.d/includes/pedro-old.el
+/emacs.d/includes/pedro-os-specific.el
+/emacs.d/includes/pedro-personal.el

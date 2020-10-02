@@ -1,5 +1,5 @@
 mod4 + alt + e
-     i3-msg "[title=\"emacs@montgomery\"] scratchpad show"
+     i3-msg "[title=\"emacs@$HOST\"] scratchpad show"
 
 mod4 + alt + l
      i3-msg "[class=\"glances\"] scratchpad show"
