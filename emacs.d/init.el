@@ -38,6 +38,9 @@
 ;;   (add-hook 'after-init-hook 'benchmark-init/deactivate))
 
 
+;; set frame title
+(setq frame-title-format `("emacs@" ,(system-name)))
+
 ;; pedro code
 (load (concat user-emacs-directory "includes/pedro.el"))
 

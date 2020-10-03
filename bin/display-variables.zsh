@@ -1,3 +1,5 @@
+#!/bin/zsh
+
 # Display, current window and i3-bar data
 # TODO: more than one display
 

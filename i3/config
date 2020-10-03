@@ -370,7 +370,7 @@ bindsym $mod+Shift+s --release exec "scrot -z -s ~/tmp/screenshots/screenshot-$(
 #execs
 # TODO: https://faq.i3wm.org/question/5430/cant-get-a-window-to-start-in-the-scratchpad-and-i3-behaves-very-oddly.1.html
 exec --no-startup-id snapfly
-exec --no-startup-id i3-msg "exec emacs --title=emacs@$HOST; move window to scratchpad"
+exec --no-startup-id i3-msg "exec emacs; move window to scratchpad"
 exec xterm -fa "Monospace" -fs 14 -rv -class "glances" -e glances
 exec krusader
 exec --no-startup-id i3-msg 'workspace 3; exec firefox; workspace 1'
