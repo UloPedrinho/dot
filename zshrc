@@ -1,11 +1,10 @@
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
-export PATH=/home/pedro/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/home/pedro/.local/bin:/home/pedro/lib/gradle/gradle-6.5.1/bin
-
-
 # Path to your oh-my-zsh installation.
 export ZSH="/home/pedro/.oh-my-zsh"
+
+export PATH=$HOME/bin:$HOME/.local/bin:$PATH
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,

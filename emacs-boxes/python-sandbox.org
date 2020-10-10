@@ -110,6 +110,13 @@
   (setq frame-title-format '("<<title()>> - " "%b"))
 
 #+END_SRC
+#+NAME: os-specific-config
+#+begin_src emacs-lisp
+  (when (file-exists-p (concat user-emacs-directory "os-specific.el"))
+    (load (concat user-emacs-directory "os-specific.el")))
+#+end_src
+
+
 * user configuration
 ** basic
 #+NAME: user-config
@@ -922,6 +929,7 @@
     (require 'projectile)
     (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
 #+end_src
+
 * packages configuration
 #+NAME: packages-config
 #+BEGIN_SRC emacs-lisp
@@ -1009,6 +1017,5 @@
     (global-set-key [remap kill-ring-save] #'easy-kill)
     (global-set-key [remap mark-sexp] #'easy-mark))
 #+END_SRC
-
 
 

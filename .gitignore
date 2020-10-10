@@ -13,3 +13,6 @@
 /emacs.d/includes/pedro-old.el
 /emacs.d/includes/pedro-os-specific.el
 /emacs.d/includes/pedro-personal.el
+/bin/epython
+/bin/youtube-dl
+/emacs-boxes/.emacs.d/
