@@ -531,4 +531,6 @@
 (use-package org-board
   :ensure t)
 
+(use-package i3wm-config-mode
+  :ensure t)
 
