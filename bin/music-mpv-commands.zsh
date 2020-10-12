@@ -1,5 +1,13 @@
 #!/bin/zsh
 
+MPV_SOCKET=/tmp/mpvsocket
+
+
+# launch 'music.sh' if not active
+if [[ ! -S $MPV_SOCKET ]] ; then
+    music.sh &
+fi
+
 COMMAND=$(case "$1" in
               "play")
                   msg=$(echo '{ "command": ["get_property", "pause"] }' | socat - /tmp/mpvsocket)
@@ -20,4 +28,4 @@ COMMAND=$(case "$1" in
                   ;;
           esac)
 
-echo $COMMAND | socat - /tmp/mpvsocket
+echo $COMMAND | socat - $MPV_SOCKET
