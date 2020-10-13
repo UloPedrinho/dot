@@ -292,7 +292,7 @@ mode "$mode_launcher" {
     bindsym k exec krusader
     bindsym f exec firefox
     # bindsym v exec virt-manager
-    bindsym g exec xterm -fa "Monospace" -fs 14 -rv -class "glances" -e glances
+    bindsym g exec xterm -fa "Monospace" -fs 14 -rv -class "glances" -e glances --disable-plugin irq --enable-plugin sensors --process-short-name
     bindsym q exec qutebrowser            
 
     bindsym --release c mode "default"
@@ -373,9 +373,9 @@ bindsym $mod+Shift+s --release exec "scrot -z -s ~/tmp/screenshots/screenshot-$(
 # TODO: https://faq.i3wm.org/question/5430/cant-get-a-window-to-start-in-the-scratchpad-and-i3-behaves-very-oddly.1.html
 exec --no-startup-id snapfly
 exec --no-startup-id i3-msg "exec emacs; move window to scratchpad"
-exec xterm -fa "Monospace" -fs 14 -rv -class "glances" -e glances
+exec xterm -fa "Monospace" -fs 14 -rv -class "glances" -e glances --disable-plugin irq --enable-plugin sensors --process-short-name
 exec krusader
 exec --no-startup-id i3-msg 'workspace 3; exec firefox; workspace 1'
 exec megasync
 exec "sh -c 'sleep 10; exec sxhkd -m 1'"
-exec music.sh
+# exec music.sh
