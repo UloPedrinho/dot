@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: mdrill
+# key: mdrill
+# --
+*** item $1                             :drill:
+    $2
+**** answer
+     $3
+$0
