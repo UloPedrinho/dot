@@ -1,3 +1,5 @@
+# -*- mode: conf-space; -*-
+
 mod4 + alt + e
      i3-msg "[title=\"emacs@$HOST\"] scratchpad show"
 
@@ -19,6 +21,16 @@ mod4 + alt + i
 mod4 + alt + u
      i3-msg "[class=\"qutebrowser\"] scratchpad show"
 
-mod4 + alt + ntilde ; { mod4 + alt + ntilde, space, n, p}
+mod4 + ntilde ; { mod4 + alt + ntilde, space, n, p}
      {i3-msg "[title=\"music.sh*\"] scratchpad show", music-mpv-commands.zsh play, music-mpv-commands.zsh next,music-mpv-commands.zsh prev}
 
+# testing
+mod4 + m ; { u, y, n, b, shift + u,shift + y,shift + n,shift + b}
+     {i3-rmq.zsh "q" "ne",      \
+      i3-rmq.zsh "q" "nw",      \
+      i3-rmq.zsh "q" "se",      \
+      i3-rmq.zsh "q" "sw",      \
+      i3-rmq.zsh "v" "ne",      \
+      i3-rmq.zsh "v" "nw",      \
+      i3-rmq.zsh "h" "sw",      \
+      i3-rmq.zsh "h" "nw"}
