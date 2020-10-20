@@ -149,3 +149,74 @@ logical line.  This is useful, e.g., for use with
 ;; holidays
 (setq holiday-other-holidays
       '((holiday-fixed 1 6 "reis cristiáns")))
+
+
+;; GnuPG
+(defun pedro-gpg-encrypt-multifiles (directory regexp recursive
+                                               uid password
+                                               &optional
+                                               move-to-dir
+                                               delete-originals)
+  "Encrypt files using GnuPG. Files are encripted using a user key and/or passphrase.
+
+DIRECTORY where files to be Encrypted are. REGEXP to choose files to encrypt. A non-NIL value in RECURSIVE to encrypt all files in subdirs based on REGEXP.
+
+Files can be encrypted with a secret key in UID and/or a passphrase in PASSWORD. a NIL value indicates no to use that type of encryption.
+
+MOVE-TO-DIR allows to move all encrypted to a directory.
+DELETE-ORIGINALS will delete original files. A risky operation if key secret and/or passphrase are forget."
+  (interactive
+   (let* ((source-dir (expand-file-name (read-directory-name "Directory: ")))
+          (rgxp (read-string "Files RegExp: "))
+          (recur (y-or-n-p "Recursive? "))
+          (user-id (completing-read "User ID: "
+                                    (list nil (shell-command-to-string
+                                               "gpg --list-keys | grep uid"))))
+          (pass (read-passwd "Passphrase: " t))
+          (move-dir (if (y-or-n-p "Move encrypted files to directory? ")
+                        (expand-file-name (read-directory-name "Move files to: "))
+                      nil))
+          (del (if (y-or-n-p "Delete original files? ")
+                   (y-or-n-p "Are you sure!? ")
+                 nil)))
+     (list source-dir rgxp recur user-id pass move-dir del)))
+
+  (let* ((files (if recursive
+                    (directory-files-recursively directory regexp t)
+                  (directory-files directory t regexp)))
+         (recipient (if (not (string= uid "nil"))
+                        (substring uid
+                                   (1+ (string-match "<" uid))
+                                   (string-match ">" uid))
+                      nil))
+         (output-buffer (get-buffer-create
+                         "*gpg-encrypt-multifiles-output*")))
+
+    (dolist (f files)
+      (let* ((gpg-arguments (flatten-list `("--batch"
+                                            "-o" ,(concat f ".gpg")
+                                            ,(if recipient
+                                                 (list "--recipient"
+                                                       recipient
+                                                       "--encrypt"))
+                                            ,(if (not (string= "" password))
+                                                 (list "--passphrase"
+                                                       password
+                                                       "--symmetric"))
+                                            ,f)))
+             (shell-output-status (apply 'call-process
+                                         "gpg"
+                                         nil
+                                         output-buffer
+                                         nil
+                                         gpg-arguments)))
+        (if (= shell-output-status 0)
+            (progn
+              (if move-to-dir
+                  (rename-file (concat f ".gpg")
+                               (concat move-to-dir
+                                       (file-name-nondirectory f)
+                                       ".gpg")))
+              (if delete-originals
+                  (delete-file (concat f))))
+          (message "Encryption of %s has return an error.  Shell output status: %d" f shell-output-status))))))
