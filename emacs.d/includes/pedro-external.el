@@ -217,9 +217,9 @@
   (global-git-gutter-mode t))
 
 (use-package rainbow-delimiters
+	     :diminish rainbow-mode
 	     :config
 	     (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
-	     :diminish rainbow-mode
 	     :ensure t)
 
 
@@ -392,8 +392,7 @@
 
   ;; (define-key company-active-map (kbd "\C-n") 'company-select-next)
   ;; (define-key company-active-map (kbd "\C-p") 'company-select-previous)
-  ;; (define-key company-active-map (kbd "\C-d") 'company-show-doc-buffer)
-  ;; (define-key company-active-map (kbd "M-.") 'company-show-location)
+  ;; (define-key company-active-map (kbd "\C-d") 'company-show-doc-buffer)  ;; (define-key company-active-map (kbd "M-.") 'company-show-location)
 
   (global-company-mode 1))
 
@@ -538,6 +537,12 @@
 	     :config
 	     (keyfreq-mode 1)
 	     (keyfreq-autosave-mode 1)
+             (setq keyfreq-excluded-commands
+                   '(self-insert-command
+                     forward-char
+                     backward-char
+                     previous-line
+                     next-line))
 	     :ensure t)
 
 (use-package expand-region

@@ -89,6 +89,9 @@
 (auto-fill-mode -1)
 (remove-hook 'text-mode-hook #'turn-on-auto-fill)
 
+;; fill column indicator
+(add-hook 'prog-mode-hook #'display-fill-column-indicator-mode)
+
 ;; whitespaces
 (require 'whitespace)
 (add-hook 'prog-mode-hook '(lambda () (setq show-trailing-whitespace t)))
