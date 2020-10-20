@@ -271,16 +271,17 @@ mode "$mode_resize_window" {
 }
 bindsym $mod+Shift+P mode "$mode_resize_window"
 
+# -- migrated to shxkdrc
+# bindsym $mod+Shift+U exec i3-rmq.zsh "q" "ne"
+# bindsym $mod+Shift+Y exec i3-rmq.zsh "q" "nw"
+# bindsym $mod+Shift+n exec i3-rmq.zsh "q" "se"
+# bindsym $mod+Shift+b exec i3-rmq.zsh "q" "sw"
 
-bindsym $mod+Shift+U exec i3-rmq.zsh "q" "ne"
-bindsym $mod+Shift+Y exec i3-rmq.zsh "q" "nw"
-bindsym $mod+Shift+n exec i3-rmq.zsh "q" "se"
-bindsym $mod+Shift+b exec i3-rmq.zsh "q" "sw"
+# bindsym $mod+Control+U exec i3-rmq.zsh "v" "ne"
+# bindsym $mod+Control+Y exec i3-rmq.zsh "v" "nw"
+# bindsym $mod+Control+b exec i3-rmq.zsh "h" "nw"
+# bindsym $mod+Control+n exec i3-rmq.zsh "h" "sw"
 
-bindsym $mod+Control+U exec i3-rmq.zsh "v" "ne"
-bindsym $mod+Control+Y exec i3-rmq.zsh "v" "nw"
-bindsym $mod+Control+b exec i3-rmq.zsh "h" "nw"
-bindsym $mod+Control+n exec i3-rmq.zsh "h" "sw"
 
 # Launcher apps
 set $mode_launcher Launch: [f]irefox [v]irt-manager [k]rusader [c]aja [g]lances
