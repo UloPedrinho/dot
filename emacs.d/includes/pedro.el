@@ -3,10 +3,12 @@
 (setq calendar-standard-time-zone-name "CET")
 (setq calendar-daylight-time-zone-name "CEST")
 
-(setq display-time-world-list '(("Europe/London" "London")
+(setq display-time-world-list '(("UTC+" "ZULU")
+                                ("Europe/London" "London")
 				("Europe/Paris" "Paris")
 				("Asia/Seoul" "Seoul")
-				("Asia/Tokyo" "Tokyo")))
+				("Asia/Tokyo" "Tokyo")
+                                ("America/St_Johns" "St. Johns")))
 
 ;; after-make-frame
 (defun pedro/after-make-frame (&optional frame)
