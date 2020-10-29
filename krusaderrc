@@ -198,7 +198,7 @@ Window Width=600
 
 [Open-with settings]
 CompletionMode=1
-History=file-roller,file roller,unar,play,pla,kde,mpv
+History=libre,file-roller,file roller,unar,play,pla,kde,mpv
 
 [Panel - 1]
 Left Side Is Active=true

@@ -28,7 +28,7 @@ c.statusbar.padding = {'top': 0, 'bottom': 0, 'left': 0, 'right': 0}
 # webpage
 # requires Qt1.5..
 # c.colors.webpage.prefers_color_scheme_dark = True
-c.qt.args = ["blink-settings=darkMode=4"]
+#c.qt.args = ["blink-settings=darkMode=4"]
 
 # keybindings
 config.bind('<Ctrl-g>', 'leave-mode')
