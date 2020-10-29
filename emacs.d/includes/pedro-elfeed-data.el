@@ -1,5 +1,9 @@
 (setq elfeed-feeds
       '(
+        ("https://hnrss.org/newest?q=emacs" emacs)
+        ("https://hnrss.org/newest?q=org-mode" emacs)
+        ("https://hnrss.org/newest?q=clojure" clojure)
+        ;;("https://hnrss.org/newest" hacker)
         ("https://todayinclojure.com/rss" clojure)
         ("http://novafantasia.com/feed" sci-fi)
 ;; 	"http://www.seriecanal.com/rss.php"
@@ -7,7 +11,7 @@
 ;; 	"http://esmateria.com/feed/"
  	("http://apod.nasa.gov/apod.rss" space)
 	("https://www.masteringemacs.org/feed" emacs)
-	("http://planet.emacsen.org/atom.xml" emacs)
+;;	("http://planet.emacsen.org/atom.xml" emacs)
 ;; 	"http://clavicembalo.com/rss/"
 ;; 	"http://www.lugo.es/cs/ContentServer?pagename=Spark/Spark_Novas/PlantNoticiasRSS&c=Spark_Novas"
 ;; 	"http://www.lugo.es/cs/ContentServer?pagename=Spark/Spark_Eventos/PlantEventosRSS&c=Spark_Eventos"
@@ -38,6 +42,7 @@
 ))
 
 ;; ;; (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :before "2 weeks ago" :remove 'unread))
+(add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "ycombinator\\.com" :add '(emacs)))
 (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "todayinclojure\\.com" :add '(clojure)))
 (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "reddit\\.com/r/Guitar" :add '(guitar music r)))
 ;; (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :feed-url "clavicembalo\\.com"  :add '(clavi lecer music)))
@@ -77,7 +82,7 @@
 (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :feed-url "emacsninja\\.com" :add '(emacs computer)))
 (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "irreal\\.org" :add '(emacs computer)))
 ;; (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :feed-url "eldiario\\.es" :add '(news)))
-(add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :feed-url "planet\\.emacsen\\.org" :add '(emacs computer)))
+;; (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :feed-url "planet\\.emacsen\\.org" :add '(emacs computer)))
 ;; (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :feed-url "hopwag\\.podbean\\.com" :add '(philosophy learn)))
 ;; (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "gciencia\\.com" :add '(science galiza)))
 (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "emacsformacosx\\.com" :add '(emacs computer mac)))

@@ -3,9 +3,9 @@
 (setq calendar-standard-time-zone-name "CET")
 (setq calendar-daylight-time-zone-name "CEST")
 
-(setq display-time-world-list '(("UTC+" "ZULU")
+(setq display-time-world-list '(("Europe/Paris" "Galiza")
+                                ("UTC+" "ZULU")
                                 ("Europe/London" "London")
-				("Europe/Paris" "Paris")
 				("Asia/Seoul" "Seoul")
 				("Asia/Tokyo" "Tokyo")
                                 ("America/St_Johns" "St. Johns")))

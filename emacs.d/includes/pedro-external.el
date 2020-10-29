@@ -51,21 +51,22 @@
              :ensure t)
 
 (use-package lilypond-mode
-             :load-path "var/lisp/lilypond-mode"
-             :config
-             (setq auto-mode-alist
-                   (cons '("\\.ly$" . LilyPond-mode) auto-mode-alist))
+  :defer t
+  :load-path "var/lisp/lilypond-mode"
+  :config
+  (setq auto-mode-alist
+        (cons '("\\.ly$" . LilyPond-mode) auto-mode-alist))
 
-             (add-hook 'LilyPond-mode-hook (lambda () (turn-on-font-lock)))
-             (setq LilyPond-command-alist '(("LilyPond" "lilypond %s" "%s" "%l" "View")
-                                            ("2PS" "lilypond -f ps %s" "%s" "%p" "ViewPS")
-                                            ("Book" "lilypond-book %x" "%x" "%l" "LaTeX")
-                                            ("LaTeX" "latex '\\nonstopmode\\input %l'" "%l" "%d" "ViewDVI")
-                                            ("View" "open %f")
-                                            ("ViewPDF" "open %f")
-                                            ("ViewPS" "gv --watch %p")
-                                            ("Midi" "")
-                                            ("MidiAll" "")))
+  (add-hook 'LilyPond-mode-hook (lambda () (turn-on-font-lock)))
+  (setq LilyPond-command-alist '(("LilyPond" "lilypond %s" "%s" "%l" "View")
+                                 ("2PS" "lilypond -f ps %s" "%s" "%p" "ViewPS")
+                                 ("Book" "lilypond-book %x" "%x" "%l" "LaTeX")
+                                 ("LaTeX" "latex '\\nonstopmode\\input %l'" "%l" "%d" "ViewDVI")
+                                 ("View" "open %f")
+                                 ("ViewPDF" "open %f")
+                                 ("ViewPS" "gv --watch %p")
+                                 ("Midi" "")
+                                 ("MidiAll" "")))
              ;; add info files
              (push "~/tmp/info/lilypond/" Info-directory-list)
 
@@ -89,6 +90,7 @@
                (info "lilypond-notation")))
 
 (use-package  flycheck-lilypond
+  :defer t
               :ensure t
               :config
               (add-hook 'LilyPond-mode-hook 'flycheck-mode)(and )
@@ -143,6 +145,7 @@
   (switch-to-buffer "*Bookmark List*"))
 
 (use-package avy
+  :defer t
 	     :config
 	     (global-set-key (kbd "C-c SPC") 'avy-goto-char-timer)
 	     (add-hook 'org-mode-hook
@@ -257,6 +260,7 @@
 
 
 (use-package magit
+  :defer t
 	     :config
 	     (global-set-key (kbd "C-x g") 'magit-status)
              ;; set emacsclient executable path
@@ -264,12 +268,14 @@
 	     :ensure t)
 
 (use-package git-timemachine
+  :defer t
 	     :ensure t)
 
 ;; (use-package sr-speedbar
 ;; 	     :ensure t)
 
 (use-package expand-region
+  :defer t
 	     :ensure t)
 
 (use-package helm-swoop
@@ -307,6 +313,7 @@
 	     :ensure t)
 
 (use-package projectile
+  :defer t
   :ensure t
   :config
   (require 'projectile)
@@ -415,9 +422,11 @@
 	     :ensure t)
 
 (use-package eww-lnum
+  :defer t
 	     :ensure t)
 
 (use-package lorem-ipsum
+  :defer t
 	     :ensure t)
 
 (use-package which-key
@@ -451,6 +460,7 @@
              :ensure t)
 
 (use-package origami
+  :defer t
 	     :config
 	     (global-origami-mode)
 	     :ensure t)
@@ -485,6 +495,7 @@
   :ensure t)
 
 (use-package elisp-slime-nav
+  :defer t
   :config
   (dolist (hook '(emacs-lisp-mode-hook ielm-mode-hook))
     (add-hook hook 'turn-on-elisp-slime-nav-mode))
@@ -757,6 +768,7 @@
   (lisp-extra-font-lock-global-mode 1))
 
 (use-package markdown-mode
+  :defer t
              :ensure t
              :commands (markdown-mode gfm-mode)
              :mode (("README\\.md\\'" . gfm-mode)
@@ -817,6 +829,7 @@
 ;; )
 
 (use-package multi-term
+  :defer t
   :ensure t
   :config
   )

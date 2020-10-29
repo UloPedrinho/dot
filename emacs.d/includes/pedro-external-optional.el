@@ -1,6 +1,7 @@
 ;;; optional packages
 
 (use-package emms
+  :defer t
 	     :config
 	     (setq emms-directory (concat user-emacs-directory "var/emms" ))
 	     (require 'cl)
@@ -124,6 +125,7 @@
 ;; 	     :ensure t)
 
 (use-package nov
+  :defer t
              :config
              (setq nov-text-width 80)
              ;; (require 'justify-kp)
@@ -158,6 +160,7 @@
 
 ;; dictionary
 (use-package dictionary
+  :defer t
 	     :config
 	     ;; https://github.com/myrkr/dictionary-el
 	     (autoload 'dictionary-search "dictionary"
@@ -179,6 +182,7 @@
 	     :ensure t)
 
 (use-package google-translate
+  :defer t
 	     :ensure t)
 
 ;; (use-package kanji-mode
@@ -247,6 +251,7 @@
   :ensure t)
 
 (use-package org-pomodoro
+  :defer t
 	     :ensure t)
 
 ;; TODO: not working.. 
@@ -254,6 +259,7 @@
 ;; 	     :ensure t)
 
 (use-package ledger-mode
+  :defer t
 	     :config
 	     (add-to-list 'auto-mode-alist '("\\.ledger$" . ledger-mode))
 	     :ensure t)
@@ -265,6 +271,7 @@
 	     :ensure t)
 
 (use-package org-brain
+  :defer t
              :ensure t
              :init
              (setq org-brain-path "~/org/learn/brain/")
@@ -302,6 +309,7 @@
              )
 
 (use-package ascii-art-to-unicode
+  :defer t
              :ensure t
              :config
              (defun aa2u-buffer ()
@@ -327,9 +335,11 @@
              (setq dumb-jump-prefer-searcher 'ag))
 
 (use-package pandoc
+  :defer t
 	     :ensure t)
 
 (use-package speed-type
+  :defer t
 	     :ensure t)
 
 ;; (use-package treemacs
@@ -401,6 +411,7 @@
 ;;   )
 
 (use-package circe
+  :defer t
   :ensure t
   :config
   (setq circe-network-options
@@ -458,6 +469,7 @@
   (enable-circe-color-nicks))
 
 (use-package circe-notifications
+  :defer t
   :ensure t
   :config
   (autoload 'enable-circe-notifications "circe-notifications" nil t)
@@ -483,6 +495,7 @@
   (global-hungry-delete-mode))
 
 (use-package chronos
+  :defer t
   :ensure t
   :config
   (setq chronos-shell-notify-program "mpv"
@@ -520,6 +533,7 @@
 
 ;; TEST
 (use-package org-sidebar
+  :defer t
   :ensure t)
 
 (use-package disk-usage
@@ -529,8 +543,10 @@
   :ensure t)
 
 (use-package org-board
+  :defer t
   :ensure t)
 
 (use-package i3wm-config-mode
+  :defer t
   :ensure t)
 
