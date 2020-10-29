@@ -116,7 +116,6 @@
     (load (concat user-emacs-directory "os-specific.el")))
 #+end_src
 
-
 * user configuration
 ** basic
 #+NAME: user-config
@@ -214,6 +213,7 @@
         (quote (("default"
                  ("programming"
                   (or
+                   (mode . python-mode)
                    (mode . conf-space-mode)
                    (mode . conf-unix-mode)
                    (name . "Makefile")))
@@ -412,10 +412,9 @@
 #+NAME: mode-line-config
 #+BEGIN_SRC emacs-lisp
   ;;;; mode-line
-  ;; (use-package doom-modeline
-  ;;   :ensure t
-  ;;   :config (doom-modeline-init))
-
+  (use-package doom-modeline
+    :ensure t
+    :config (doom-modeline-init))
 #+END_SRC
 
 ** completition
