@@ -455,7 +455,16 @@
                 ("M-m m" . er/expand-region)
                 ("M-m =" . indent-region)
                 ("M-m w" . delete-trailing-whitespace)
-
+                ("C-0" . (lambda () (interactive) (persp-switch "0")))
+                ("C-1" . (lambda () (interactive) (persp-switch "1")))
+                ("C-2" . (lambda () (interactive) (persp-switch "2")))
+                ("C-3" . (lambda () (interactive) (persp-switch "3")))
+                ("C-4" . (lambda () (interactive) (persp-switch "4")))
+                ("C-5" . (lambda () (interactive) (persp-switch "5")))
+                ("C-6" . (lambda () (interactive) (persp-switch "6")))
+                ("C-7" . (lambda () (interactive) (persp-switch "7")))
+                ("C-8" . (lambda () (interactive) (persp-switch "8")))
+                ("C-9" . (lambda () (interactive) (persp-switch "9")))
                 ;; clojure
                 ("M-m c r" . hydra-clojure-refactor/body)
 
@@ -494,6 +503,7 @@
     :config
     (define-key global-map "\C-cl" 'org-store-link)
     (setq org-src-window-setup 'current-window)
+    (setq org-log-into-drawer t)
     (setq org-indent-mode t)
     (org-babel-do-load-languages
      'org-babel-load-languages
@@ -676,6 +686,33 @@
                (global-set-key (kbd "C-M-h") 'winner-undo)
                (global-set-key (kbd "C-M-l") 'winner-redo))
 #+END_SRC
+** workspaces
+#+NAME: workspaces
+#+begin_src emacs-lisp
+  (use-package perspective
+    :ensure t
+    :config
+    (setq persp-initial-frame-name "1")
+    (set-face-attribute 'persp-selected-face nil  :foreground "#4876ff" :underline t)
+    (persp-mode)
+    (global-set-key (kbd "C-x C-b") 'persp-ibuffer)
+    (global-set-key (kbd "C-x b") 'persp-ivy-switch-buffer))
+
+  ;; (use-package eyebrowse
+  ;;     :ensure t
+  ;;     ;; :bind (("C-c C-w C-w" . eyebrowse-last-window-config)
+  ;;     ;;        ("C-c C-w C-h" . eyebrowse-prev-window-config)
+  ;;     ;;        ("C-c C-w C-l" . eyebrowse-next-window-config))
+  ;;     :config
+  ;;     (add-to-list 'window-persistent-parameters '(window-side . writable))
+  ;;     (add-to-list 'window-persistent-parameters '(window-slot . writable))
+  ;;     (set-face-attribute 'eyebrowse-mode-line-active nil :foreground "#d2691e" :weight 'bold)
+  ;;     (set-face-attribute 'eyebrowse-mode-line-inactive nil :foreground "#000000")
+  ;;     (setq eyebrowse-mode-line-separator " ")
+
+  ;;     (eyebrowse-mode t))
+#+end_src
+
 * packages configuration
 #+NAME: packages-config
 #+BEGIN_SRC emacs-lisp
