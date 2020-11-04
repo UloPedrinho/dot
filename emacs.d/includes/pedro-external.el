@@ -260,12 +260,12 @@
 
 
 (use-package magit
-  :defer t
-	     :config
-	     (global-set-key (kbd "C-x g") 'magit-status)
-             ;; set emacsclient executable path
-             ;; (set-variable 'magit-emacsclient-executable "/usr/local/Cellar/emacs/HEAD-da18508/bin/emacsclient")
-	     :ensure t)
+  ;; :defer t
+  :config
+  (global-set-key (kbd "C-x g") 'magit-status)
+  ;; set emacsclient executable path
+  ;; (set-variable 'magit-emacsclient-executable "/usr/local/Cellar/emacs/HEAD-da18508/bin/emacsclient")
+  :ensure t)
 
 (use-package git-timemachine
   :defer t

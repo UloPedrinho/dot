@@ -2,7 +2,7 @@
 #+TITLE: init sandbox
 #+DATE: Wed Nov 15 18:27:36 2017
 #+STARTUP: hidestars indent overview
-
+ 
 *Emacs executable*
 #+NAME: emacs-bin
 #+BEGIN_SRC elisp :tangle no 
@@ -179,6 +179,34 @@
   (setq-default history-length 1000)
   (savehist-mode 1)
 
+#+END_SRC
+** org-mode
+#+NAME: org-mode
+#+BEGIN_SRC emacs-lisp
+  ;;;; org-mode
+  (use-package org
+    :ensure t
+    :ensure org-plus-contrib
+    :pin org
+    :config
+    (define-key global-map "\C-cl" 'org-store-link)
+    (setq org-src-window-setup 'current-window)
+    (setq org-log-into-drawer t)
+    (setq org-indent-mode t)
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((shell . t)
+       (java . t)
+       (lisp . t)
+       (clojure . t)))
+    (setq org-todo-keywords '((sequence "TODO" "STARTED" "WAITING" "|" "DONE" "ABORTED" "STOPPED")))
+    (setq org-todo-keyword-faces '(("TODO" . (:foreground "#4169e1" :weight bold))
+                                   ("STARTED" . (:foreground "dark orange" :weight bold))
+                                   ("CURRENT" . (:foreground "#00bfff" :weight bold))
+                                   ("WAITING" . (:foreground "#cd2626" :weight bold))
+                                   ("DONE" . (:foreground "green4" :weight bold))
+                                   ("ABORTED" . (:foreground "gray" :weight bold))
+                                   ("STOPPED" . (:foreground "#d3d3d3" :weight bold)))))
 #+END_SRC
 ** bookmarks
 #+NAME: bookmarks-config
@@ -492,35 +520,6 @@
     :config (doom-modeline-init))
 
 #+END_SRC
-** org-mode
-#+NAME: org-mode
-#+BEGIN_SRC emacs-lisp
-  ;;;; org-mode
-  (use-package org
-    :ensure t
-    :ensure org-plus-contrib
-    :pin org
-    :config
-    (define-key global-map "\C-cl" 'org-store-link)
-    (setq org-src-window-setup 'current-window)
-    (setq org-log-into-drawer t)
-    (setq org-indent-mode t)
-    (org-babel-do-load-languages
-     'org-babel-load-languages
-     '((shell . t)
-       (java . t)
-       (lisp . t)
-       (clojure . t)))
-    (setq org-todo-keywords '((sequence "TODO" "STARTED" "WAITING" "|" "DONE" "ABORTED" "STOPPED")))
-    (setq org-todo-keyword-faces '(("TODO" . (:foreground "#4169e1" :weight bold))
-                                   ("STARTED" . (:foreground "dark orange" :weight bold))
-                                   ("CURRENT" . (:foreground "#00bfff" :weight bold))
-                                   ("WAITING" . (:foreground "#cd2626" :weight bold))
-                                   ("DONE" . (:foreground "green4" :weight bold))
-                                   ("ABORTED" . (:foreground "gray" :weight bold))
-                                   ("STOPPED" . (:foreground "#d3d3d3" :weight bold)))))
-
-#+END_SRC
 ** project
 #+NAME: projectile
 #+BEGIN_SRC emacs-lisp
@@ -594,22 +593,30 @@
                          (lambda ()
                            (local-set-key (kbd "\C-c SPC") 'avy-goto-char-timer))))
 
-  (use-package smartparens
+  ;; (use-package smartparens
+  ;;   :config
+  ;;   (require 'smartparens-config)
+  ;;   (smartparens-global-mode)
+  ;;   (show-smartparens-global-mode t)
+  ;;   ;; keybindings
+  ;;   (define-key smartparens-mode-map (kbd "C-M-f") 'sp-forward-sexp)
+  ;;   (define-key smartparens-mode-map (kbd "C-M-b") 'sp-backward-sexp)
+  ;;   (define-key smartparens-mode-map (kbd "M-(") 'sp-wrap-round)
+  ;;   (define-key smartparens-mode-map (kbd "C-<right>") 'sp-forward-slurp-sexp)
+  ;;   (define-key smartparens-mode-map (kbd "C-M-ñ") 'sp-forward-slurp-sexp)
+  ;;   (define-key smartparens-mode-map (kbd "C-<left>") 'sp-forward-barf-sexp)
+  ;;   (define-key smartparens-mode-map (kbd "C-j") 'sp-forward-barf-sexp)
+  ;;   (define-key smartparens-mode-map (kbd "C-M-<left>") 'sp-backward-slurp-sexp)
+  ;;   (define-key smartparens-mode-map (kbd "C-M-<right>") 'sp-backward-barf-sexp)
+  ;;   :ensure t)
+
+  ;; (use-package paredit
+  ;;   :ensure t)
+
+  (use-package lispy
+    :ensure t
     :config
-    (require 'smartparens-config)
-    (smartparens-global-mode)
-    (show-smartparens-global-mode t)
-    ;; keybindings
-    (define-key smartparens-mode-map (kbd "C-M-f") 'sp-forward-sexp)
-    (define-key smartparens-mode-map (kbd "C-M-b") 'sp-backward-sexp)
-    (define-key smartparens-mode-map (kbd "M-(") 'sp-wrap-round)
-    (define-key smartparens-mode-map (kbd "C-<right>") 'sp-forward-slurp-sexp)
-    (define-key smartparens-mode-map (kbd "C-M-ñ") 'sp-forward-slurp-sexp)
-    (define-key smartparens-mode-map (kbd "C-<left>") 'sp-forward-barf-sexp)
-    (define-key smartparens-mode-map (kbd "C-j") 'sp-forward-barf-sexp)
-    (define-key smartparens-mode-map (kbd "C-M-<left>") 'sp-backward-slurp-sexp)
-    (define-key smartparens-mode-map (kbd "C-M-<right>") 'sp-backward-barf-sexp)
-    :ensure t)
+    (setq lispy-compat '(cider)))
 #+END_SRC
 ** themes
 #+NAME: themes-config
@@ -717,6 +724,10 @@
 #+NAME: packages-config
 #+BEGIN_SRC emacs-lisp
   ;;; packages 
+  (use-package clojure-mode
+    :config
+    (setq clojure-align-forms-automatically t))
+
   (use-package clojure-mode-extra-font-locking
     :ensure t)
 

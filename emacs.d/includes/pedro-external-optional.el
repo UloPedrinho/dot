@@ -550,3 +550,10 @@
   :defer t
   :ensure t)
 
+(use-package eshell-syntax-highlighting
+  :after esh-mode
+  :demand t ;; Install if not already installed.
+  :ensure t
+  :config
+  ;; Enable in all Eshell buffers.
+  (eshell-syntax-highlighting-global-mode +1))
