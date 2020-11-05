@@ -615,8 +615,14 @@
 
   (use-package lispy
     :ensure t
-    :config
-    (setq lispy-compat '(cider)))
+    :init
+    (setq lispy-compat '(cider))
+    (eval-after-load 'cider
+    '(progn
+      (cider-add-to-alist 'cider-jack-in-dependencies
+       "org.tcrawley/dynapath" "0.2.5")
+      (cider-add-to-alist 'cider-jack-in-dependencies
+       "com.cemerick/pomegranate" "0.4.0"))))
 #+END_SRC
 ** themes
 #+NAME: themes-config
