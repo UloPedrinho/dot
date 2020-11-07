@@ -732,7 +732,8 @@
   ;;; packages 
   (use-package clojure-mode
     :config
-    (setq clojure-align-forms-automatically t))
+    (setq clojure-align-forms-automatically t)
+    (add-hook 'clojure-mode-hook 'lispy-mode))
 
   (use-package clojure-mode-extra-font-locking
     :ensure t)
