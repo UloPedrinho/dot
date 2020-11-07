@@ -235,6 +235,7 @@ for_window [class="kmetronome"] floating enable
 for_window [class="TelegramDesktop"] floating enable
 for_window [class="mpv"] floating enable
 for_window [class="PPSSPPSDL"] floating enable
+for_window [class="discord"] floating enable
 
 # dev
 for_window [class="snake"] floating enable
@@ -378,5 +379,8 @@ exec xterm -fa "Monospace" -fs 14 -rv -class "glances" -e glances --disable-plug
 exec krusader
 exec --no-startup-id i3-msg 'workspace 3; exec firefox; workspace 1'
 exec megasync
+exec dropbox start
+exec discord
+exec Telegram
 exec "sh -c 'sleep 10; exec sxhkd -m 1'"
 # exec music.sh
