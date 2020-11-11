@@ -752,6 +752,7 @@
     ;; history and logs
     (setq cider-repl-history-file (concat user-emacs-directory "var/cider-repl-history"))
     (setq nrepl-log-messages t)
+    (setq cider-print-fn 'fipp)
     :ensure t)
 
   (use-package clj-refactor
