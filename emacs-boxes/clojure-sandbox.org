@@ -1,43 +1,47 @@
 # -*- mode: Org -*-
-#+TITLE: init sandbox
+#+TITLE: Clojure sandbox
 #+DATE: Wed Nov 15 18:27:36 2017
 #+STARTUP: hidestars indent overview
  
-*Emacs executable*
+* sandbox code
+** Variables
+*** Emacs executable
 #+NAME: emacs-bin
 #+BEGIN_SRC elisp :tangle no 
-(concat invocation-directory "/" invocation-name)
+(concat invocation-directory invocation-name)
 #+END_SRC
-
-*Emacs init file path*
+*** Emacs init file path
 #+NAME: file-path
 #+BEGIN_SRC elisp :tangle no :results value
 (concat (file-name-sans-extension (buffer-file-name)) ".el")
 #+END_SRC
-
-*Set tangled file Elisp extension*
-#+PROPERTY: header-args :tangle (concat (file-name-sans-extension (buffer-file-name)) ".el")
-
-*Get frame title*
+*** Sandbox directory
+#+NAME: sandbox-dir
+#+BEGIN_SRC elisp :tangle no :results value
+(file-name-directory (buffer-file-name))
+#+END_SRC
+*** Get frame title
 #+NAME: title
 #+BEGIN_SRC emacs-lisp :tangle no :result value 
 (org-no-properties (car (plist-get (org-export-get-environment) ':title)))
 #+END_SRC
 
-*Launch Emacs to test config*
+** Set tangled file Elisp extension
+#+PROPERTY: header-args :tangle (concat (file-name-sans-extension (buffer-file-name)) ".el")
+** Generate shell script
+#+BEGIN_SRC shell :eval no :tangle (concat (file-name-sans-extension (buffer-file-name)) ".sh") :tangle-mode (identity #o755) :noweb tangle :shebang "#!/bin/zsh"
+  <<emacs-bin()>> -Q --chdir=<<sandbox-dir()>>  -l <<file-path()>>
+#+END_SRC
+
+** Launch Emacs to test config
 #+NAME: launch
 #+HEADER: :var EMACS_BIN=emacs-bin
 #+HEADER: :var FILE_PATH=(concat (file-name-sans-extension (buffer-file-name)) ".el")
 #+BEGIN_SRC elisp  :results silent :tangle no :dir (file-name-directory (buffer-file-name)) :noweb eval
 ;; (call-process EMACS_BIN nil 0 nil "-Q" "-l" <<file-path>>) ; not load `user-emacs-directory'
-   (async-shell-command (concat EMACS_BIN " -Q -l " FILE_PATH))
+   (async-shell-command (concat EMACS_BIN " -Q " "--chdir=<<sandbox-dir()>>" " -l " FILE_PATH))
 #+END_SRC
-
-*Generate shell script*
-#+BEGIN_SRC shell :eval no :tangle (concat (file-name-sans-extension (buffer-file-name)) ".sh") :tangle-mode (identity #o755) :noweb tangle :shebang "#!/bin/zsh"
-  <<emacs-bin()>> -Q -l <<file-path()>>
-#+END_SRC
-
+* -------------------------
 * TODO [0/1]
 - [ ] not close started emacs when host emacs quits
   https://oremacs.com/2015/01/04/dired-nohup/
