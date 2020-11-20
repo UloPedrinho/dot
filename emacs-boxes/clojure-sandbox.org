@@ -454,12 +454,19 @@
   (defhydra hydra-clojure-refactor (:exit t :hint nil)
     ""
     ("h"  (hydra-cljr-help-menu/body) "help" exit t)
-    ("n"  (hydra-cljr-ns-menu/body) "ns" :exit t) 
+    ("n"  (hydra-cljr-ns-menu/body) "ns" :exit t)
     ("c"  (hydra-cljr-code-menu/body) "code" :exit t)
     ("p"  (hydra-cljr-project-menu/body) "project")
     ("t"  (hydra-cljr-toplevel-form-menu/body) "toplevel" :exit t)
     ("s"  (hydra-cljr-cljr-menu/body) "self" :exit t))
 
+
+  (defhydra hydra-various (:columns 5 :exit t :hint nil)
+    ("a" counsel-ag "ag")
+    ("g" git-timemachine "timemachine")
+    ("h" hl-line-mode "hl-line")
+    ("p" org-pomodoro "pomodoro")
+    ("z" zoom-mode "zoom"))
 #+END_SRC
 ** indent
 #+BEGIN_SRC emacs-lisp
@@ -513,7 +520,9 @@
                 ("M-m o" . poporg-dwim)
 
                 ;; deft
-                ("M-m d" . deft)))
+                ("M-m d" . deft)
+                ;; various
+                ("M-m v" . hydra-various/body)))
 #+END_SRC
 ** mode-line
 #+NAME: mode-line-config
@@ -674,6 +683,20 @@
                :config
                (global-set-key (kbd "C-x g") 'magit-status)
                :ensure t)
+
+  (use-package git-timemachine
+               :ensure t)
+
+  (use-package git-gutter
+      :ensure t
+      :config
+      (add-hook 'clojure-mode-hook 'git-gutter-mode))
+
+  (use-package dired-git-info
+    :ensure t
+    :config
+    (setq dgi-auto-hide-details-p ni)
+    (add-hook 'dired-after-readin-hook 'dired-git-info-auto-enable))
 #+END_SRC
 ** windows
 #+BEGIN_SRC emacs-lisp
@@ -734,6 +757,13 @@
 #+NAME: packages-config
 #+BEGIN_SRC emacs-lisp
   ;;; packages 
+  (show-paren-mode 1)
+
+  (use-package rainbow-delimiters
+    :ensure t
+    :config
+    (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
+
   (use-package clojure-mode
     :config
     (setq clojure-align-forms-automatically t)
@@ -1097,17 +1127,18 @@
     :config
     (add-hook 'after-init-hook 'global-color-identifiers-mode))
 
-  (use-package fic-mode
+  (use-package hl-todo
     :ensure t
     :config
-    (setq fic-highlighted-words '("FIXME" "TODO" "BUG" "TEST" "NOTE" "HERE"))
-    (add-hook 'prog-mode-hook 'fic-mode))
-
-  (use-package git-gutter
-    :ensure t
-    :config
-    (add-hook 'clojure-mode-hook 'git-gutter-mode))
-
+    (setq hl-todo-keyword-faces
+          '(("TODO" . "#cc9393")
+            ("NEXT" . "#dca3a3")
+            ("NOTE"   . "#d0bf8f")
+            ("TAG" ."#8a2be2")
+            ("TEMP"   . "#d0bf8f")
+            ("FIXME"  . "#cc9393")
+            ("BENCHMARK" . "#aaefbf")))
+    (add-hook 'prog-mode-hook #'hl-todo-mode))
 
   (use-package deft
     :ensure t
