@@ -101,10 +101,12 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
 
-# ### my variables
+# ### my variables and options
 # <2012-08-30 Xov>
 
 #TERM="screen-256color"
+
+setopt HIST_IGNORE_SPACE
 
 # history
 HISTSIZE=100000
