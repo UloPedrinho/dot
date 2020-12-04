@@ -60,7 +60,7 @@
 (define-key global-map "\C-cm" 'org-agenda-month-view)
 (add-hook 'org-mode-hook 'turn-on-font-lock)
 
-(setq org-extend-today-until 0)
+(setq org-extend-today-until 3)
 (setq org-agenda-start-on-weekday 1)
 (setq org-agenda-span 15)
 (setq org-agenda-start-day "-3d")
