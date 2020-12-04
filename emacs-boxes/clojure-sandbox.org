@@ -210,7 +210,8 @@
                                    ("WAITING" . (:foreground "#cd2626" :weight bold))
                                    ("DONE" . (:foreground "green4" :weight bold))
                                    ("ABORTED" . (:foreground "gray" :weight bold))
-                                   ("STOPPED" . (:foreground "#d3d3d3" :weight bold)))))
+                                   ("STOPPED" . (:foreground "#d3d3d3" :weight bold))
+                                   ("MYSELF" . (:foreground "#698b22" :weight bold)))))
 #+END_SRC
 ** bookmarks
 #+NAME: bookmarks-config
@@ -695,7 +696,7 @@
   (use-package dired-git-info
     :ensure t
     :config
-    (setq dgi-auto-hide-details-p ni)
+    (setq dgi-auto-hide-details-p nil)
     (add-hook 'dired-after-readin-hook 'dired-git-info-auto-enable))
 #+END_SRC
 ** windows
