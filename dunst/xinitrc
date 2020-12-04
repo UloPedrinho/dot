@@ -1,0 +1,4 @@
+xsetroot -solid "#000000"
+
+# start snapfly
+snapfly &
