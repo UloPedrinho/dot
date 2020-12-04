@@ -378,7 +378,7 @@ exec --no-startup-id i3-msg "exec emacs; move window to scratchpad"
 exec xterm -fa "Monospace" -fs 14 -rv -class "glances" -e glances --disable-plugin irq --enable-plugin sensors --process-short-name
 exec krusader
 exec --no-startup-id i3-msg 'workspace 3; exec firefox; workspace 1'
-exec megasync
+# exec megasync
 exec dropbox start
 exec discord
 exec Telegram
