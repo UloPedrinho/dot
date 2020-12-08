@@ -424,6 +424,19 @@
     :ensure t
     :config
     (company-posframe-mode 1))
+
+    ;; yasnippets
+    (use-package yasnippet
+      :config
+      (yas-global-mode 1)
+      :ensure clojure-snippets
+      :ensure t)
+
+    (use-package yasnippet-snippets
+      :ensure t
+      :config
+      (yasnippet-snippets-initialize))
+
 #+END_SRC
 ** ido/helm/swiper
 *** ido 
@@ -529,7 +542,7 @@
     (setq helm-grep-ag-command "rg --color=always --smart-case --no-heading --line-number %s %s %s")
     (setq dumb-jump-prefer-searcher 'ag))
 #+end_src
-*** swiper/ivy/counsel
+*** ºswiper/ivy/counsel
 #+begin_src emacs-lisp
   (use-package swiper
     :ensure t)
@@ -1007,6 +1020,8 @@
 ** various
 #+NAME: various-config
 #+BEGIN_SRC emacs-lisp
+  (show-paren-mode 1)
+
   (use-package beacon
     :ensure t
     :config
@@ -1017,6 +1032,11 @@
     :diminish vi-tilde-fringe-mode
     :config
     (global-vi-tilde-fringe-mode nil))
+
+  (use-package color-identifiers-mode
+      :ensure t
+      :config
+      (add-hook 'after-init-hook 'global-color-identifiers-mode))
 
   (use-package hl-todo
     :ensure t
@@ -1050,6 +1070,29 @@
 
   (use-package expand-region
     :ensure t)
+
+  (use-package deft
+    :ensure t
+    :config (setq ;deft-directory ""
+                  deft-default-extension "org"
+                  deft-extensions '("org")
+                  deft-use-filename-as-title t
+                  deft-use-filter-string-for-filename t))
+
+  (use-package hungry-delete
+    :diminish hungry-delete-mode
+    :ensure t
+    :config
+    (global-hungry-delete-mode))
+
+  (use-package visual-fill-column
+    :ensure t)
+
+  (use-package easy-kill
+    :ensure t
+    :config
+    (global-set-key [remap kill-ring-save] #'easy-kill)
+    (global-set-key [remap mark-sexp] #'easy-mark))
 #+END_SRC
 ** fonts & faces
 #+BEGIN_SRC emacs-lisp

@@ -184,6 +184,99 @@
   (savehist-mode 1)
 
 #+END_SRC
+** ibuffer
+#+NAME: ibuffer-config
+#+BEGIN_SRC emacs-lisp
+  (defalias 'list-buffers 'ibuffer)
+  (autoload 'ibuffer "ibuffer" "List buffers." t)
+  (global-set-key (kbd "C-x C-b") 'ibuffer)
+  (require 'ibuffer)
+  (require 'ibuf-ext)
+  (add-to-list 'ibuffer-never-show-predicates "\\*.*helm.*\\*")
+  (setq ibuffer-show-empty-filter-groups nil)
+
+  ;; show human-size readable
+  ;; https://www.emacswiki.org/emacs/IbufferMode
+
+  (setq ibuffer-saved-filter-groups
+        (quote (("default"
+                 ("clojure"
+                  (or
+                   (mode . clojure-mode)
+                   ))
+                 ("repl"
+                  (mode . cider-repl-mode))
+                 ;; ("                          web"
+                 ;;  (or
+                 ;;   (mode . html-mode)
+                 ;;   (mode . js2-mode)
+                 ;;   (mode . javascript-mode)
+                 ;;   (mode . js-mode)
+                 ;;   (mode . css-mode)
+                 ;;   (mode . web-mode)
+                 ;;   (mode . php-mode)
+                 ;;   (mode . nxhtml-mode)
+                 ;;   ))
+                 ;; ("                         lisp"
+                 ;;  (or
+                 ;;   (mode . lisp-mode)
+                 ;;   (mode . emacs-lisp-mode)
+                 ;;   ))
+                 ("org" ;; all org-related buffers
+                  (or
+                   (mode . org-mode)
+                   ))
+                 ("doc"
+                  (or
+                   (mode . eww-mode)
+                   (mode . pdf-view-mode)))
+                 ("dired"
+                  (or
+                   (mode . dired-mode)))
+                 ("shell"
+                  (or
+                   (name . "^\\*eshell")
+                   (name . "^\\*terminal")
+                   (name . "^\\*zsh")
+                   (name . "^\\*ansi-term")
+                   (name . "^\\*Shell*")
+                   ))
+                 ("magit"
+                  (or
+                   (name . "^magit*")))
+                 ("info"
+                  (or
+                   (name . "^\\*Messages\\*$")
+                   (name . "^\\*Warnings\\*$")
+                   (name . "^\\*Compile*")
+                   (mode . Info-mode)
+                   (mode . help-mode)))))))
+
+  (add-hook 'ibuffer-mode-hook
+            (lambda ()
+              (ibuffer-switch-to-saved-filter-groups "default")))
+
+
+  (define-ibuffer-column size-h
+    (:name "Size" :inline t)
+    (cond
+     ((> (buffer-size) 1000000) (format "%7.1fM" (/ (buffer-size) 1000000.0)))
+     ((> (buffer-size) 100000) (format "%7.0fk" (/ (buffer-size) 1000.0)))
+     ((> (buffer-size) 1000) (format "%7.1fk" (/ (buffer-size) 1000.0)))
+     (t (format "%8d" (buffer-size)))))
+
+  ;; name column to 30 witdh
+  (setq ibuffer-formats
+        '((mark modified read-only " "
+                (name 30 30 :left :elide)
+                " "
+                (size-h 9 -1 :right)
+                " "
+                (mode 16 16 :left :elide)
+                " "
+                filename-and-process)))
+#+END_SRC
+
 ** org-mode
 #+NAME: org-mode
 #+BEGIN_SRC emacs-lisp
@@ -376,6 +469,60 @@
     :ensure t
     :config
     (company-posframe-mode 1))
+
+  ;; yasnippets
+  (use-package yasnippet
+    :config
+    (yas-global-mode 1)
+    :ensure clojure-snippets
+    :ensure t)
+
+  (use-package yasnippet-snippets
+    :ensure t
+    :config
+    (yasnippet-snippets-initialize))
+#+END_SRC
+** ido/helm/swiper
+*** swiper/ivy/counsel
+#+begin_src emacs-lisp
+  (use-package swiper
+    :ensure t)
+
+  (use-package ivy :demand
+    :ensure ivy-hydra
+    :config
+    (setq ivy-use-virtual-buffers t
+          ivy-count-format "%d/%d ")
+    (ivy-mode 1))
+
+  (use-package ivy-posframe
+    :config
+    (cl-defun my/window-size-change (&optional _)
+      "My very own resize defun for modifying the posframe size"
+      (unless (= (window-pixel-width-before-size-change) (window-pixel-width))
+        (let ((body-width (window-body-width)))
+          (set-variable 'ivy-posframe-width body-width)
+          (set-variable 'ivy-posframe-min-width body-width)
+          (set-variable 'which-key-posframe-width body-width)
+          (set-variable 'which-key-posframe-min-width body-width))))
+
+    (add-hook 'window-size-change-functions 'my/window-size-change)
+
+    (setq ivy-posframe-parameters
+          '((left-fringe . 8)
+            (right-fringe . 8)))
+
+    (setq ivy-posframe-display-functions-alist '( (t . ivy-posframe-display-at-frame-bottom-left)))
+    (ivy-posframe-mode 1))
+
+  (use-package counsel
+    :ensure t)
+
+  (use-package counsel-projectile
+    :ensure t
+    :config
+    (counsel-projectile-mode 1))
+
 #+END_SRC
 ** fonts & faces
 #+BEGIN_SRC emacs-lisp
@@ -479,7 +626,7 @@
 #+END_SRC
 ** keybindings
 #+BEGIN_SRC emacs-lisp
-  ;;;; keybindings
+    ;;;; keybindings
   (global-unset-key (kbd "M-m"))
 
   (global-set-key (kbd "C-x C-c") 'ask-before-closing)
@@ -490,40 +637,49 @@
   ;; (global-set-key (kbd "C-c f") 'recentf-ido-find-file) 
 
   (use-package bind-key
-               :config
-               (bind-keys*
-                ("M-m m" . er/expand-region)
-                ("M-m =" . indent-region)
-                ("M-m w" . delete-trailing-whitespace)
-                ("C-0" . (lambda () (interactive) (persp-switch "0")))
-                ("C-1" . (lambda () (interactive) (persp-switch "1")))
-                ("C-2" . (lambda () (interactive) (persp-switch "2")))
-                ("C-3" . (lambda () (interactive) (persp-switch "3")))
-                ("C-4" . (lambda () (interactive) (persp-switch "4")))
-                ("C-5" . (lambda () (interactive) (persp-switch "5")))
-                ("C-6" . (lambda () (interactive) (persp-switch "6")))
-                ("C-7" . (lambda () (interactive) (persp-switch "7")))
-                ("C-8" . (lambda () (interactive) (persp-switch "8")))
-                ("C-9" . (lambda () (interactive) (persp-switch "9")))
-                ;; clojure
-                ("M-m c r" . hydra-clojure-refactor/body)
+    :config
+    (bind-keys*
+     ("M-m m" . er/expand-region)
+     ("M-m =" . indent-region)
+     ("M-m w" . delete-trailing-whitespace)
+     ("C-0" . (lambda () (interactive) (persp-switch "0")))
+     ("C-1" . (lambda () (interactive) (persp-switch "1")))
+     ("C-2" . (lambda () (interactive) (persp-switch "2")))
+     ("C-3" . (lambda () (interactive) (persp-switch "3")))
+     ("C-4" . (lambda () (interactive) (persp-switch "4")))
+     ("C-5" . (lambda () (interactive) (persp-switch "5")))
+     ("C-6" . (lambda () (interactive) (persp-switch "6")))
+     ("C-7" . (lambda () (interactive) (persp-switch "7")))
+     ("C-8" . (lambda () (interactive) (persp-switch "8")))
+     ("C-9" . (lambda () (interactive) (persp-switch "9")))
+     ;; clojure
+     ("M-m c r" . hydra-clojure-refactor/body)
 
-                ;; folding
-                ("M-m f" . hydra-folding/body)
+     ;; folding
+     ("M-m f" . hydra-folding/body)
 
-                ;; go
-                ("M-m g" . hydra-go/body)
+     ;; go
+     ("M-m g" . hydra-go/body)
 
-                ;; keys
-                ("M-m k" . hydra-keys/body)
+     ;; keys
+     ("M-m k" . hydra-keys/body)
 
-                ;; outorg comments
-                ("M-m o" . poporg-dwim)
+     ;; outorg comments
+     ("M-m o" . poporg-dwim)
 
-                ;; deft
-                ("M-m d" . deft)
-                ;; various
-                ("M-m v" . hydra-various/body)))
+     ;; deft
+     ("M-m d" . deft)
+
+     ;; various
+     ("M-m v" . hydra-various/body)
+
+     ;; counsel
+     ("M-x" . counsel-M-x)
+
+     ;; swiper
+     ("C-c f" . counsel-recentf)
+     ("M-i" . swiper-isearch)
+     ("M-g t" . counsel-org-goto)))
 #+END_SRC
 ** mode-line
 #+NAME: mode-line-config
@@ -665,16 +821,68 @@
 ** various
 #+NAME: various-config
 #+BEGIN_SRC emacs-lisp
+  (show-paren-mode 1)
+
   (use-package beacon
-               :ensure t
-               :config
-               (beacon-mode +1))
+    :ensure t
+    :config
+    (beacon-mode +1))
 
   (use-package vi-tilde-fringe
     :ensure t
     :diminish vi-tilde-fringe-mode
     :config
     (global-vi-tilde-fringe-mode nil))
+
+  (use-package rainbow-delimiters
+    :ensure t
+    :config
+    (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
+
+
+  (use-package color-identifiers-mode
+    :ensure t
+    :config
+    (add-hook 'after-init-hook 'global-color-identifiers-mode))
+
+  (use-package hl-todo
+    :ensure t
+    :config
+    (setq hl-todo-keyword-faces
+          '(("TODO" . "#cc9393")
+            ("NEXT" . "#dca3a3")
+            ("NOTE"   . "#d0bf8f")
+            ("TAG" ."#8a2be2")
+            ("TEMP"   . "#d0bf8f")
+            ("FIXME"  . "#cc9393")
+            ("BENCHMARK" . "#aaefbf")))
+    (add-hook 'prog-mode-hook #'hl-todo-mode))
+
+  (use-package deft
+    :ensure t
+    :config (setq deft-directory "~/dev/computer/clojure/deft"
+                  deft-default-extension "org"
+                  deft-extensions '("org")
+                  deft-use-filename-as-title t
+                  deft-use-filter-string-for-filename t))
+
+  (use-package hungry-delete
+    :diminish hungry-delete-mode
+    :ensure t
+    :config
+    (global-hungry-delete-mode))
+
+  (use-package visual-fill-column
+    :ensure t
+    :config
+    ;; https://github.com/bbatsov/clojure-style-guide#maximum-line-length-
+    (setq fill-column 80))
+
+  (use-package easy-kill
+    :ensure t
+    :config
+    (global-set-key [remap kill-ring-save] #'easy-kill)
+    (global-set-key [remap mark-sexp] #'easy-mark))
 #+END_SRC
 ** versioning
 #+NAME: versioning-config
@@ -699,111 +907,9 @@
     (setq dgi-auto-hide-details-p nil)
     (add-hook 'dired-after-readin-hook 'dired-git-info-auto-enable))
 #+END_SRC
-** windows
-#+BEGIN_SRC emacs-lisp
-  ;;;; windows
-  (use-package zoom
-               :config
-               (zoom-mode 1)
-               :diminish zoom-mode
-               :ensure t)
-  (use-package zoom-window
-               :config
-               (setq zoom-window-mode-line-color "#ffdead") ; "#a2cd5a")
-               :bind ("C-x C-z" . zoom-window-zoom)
-               :ensure t)
-
-  (use-package window-numbering
-               :config
-               (setq window-numbering-assign-func
-                     (lambda () (when (equal (buffer-name) "*Calculator*") 9)))
-               (window-numbering-mode 1)
-               :ensure t)
-
-  (use-package winner
-               :config
-               (winner-mode 1)
-               (windmove-default-keybindings 'meta)
-               (global-set-key (kbd "C-M-h") 'winner-undo)
-               (global-set-key (kbd "C-M-l") 'winner-redo))
-#+END_SRC
-** workspaces
-#+NAME: workspaces
+** viewers
+#+NAME: viewers-config
 #+begin_src emacs-lisp
-  (use-package perspective
-    :ensure t
-    :config
-    (setq persp-initial-frame-name "1")
-    (set-face-attribute 'persp-selected-face nil  :foreground "#4876ff" :underline t)
-    (persp-mode)
-    (global-set-key (kbd "C-x C-b") 'persp-ibuffer)
-    (global-set-key (kbd "C-x b") 'persp-ivy-switch-buffer))
-
-  ;; (use-package eyebrowse
-  ;;     :ensure t
-  ;;     ;; :bind (("C-c C-w C-w" . eyebrowse-last-window-config)
-  ;;     ;;        ("C-c C-w C-h" . eyebrowse-prev-window-config)
-  ;;     ;;        ("C-c C-w C-l" . eyebrowse-next-window-config))
-  ;;     :config
-  ;;     (add-to-list 'window-persistent-parameters '(window-side . writable))
-  ;;     (add-to-list 'window-persistent-parameters '(window-slot . writable))
-  ;;     (set-face-attribute 'eyebrowse-mode-line-active nil :foreground "#d2691e" :weight 'bold)
-  ;;     (set-face-attribute 'eyebrowse-mode-line-inactive nil :foreground "#000000")
-  ;;     (setq eyebrowse-mode-line-separator " ")
-
-  ;;     (eyebrowse-mode t))
-#+end_src
-
-* packages configuration
-#+NAME: packages-config
-#+BEGIN_SRC emacs-lisp
-  ;;; packages 
-  (show-paren-mode 1)
-
-  (use-package rainbow-delimiters
-    :ensure t
-    :config
-    (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
-
-  (use-package clojure-mode
-    :config
-    (setq clojure-align-forms-automatically t)
-    (add-hook 'clojure-mode-hook 'lispy-mode))
-
-  (use-package clojure-mode-extra-font-locking
-    :ensure t)
-
-  (use-package cider
-    :config
-    ;; http://fgiasson.com/blog/index.php/2016/06/14/my-optimal-gnu-emacs-settings-for-developing-clojure-revised/
-    (add-hook 'clojure-mode-hook '(lambda () (local-unset-key (kbd "\C-c SPC"))))
-    (add-hook 'clojure-mode-hook 'cider-mode)
-    (add-hook 'cider-repl-mode-hook #'company-mode)
-    (add-hook 'cider-mode-hook #'company-mode)
-    ;; tests
-    (setq cider-test-show-report-on-success t)
-    ;; Replace return key with newline-and-indent when in cider mode.
-    (add-hook 'cider-mode-hook '(lambda () (local-set-key (kbd "RET") 'newline-and-indent)))
-    ;; history and logs
-    (setq cider-repl-history-file (concat user-emacs-directory "var/cider-repl-history"))
-    (setq nrepl-log-messages t)
-    (setq cider-print-fn 'fipp)
-    :ensure t)
-
-  (use-package clj-refactor
-    :ensure t
-    :config
-    (defun my-clojure-mode-hook ()
-      (clj-refactor-mode 1)
-      (yas-minor-mode 1) ; for adding require/use/import statements
-      ;; This choice of keybinding leaves cider-macroexpand-1 unbound
-      (cljr-add-keybindings-with-prefix "C-c C-m"))
-
-    (add-hook 'clojure-mode-hook #'my-clojure-mode-hook))
-
-  ;; (use-package cider-hydra
-  ;;   :ensure t)
-
   (use-package pdf-tools
     :config
     (pdf-tools-install)
@@ -882,25 +988,123 @@
     (add-hook 'pdf-view-mode-hook 'bms/pdf-midnite-colour-schemes)
 
     :ensure t)
+#+END_SRC
+** windows
+#+BEGIN_SRC emacs-lisp
+  ;;;; windows
+  (use-package zoom
+               :config
+               (zoom-mode 1)
+               :diminish zoom-mode
+               :ensure t)
+  (use-package zoom-window
+               :config
+               (setq zoom-window-mode-line-color "#ffdead") ; "#a2cd5a")
+               :bind ("C-x C-z" . zoom-window-zoom)
+               :ensure t)
 
-    ;; cider-hydra
-  ;;; at this time <2018-07-28 Sat> some 'requires' not working, so copy/paste from sources
+  (use-package window-numbering
+               :config
+               (setq window-numbering-assign-func
+                     (lambda () (when (equal (buffer-name) "*Calculator*") 9)))
+               (window-numbering-mode 1)
+               :ensure t)
+
+  (use-package winner
+               :config
+               (winner-mode 1)
+               (windmove-default-keybindings 'meta)
+               (global-set-key (kbd "C-M-h") 'winner-undo)
+               (global-set-key (kbd "C-M-l") 'winner-redo))
+#+END_SRC
+** workspaces
+#+NAME: workspaces
+#+begin_src emacs-lisp
+  (use-package perspective
+    :ensure t
+    :config
+    (setq persp-initial-frame-name "1")
+    (set-face-attribute 'persp-selected-face nil  :foreground "#4876ff" :underline t)
+    (persp-mode)
+    (global-set-key (kbd "C-x C-b") 'persp-ibuffer)
+    (global-set-key (kbd "C-x b") 'persp-ivy-switch-buffer))
+
+  ;; (use-package eyebrowse
+  ;;     :ensure t
+  ;;     ;; :bind (("C-c C-w C-w" . eyebrowse-last-window-config)
+  ;;     ;;        ("C-c C-w C-h" . eyebrowse-prev-window-config)
+  ;;     ;;        ("C-c C-w C-l" . eyebrowse-next-window-config))
+  ;;     :config
+  ;;     (add-to-list 'window-persistent-parameters '(window-side . writable))
+  ;;     (add-to-list 'window-persistent-parameters '(window-slot . writable))
+  ;;     (set-face-attribute 'eyebrowse-mode-line-active nil :foreground "#d2691e" :weight 'bold)
+  ;;     (set-face-attribute 'eyebrowse-mode-line-inactive nil :foreground "#000000")
+  ;;     (setq eyebrowse-mode-line-separator " ")
+
+  ;;     (eyebrowse-mode t))
+#+end_src
+
+* packages configuration
+#+NAME: packages-config
+** clojure
+#+BEGIN_SRC emacs-lisp
+  ;;;; clojure
+  (use-package clojure-mode
+    :config
+    (setq clojure-align-forms-automatically t)
+    (add-hook 'clojure-mode-hook 'lispy-mode))
+
+  (use-package clojure-mode-extra-font-locking
+    :ensure t)
+
+  (use-package cider
+    :config
+    ;; http://fgiasson.com/blog/index.php/2016/06/14/my-optimal-gnu-emacs-settings-for-developing-clojure-revised/
+    (add-hook 'clojure-mode-hook '(lambda () (local-unset-key (kbd "\C-c SPC"))))
+    (add-hook 'clojure-mode-hook 'cider-mode)
+    (add-hook 'cider-repl-mode-hook #'company-mode)
+    (add-hook 'cider-mode-hook #'company-mode)
+    ;; tests
+    (setq cider-test-show-report-on-success t)
+    ;; Replace return key with newline-and-indent when in cider mode.
+    (add-hook 'cider-mode-hook '(lambda () (local-set-key (kbd "RET") 'newline-and-indent)))
+    ;; history and logs
+    (setq cider-repl-history-file (concat user-emacs-directory "var/cider-repl-history"))
+    (setq nrepl-log-messages t)
+    (setq cider-print-fn 'fipp)
+    :ensure t)
+
+  (use-package clj-refactor
+    :ensure t
+    :config
+    (defun my-clojure-mode-hook ()
+      (clj-refactor-mode 1)
+      (yas-minor-mode 1) ; for adding require/use/import statements
+      ;; This choice of keybinding leaves cider-macroexpand-1 unbound
+      (cljr-add-keybindings-with-prefix "C-c C-m"))
+
+    (add-hook 'clojure-mode-hook #'my-clojure-mode-hook))
+
+  ;; (use-package cider-hydra
+  ;;   :ensure t)
+  ;; cider-hydra
+    ;;; at this time <2018-07-28 Sat> some 'requires' not working, so copy/paste from sources
   (defgroup cider-hydra nil
     "Hydras for CIDER."
     :prefix "cider-hydra-"
     :group 'cider)
 
-  ;;;; Documentation
+    ;;;; Documentation
 
   (defhydra cider-hydra-doc (:color blue)
     "
-  CIDER Documentation
-  ---------------------------------------------------------------------------
-  _d_: CiderDoc                           _j_: JavaDoc in browser
-  _a_: Search symbols                     _s_: Search symbols & select
-  _A_: Search documentation               _e_: Search documentation & select
-  _r_: Grimoire                           _h_: Grimoire in browser
-  "
+    CIDER Documentation
+    ---------------------------------------------------------------------------
+    _d_: CiderDoc                           _j_: JavaDoc in browser
+    _a_: Search symbols                     _s_: Search symbols & select
+    _A_: Search documentation               _e_: Search documentation & select
+    _r_: Grimoire                           _h_: Grimoire in browser
+    "
     ;; CiderDoc
     ("d" cider-doc nil)
     ;; JavaDoc
@@ -915,21 +1119,21 @@
     ("h" cider-grimoire-web nil))
 
 
-  ;;;; Loading and evaluation
+    ;;;; Loading and evaluation
 
   (defhydra cider-hydra-eval (:color blue)
     "
-  CIDER Evaluation
-  ---------------------------------------------------------------------------
-  _k_: Load (eval) buffer                 _l_: Load (eval) file
-  _p_: Load all project namespaces
-  _r_: Eval region                        _n_: Eval ns form
-  _e_: Eval last sexp                     _p_: Eval last sexp and pprint
-  _w_: Eval last sexp and replace         _E_: Eval last sexp to REPL
-  _d_: Eval defun at point                _f_: Eval defun at point and pprint
-  _:_: Read and eval                      _i_: Inspect
-  _m_: Macroexpand-1                      _M_: Macroexpand all
-  "
+    CIDER Evaluation
+    ---------------------------------------------------------------------------
+    _k_: Load (eval) buffer                 _l_: Load (eval) file
+    _p_: Load all project namespaces
+    _r_: Eval region                        _n_: Eval ns form
+    _e_: Eval last sexp                     _p_: Eval last sexp and pprint
+    _w_: Eval last sexp and replace         _E_: Eval last sexp to REPL
+    _d_: Eval defun at point                _f_: Eval defun at point and pprint
+    _:_: Read and eval                      _i_: Inspect
+    _m_: Macroexpand-1                      _M_: Macroexpand all
+    "
     ;; Load
     ("k" cider-load-buffer nil)
     ("l" cider-load-file nil)
@@ -950,18 +1154,18 @@
     ("m" cider-macroexpand-1 nil)
     ("M" cider-macroexpand-all nil))
 
-  ;;;; Testing and debugging
+    ;;;; Testing and debugging
 
   (defhydra cider-hydra-test (:color blue)
     "
-  CIDER Debug and Test
-  ---------------------------------------------------------------------------
-  _x_: Eval defun at point
-  _v_: Toggle var tracing                 _n_: Toggle ns tracing
-  _t_: Run test                           _l_: Run loaded tests
-  _p_: Run project tests                  _r_: Rerun tests
-  _s_: Show test report
-  "
+    CIDER Debug and Test
+    ---------------------------------------------------------------------------
+    _x_: Eval defun at point
+    _v_: Toggle var tracing                 _n_: Toggle ns tracing
+    _t_: Run test                           _l_: Run loaded tests
+    _p_: Run project tests                  _r_: Rerun tests
+    _s_: Show test report
+    "
     ;; Debugging
     ("x" (lambda () (interactive) (cider-eval-defun-at-point t)) nil)
     ("v" cider-toggle-trace-var nil)
@@ -974,18 +1178,18 @@
     ("s" cider-test-show-report nil))
 
 
-  ;;;; REPL
+    ;;;; REPL
 
   (defhydra cider-hydra-repl (:color blue)
     "
-  CIDER REPL
-  ---------------------------------------------------------------------------
-  _d_: Display connection info            _r_: Rotate default connection
-  _z_: Switch to REPL                     _n_: Set REPL ns
-  _p_: Insert last sexp in REPL           _x_: Reload namespaces
-  _o_: Clear REPL output                  _O_: Clear entire REPL
-  _b_: Interrupt pending evaluations      _Q_: Quit CIDER
-  "
+    CIDER REPL
+    ---------------------------------------------------------------------------
+    _d_: Display connection info            _r_: Rotate default connection
+    _z_: Switch to REPL                     _n_: Set REPL ns
+    _p_: Insert last sexp in REPL           _x_: Reload namespaces
+    _o_: Clear REPL output                  _O_: Clear entire REPL
+    _b_: Interrupt pending evaluations      _Q_: Quit CIDER
+    "
     ;; Connection
     ("d" cider-display-connection-info nil)
     ("r" cider-rotate-default-connection nil)
@@ -1002,7 +1206,7 @@
     ("Q" cider-quit nil))
 
   
-  ;;;; Key bindings and minor mode
+    ;;;; Key bindings and minor mode
 
   (defvar cider-hydra-map
     (let ((map (make-sparse-keymap)))
@@ -1014,237 +1218,9 @@
       map)
     "Keymap for CIDER hydras.")
 
-  ;;;###autoload
+    ;;;###autoload
   (define-minor-mode cider-hydra-mode
     "Hydras for CIDER."
     :keymap cider-hydra-map
     :require 'cider)
-
-
-  ;;;; ibuffer
-  (defalias 'list-buffers 'ibuffer)
-  (autoload 'ibuffer "ibuffer" "List buffers." t)
-  (global-set-key (kbd "C-x C-b") 'ibuffer)
-  (require 'ibuffer)
-  (require 'ibuf-ext)
-  (add-to-list 'ibuffer-never-show-predicates "\\*.*helm.*\\*")
-  (setq ibuffer-show-empty-filter-groups nil)
-
-  ;; show human-size readable
-  ;; https://www.emacswiki.org/emacs/IbufferMode
-
-  (setq ibuffer-saved-filter-groups
-        (quote (("default"
-                 ("clojure"
-                  (or
-                   (mode . clojure-mode)
-                   ))
-                 ("repl"
-                  (mode . cider-repl-mode))
-                 ;; ("                          web"
-                 ;;  (or
-                 ;;   (mode . html-mode)
-                 ;;   (mode . js2-mode)
-                 ;;   (mode . javascript-mode)
-                 ;;   (mode . js-mode)
-                 ;;   (mode . css-mode)
-                 ;;   (mode . web-mode)
-                 ;;   (mode . php-mode)
-                 ;;   (mode . nxhtml-mode)
-                 ;;   ))
-                 ;; ("                         lisp"
-                 ;;  (or
-                 ;;   (mode . lisp-mode)
-                 ;;   (mode . emacs-lisp-mode)
-                 ;;   ))
-                 ("org" ;; all org-related buffers
-                  (or
-                   (mode . org-mode)
-                   ))
-                 ("doc"
-                  (or
-                   (mode . eww-mode)
-                   (mode . pdf-view-mode)))
-                 ("dired"
-                  (or
-                   (mode . dired-mode)))
-                 ("shell"
-                  (or
-                   (name . "^\\*eshell")
-                   (name . "^\\*terminal")
-                   (name . "^\\*zsh")
-                   (name . "^\\*ansi-term")
-                   (name . "^\\*Shell*")
-                   ))
-                 ("magit"
-                  (or
-                   (name . "^magit*")))
-                 ("info"
-                  (or
-                   (name . "^\\*Messages\\*$")
-                   (name . "^\\*Warnings\\*$")
-                   (name . "^\\*Compile*")
-                   (mode . Info-mode)
-                   (mode . help-mode)))))))
-
-  (add-hook 'ibuffer-mode-hook
-            (lambda ()
-              (ibuffer-switch-to-saved-filter-groups "default")))
-
-
-  (define-ibuffer-column size-h
-    (:name "Size" :inline t)
-    (cond
-     ((> (buffer-size) 1000000) (format "%7.1fM" (/ (buffer-size) 1000000.0)))
-     ((> (buffer-size) 100000) (format "%7.0fk" (/ (buffer-size) 1000.0)))
-     ((> (buffer-size) 1000) (format "%7.1fk" (/ (buffer-size) 1000.0)))
-     (t (format "%8d" (buffer-size)))))
-
-  ;; name column to 30 witdh
-  (setq ibuffer-formats
-        '((mark modified read-only " "
-                (name 30 30 :left :elide)
-                " "
-                (size-h 9 -1 :right)
-                " "
-                (mode 16 16 :left :elide)
-                " "
-                filename-and-process)))
-
-  ;; yasnippets
-  (use-package yasnippet
-    :config
-    (yas-global-mode 1)
-    :ensure clojure-snippets
-    :ensure t)
-
-  (use-package yasnippet-snippets
-    :ensure t
-    :config
-    (yasnippet-snippets-initialize))
-
-  (use-package color-identifiers-mode
-    :ensure t
-    :config
-    (add-hook 'after-init-hook 'global-color-identifiers-mode))
-
-  (use-package hl-todo
-    :ensure t
-    :config
-    (setq hl-todo-keyword-faces
-          '(("TODO" . "#cc9393")
-            ("NEXT" . "#dca3a3")
-            ("NOTE"   . "#d0bf8f")
-            ("TAG" ."#8a2be2")
-            ("TEMP"   . "#d0bf8f")
-            ("FIXME"  . "#cc9393")
-            ("BENCHMARK" . "#aaefbf")))
-    (add-hook 'prog-mode-hook #'hl-todo-mode))
-
-  (use-package deft
-    :ensure t
-    :config (setq deft-directory "~/dev/computer/clojure/deft"
-                  deft-default-extension "org"
-                  deft-extensions '("org")
-                  deft-use-filename-as-title t
-                  deft-use-filter-string-for-filename t))
-
-  (use-package eyebrowse
-    :ensure t
-    ;; :bind (("C-c C-w C-w" . eyebrowse-last-window-config)
-    ;;        ("C-c C-w C-h" . eyebrowse-prev-window-config)
-    ;;        ("C-c C-w C-l" . eyebrowse-next-window-config))
-    :config
-    (add-to-list 'window-persistent-parameters '(window-side . writable))
-    (add-to-list 'window-persistent-parameters '(window-slot . writable))
-    (set-face-attribute 'eyebrowse-mode-line-active nil :foreground "#d2691e" :weight 'bold)
-    (set-face-attribute 'eyebrowse-mode-line-inactive nil :foreground "#000000")
-    (setq eyebrowse-mode-line-separator " ")
-
-    ;; poor solution, but works in this doom-mode-line version
-    (doom-modeline-def-segment workspace-name
-      "The current workspace name or number. Requires `eyebrowse-mode' to be enabled."
-      (if (and (bound-and-true-p eyebrowse-mode)
-               (< 1 (length (eyebrowse--get 'window-configs))))
-          (let* ((num (eyebrowse--get 'current-slot))
-                 (tag (when num (nth 2 (assoc num (eyebrowse--get 'window-configs)))))
-                 (str (if (and tag (< 0 (length tag)))
-                          tag
-                        (when num (int-to-string num)))))
-            (assq-delete-all 'eyebrowse-mode mode-line-misc-info)
-            (propertize (format " %s" str) 'face
-                        (if (doom-modeline--active)
-                            'eyebrowse-mode-line-active
-                          'eyebrowse-mode-line-inactive)))))
-
-
-    (eyebrowse-mode t))
-
-  (use-package hungry-delete
-    :diminish hungry-delete-mode
-    :ensure t
-    :config
-    (global-hungry-delete-mode))
-
-  (use-package swiper
-    :ensure t)
-
-  (use-package ivy :demand
-    :ensure ivy-hydra
-    :config
-    (setq ivy-use-virtual-buffers t
-          ivy-count-format "%d/%d ")
-    (ivy-mode 1))
-
-  (use-package ivy-posframe
-    :config
-    (cl-defun my/window-size-change (&optional _)
-    "My very own resize defun for modifying the posframe size"
-    (unless (= (window-pixel-width-before-size-change) (window-pixel-width))
-      (let ((body-width (window-body-width)))
-        (set-variable 'ivy-posframe-width body-width)
-        (set-variable 'ivy-posframe-min-width body-width)
-        (set-variable 'which-key-posframe-width body-width)
-        (set-variable 'which-key-posframe-min-width body-width))))
-
-    (add-hook 'window-size-change-functions 'my/window-size-change)
-
-    (setq ivy-posframe-parameters
-          '((left-fringe . 8)
-            (right-fringe . 8)))
-
-    (setq ivy-posframe-display-functions-alist '( (t . ivy-posframe-display-at-frame-bottom-left)))
-    (ivy-posframe-mode 1))
-
-  (use-package counsel
-    :ensure t)
-
-  (use-package counsel-projectile
-    :ensure t
-    :config
-    (counsel-projectile-mode 1))
-
-  (use-package bind-key
-    :ensure t
-    :config
-    (bind-keys*
-     ;; eyebrowse
-     ("M-x" . counsel-M-x)
-     ("C-c C-w C-w" . eyebrowse-last-window-config)
-     ("C-c C-w C-j" . eyebrowse-prev-window-config)
-     ("C-c C-w C-ñ" . eyebrowse-next-window-config)
-     ("C-M-1" . eyebrowse-switch-to-window-config-1)
-     ("C-M-2" . eyebrowse-switch-to-window-config-2)
-     ("C-M-3" . eyebrowse-switch-to-window-config-3)
-     ("C-M-4" . eyebrowse-switch-to-window-config-4)
-     ;; swiper
-     ("C-c f" . counsel-recentf)
-     ("M-i" . swiper-isearch)
-     ("M-g t" . counsel-org-goto)))
-
-  (use-package easy-kill
-    :ensure t
-    :config
-    (global-set-key [remap kill-ring-save] #'easy-kill)
-    (global-set-key [remap mark-sexp] #'easy-mark))
 #+END_SRC
