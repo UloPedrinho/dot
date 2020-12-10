@@ -872,10 +872,17 @@
     :config
     (global-hungry-delete-mode))
 
-  (use-package visual-fill-column
+  (use-package display-fill-column-indicator
     :ensure t
     :config
     ;; https://github.com/bbatsov/clojure-style-guide#maximum-line-length-
+    (setq display-fill-column-indicator-column 80)
+    (add-hook 'prog-mode-hook 'display-fill-column-indicator-mode))
+
+  (use-package visual-fill-column
+    :ensure t
+    :config
+
     (setq fill-column 80))
 
   (use-package easy-kill
@@ -999,7 +1006,7 @@
                :ensure t)
   (use-package zoom-window
                :config
-               (setq zoom-window-mode-line-color "#ffdead") ; "#a2cd5a")
+               (setq zoom-window-mode-line-color "#1A5656")
                :bind ("C-x C-z" . zoom-window-zoom)
                :ensure t)
 
