@@ -289,23 +289,27 @@ _h_   _l_
              (kill-buffer sandbox-org-buffer)))) "mandarin"))
 
 
-(defhydra hydra-buffers (:color blue :hint nil)
-              "
-
-Move to Window
---------------------------------------------------------------------------------
-     ^_k_^
-     ^^↑^^
- _h_ ←   → _l_
-     ^^↓^^
-     ^_j_^
---------------------------------------------------------------------------------
-"
-              ("q" nil "quit")
+(defhydra hydra-buffers (:hint nil :exit nil)
+  "
+^move^     ^resize^    ^transpose^
+----     ------    ---------
+_h_ _k_ _j_ _l_  _H_ _K_ _J_ _L_   _a_: horizontal  _f_: vertical _s_: rotate clockwise  _d_: rotate anti-clockwise"
+              ("q" nil)
               ("h" buf-move-left  :color red)
               ("k" buf-move-up    :color red)
               ("j" buf-move-down  :color red)
-              ("l" buf-move-right :color red))
+              ("l" buf-move-right :color red)
+              ("L" (shrink-window-horizontally 1))
+              ("H" (shrink-window-horizontally -1))
+              ("K" (enlarge-window 1))
+              ("J" (enlarge-window -1))
+              ("" transpose-frame)
+              ("f" flip-frame :color blue)
+              ("a" flop-frame :color blue)
+              ("" rotate-frame)
+              ("s" rotate-frame-clockwise)
+              ("d" rotate-frame-anticlockwise))
+
 
 ;; chronos
 (defhydra hydra-chronos (:hint nil :exit t)
