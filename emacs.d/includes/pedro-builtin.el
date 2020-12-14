@@ -45,6 +45,9 @@
       save-place-limit nil)
 (save-place-mode t)
 
+;; default new file permissions
+;; (set-default-file-modes #o600)
+
 ;; better performance
 ;; http://emacs.stackexchange.com/questions/19705/how-to-better-debug-emacs-cpu-management
 (setq gc-cons-threshold 10000000)
