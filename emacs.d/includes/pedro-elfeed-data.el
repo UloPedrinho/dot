@@ -1,5 +1,6 @@
 (setq elfeed-feeds
       '(
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCAiiOTio8Yu69c3XnR7nQBQ" emacs)
         ("https://hnrss.org/newest?q=emacs" emacs)
         ("https://hnrss.org/newest?q=org-mode" emacs)
         ("https://hnrss.org/newest?q=clojure" clojure)
@@ -19,7 +20,7 @@
 	("http://emacsredux.com/atom.xml" emacs)
 ;; 	;; "http://www.animenewsnetwork.com/newsroom/rss.xml"
 ;; 	"https://diccionarioeconomico.wordpress.com/feed/"
- 	("http://www.space.com/home/feed/site.xml" space)
+ 	("https://www.space.com/feeds/all" space)
 ;; 	"http://feeds.feedburner.com/universetoday/pYdq"
 ;; 	"https://www.sciencenews.org/feeds/headlines.rss"
 ;; 	"http://www.esa.int/rssfeed/TopNews"
@@ -51,21 +52,22 @@
 ;; (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :feed-url "jpl\\.nasa\\.gov"  :add '(space apod)))
 (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "reddit\\.com/r/emacs"  :add '(emacs r computer)))
 (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "reddit\\.com/r/orgmode"  :add '(emacs r computer)))
-;; (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "reddit\\.com/r/lisp"  :add '(lisp computer r)))
-;; (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "reddit\\.com/r/Common_Lisp"  :add '(lisp computer r)))
+(add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "reddit\\.com/r/lisp"  :add '(lisp computer r)))
+(add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "reddit\\.com/r/Common_Lisp"  :add '(lisp computer r)))
 (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "reddit\\.com/r/musictheory"  :add '(music theory learn))) ;
 (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "reddit\\.com/r/guitarlessons"  :add '(music guitar theory learn)))
 (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "reddit\\.com/r/Guitar_Theory"  :add '(music guitar theory learn)))
-;; (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "reddit\\.com/r/science"  :add '(science r)))
-;; (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "reddit\\.com/r/todayilearned"  :add '(til r)))
-;; (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "reddit\\.com/r/worldnews"  :add '(news world r)))
-;; (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "reddit\\.com\\/r/philosophy"  :add '(philosophy r)))
-;; (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "reddit\\.com\\/r/space"  :add '(space r)))
-;; (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "reddit\\.com\\/r/askscience"  :add '(science r)))
-;; (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "reddit\\.com\\/r/gadgets"  :add '(gadgets r)))
-;; (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "reddit\\.com\\/r/asm"  :add '(asm r computer)))
+(add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "reddit\\.com/r/science"  :add '(science r)))
+(add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "reddit\\.com/r/todayilearned"  :add '(til r)))
+(add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "reddit\\.com/r/worldnews"  :add '(news world r)))
+(add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "reddit\\.com\\/r/philosophy"  :add '(philosophy r)))
+(add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "reddit\\.com\\/r/space"  :add '(space r)))
+(add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "reddit\\.com\\/r/askscience"  :add '(science r)))
+(add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "reddit\\.com\\/r/gadgets"  :add '(gadgets r)))
+(add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "reddit\\.com\\/r/asm"  :add '(asm r computer)))
 (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "reddit\\.com\\/r/scifi"  :add '(r  sci-fi)))
-;; (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "reddit\\.com\\/r/Clojure"  :add '(r clojure)))
+(add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "reddit\\.com\\/r/Clojure"  :add '(r clojure)))
+(add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "reddit\\.com\\/r/Gintama"  :add '(r gintama)))
 ;; (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "universetoday\\.com"  :add '(astronomy space)))
 ;; ;; (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :feed-url "dramabeans\\.com"  :add '(lecer doramas video)))
 ;; (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :feed-url "avistaz\\.to"  :add '(lecer doramas video)))
@@ -86,3 +88,6 @@
 ;; (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :feed-url "hopwag\\.podbean\\.com" :add '(philosophy learn)))
 ;; (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "gciencia\\.com" :add '(science galiza)))
 (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "emacsformacosx\\.com" :add '(emacs computer mac)))
+
+(add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "youtube\\.com/c/SystemCrafters" :add '(emacs computer)))
+
