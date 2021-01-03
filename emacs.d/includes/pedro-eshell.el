@@ -14,9 +14,10 @@
 (set-face-attribute 'eshell-ls-directory nil  :foreground "#61afef")
 (set-face-attribute 'eshell-ls-symlink nil  :foreground "#1f5582" :weight 'bold)
 (set-face-attribute 'eshell-ls-archive nil  :foreground "#ff6c6b")
+(set-face-attribute 'eshell-ls-executable nil :foreground "#00ff00" :weight 'normal)
 
 (setq pedro-eshell--ls-video-regexp "\\.\\(mkv\\|avi\\|mpeg\\|mpg\\|webm\\|flv\\|mp4\\)")
-(setq pedro-eshell--ls-audio-regexp "\\.\\(ogg\\|wav\\|mp3\\|flack\\|ape\\|mid\\)")
+(setq pedro-eshell--ls-audio-regexp "\\.\\(ogg\\|wav\\|mp3\\|m4a\\|flac\\|ape\\|mid\\)")
 (setq pedro-eshell--ls-image-regexp "\\.\\(jpg\\|jpeg\\|png\\|gif\\|xpm\\|svg\\)")
 (setq pedro-eshell--ls-doc-regexp "\\.\\(pdf\\|epub\\|mobi\\)")
 
@@ -74,7 +75,7 @@
 
     (mapconcat #'(lambda (e)
                    (concat
-                    (propertize (number-to-string (car e)) 'face `(:background "##ff7256" :foreground "#ffffff"))
+                    (propertize (number-to-string (car e)) 'face `(:foreground "#ffffff"))
                     (propertize (cdr e) 'face `(:foreground "#8b3e2f" :weight bold :underline t))))
                verbose-list
                "")))
@@ -139,3 +140,42 @@
 
 (setq eshell-prompt-function #'pedro-eprompt-prompt-function)
 
+;; eshell history backup
+(defvar pedro-eshell-hist-bkp-size 200000 "Size in KBytes")
+(defvar pedro-eshell-hist-bkp-compress-command "bzip2")
+(defvar pedro-eshell-hist-bkp-compress-arguments "-c")
+(defvar pedro-eshell-hist-bkp-file-extension "bz2")
+
+
+(defun pedro-eshell-hist-bkp-make-it? ()
+  (when (> (file-attribute-size (file-attributes eshell-history-file-name))
+           pedro-eshell-hist-bkp-size)
+    (pedro-eshell-hist-bkp)))
+
+
+(defun pedro-eshell-hist-bkp ()
+  "Create an eshell history backup with date and backup number and
+compress it."
+  (interactive)
+  (let* ((dir-name (file-name-directory eshell-history-file-name))
+         (file-name (file-name-nondirectory eshell-history-file-name))
+         (current-date (format-time-string "%Y%m%d%H%M%S"))
+         (bkp-numbers (mapcar (lambda (f)
+                                (and-let* ((n (string-to-number (file-name-extension (file-name-sans-extension f))))
+                                           (numberp n))))
+                              (directory-files dir-name nil (concat file-name "\\..*\\.[0-9]+\\.bz2"))))
+         (new-bkp-number (if (null bkp-numbers)
+                             0
+                           (1+ (apply 'max bkp-numbers))))
+         (compressed-file-name (concat dir-name file-name "."
+                                       current-date "."
+                                       (int-to-string new-bkp-number))))
+    (shell-command
+     (concat pedro-eshell-hist-bkp-compress-command " "
+             pedro-eshell-hist-bkp-compress-arguments " "
+             eshell-history-file-name
+             ">"
+             compressed-file-name "."
+             pedro-eshell-hist-bkp-file-extension))))
+
+(add-hook 'eshell-load-hook 'pedro-eshell-hist-bkp-make-it?)
