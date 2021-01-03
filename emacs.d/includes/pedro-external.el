@@ -27,15 +27,29 @@
              :config
              (dired-quick-sort-setup))
 
-;; (use-package dired-subtree
-;;              :ensure t)
+(use-package dired-subtree
+             :ensure t)
+
+(use-package dired-rainbow
+  :ensure t
+  :config
+  (progn
+    (dired-rainbow-define image (:inherit 'bmkp-non-file) ("jpg" "jpeg" "png" "gif" "xpm" "svg" "tiff" "tif" "psd" "eps"))
+    (dired-rainbow-define doc (:inherit 'completions-annotations) ("pdf" "epub" "mobi" "doc" "docx"))
+    (dired-rainbow-define audio (:inherit 'bmkp-no-jump) ("ogg" "wav" "mp3" "m4a" "flac" "api" "mid" "3gp"))
+    (dired-rainbow-define video (:inherit 'bmkp-man) ("mkv" "avi" "mpeg" "mpg" "webm" "flv" "mp4"))
+    (dired-rainbow-define compress (:foreground "#ff6c6b" :weight bold) ("zip" "rar" "bz2" "tar" "gz"))
+    (dired-rainbow-define-chmod executable-unix "#00ff00" "-.*x.*")
+    (dired-rainbow-define-chmod symlink-unix "#1f5582" "l...*")
+    (dired-rainbow-define-chmod directory (:foreground "#61afef" :weight bold) "d...*"))
+  (setq font-lock-maximum-decoration '((dired-mode . nil) (t . t))))
 
 ;; (use-package dired-filter
 ;;              :ensure t
 ;;              :config
 ;;              (setq dired-filter-group-saved-groups '(("default"
 ;;                                                       ("PDF"
-;;                                                        (extension . "pdf"))
+;;                                                     (extension . "pdf"))
 ;;                                                       ("LaTeX"
 ;;                                                        (extension "tex" "bib"))
 ;;                                                       ("Org"
@@ -43,12 +57,12 @@
 ;;                                                       ("Archives"
 ;;                                                        (extension "zip" "rar" "gz" "bz2" "tar"))))))
 
-(use-package dired-k
-             :config
-             (setq dired-k-style 'git)
-             (add-hook 'dired-initial-position-hook 'dired-k)
-             (add-hook 'dired-after-readin-hook #'dired-k-no-revert)
-             :ensure t)
+;; (use-package dired-k
+;;              :config
+;;              (setq dired-k-style 'git)
+;;              (add-hook 'dired-initial-position-hook 'dired-k)
+;;              (add-hook 'dired-after-readin-hook #'dired-k-no-revert)
+;;              :ensure t)
 
 (use-package lilypond-mode
   :defer t
