@@ -1,0 +1,10 @@
+alias aptS apt-cache show $*
+alias apti sudo apt-get install $*
+alias apts apt-cache search $*
+alias df df -h
+alias dut du -h $* | tail -1
+alias l ls -lha
+alias ll ls -lh
+alias o xdg-open $*
+alias y youtube-dl -i -c --all-sub -f bestvideo[height<=?720]+bestaudio/best "$*"
+alias ym youtube-dl -x --audio-format mp3  "$*"
