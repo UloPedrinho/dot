@@ -530,6 +530,14 @@
     :config
     (add-hook 'eww-mode-hook (lambda () (load-theme-buffer-local 'whiteboard (current-buffer)))))
 
+(use-package eshell-syntax-highlighting
+  :after esh-mode
+  :demand t ;; Install if not already installed.
+  :ensure t
+  :config
+  ;; Enable in all Eshell buffers.
+  (eshell-syntax-highlighting-global-mode +1))
+
 
 ;; TEST
 (use-package org-sidebar
@@ -550,10 +558,11 @@
   :defer t
   :ensure t)
 
-(use-package eshell-syntax-highlighting
-  :after esh-mode
-  :demand t ;; Install if not already installed.
+(use-package visible-mark
   :ensure t
+  :init
+  (defface visible-mark-active ;; put this before (require 'visible-mark)
+  '((((type tty) (class mono)))
+    (t (:background "magenta"))) "")
   :config
-  ;; Enable in all Eshell buffers.
-  (eshell-syntax-highlighting-global-mode +1))
+  (setq visible-mark-max 5))
