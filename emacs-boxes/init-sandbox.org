@@ -109,6 +109,8 @@
                  (exec-path-from-shell-initialize)))
   ;;;; frames
   (setq frame-title-format '("<<title()>> - " "%b"))
+  ;;(setq default-frame-alist  '((icon-type . "/PATH/TO/ICON")))
+
 #+END_SRC
 * user configuration
 ** basic

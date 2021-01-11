@@ -45,7 +45,6 @@
 * TODO [0/1]
 - [ ] not close started emacs when host emacs quits
   https://oremacs.com/2015/01/04/dired-nohup/
-
 * main configuration
 #+NAME: main-config
 #+BEGIN_SRC emacs-lisp
@@ -84,6 +83,7 @@
 
   ;;;; frames
   (setq frame-title-format '("<<title()>> - " "%b"))
+  (setq default-frame-alist  '((icon-type . "/home/pedro/tmp/images-icons-etc/clojure-logo-120b.png")))
 
 #+END_SRC
 * user configuration
@@ -276,7 +276,6 @@
                 " "
                 filename-and-process)))
 #+END_SRC
-
 ** org-mode
 #+NAME: org-mode
 #+BEGIN_SRC emacs-lisp
@@ -305,6 +304,11 @@
                                    ("ABORTED" . (:foreground "gray" :weight bold))
                                    ("STOPPED" . (:foreground "#d3d3d3" :weight bold))
                                    ("MYSELF" . (:foreground "#698b22" :weight bold)))))
+
+  (use-package adaptive-wrap
+    :ensure t
+    :config
+    (add-hook 'org-mode-hook #'adaptive-wrap-prefix-mode))
 #+END_SRC
 ** bookmarks
 #+NAME: bookmarks-config
@@ -740,7 +744,6 @@
                                       pedro/projectile-filter-buffers)))
                     buffers)))
 #+END_SRC
-
 ** speed packages
 #+BEGIN_SRC emacs-lisp
   ;;;; speed packages
@@ -1076,7 +1079,6 @@
 
   ;;     (eyebrowse-mode t))
 #+end_src
-
 * packages configuration
 #+NAME: packages-config
 ** clojure
