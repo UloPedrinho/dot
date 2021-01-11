@@ -12,11 +12,26 @@
 (setq org-hide-emphasis-markers t)
 
 (setq org-catch-invisible-edits 'error)
+
 (setq org-enforce-todo-dependencies t)
 (setq org-enforce-todo-checkbox-dependencies t)
-(setq org-cycle-separator-lines 0)
-(setq org-blank-before-new-entry (quote ((heading)
-                                         (plain-list-item . auto))))
+
+;; https://orgmode.org/manual/Breaking-Down-Tasks.html
+(defun org-summary-todo (n-done n-not-done)
+  "Switch entry to DONE when all subentries are done, to TODO otherwise."
+  (let (org-log-done org-log-states)   ; turn off logging
+    (org-todo (if (= n-not-done 0) "DONE" "TODO"))))
+
+(add-hook 'org-after-todo-statistics-hook 'org-summary-todo)
+
+;; show hide white-space between headings when toggled
+;; https://explog.in/notes/writingsetup.html
+(customize-set-variable 'org-blank-before-new-entry
+                        '((heading . nil)
+                          (plain-list-item . nil)))
+(setq org-cycle-separator-lines 1)
+
+
 (setq org-agenda-tags-column -110)
 (setq org-habit-graph-column 50)
 
@@ -243,7 +258,7 @@ has no effect."
 ;; * org latex
 (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
 ;;; highlight inline latex code
-(font-lock-add-keywords 
+(font-lock-add-keywords
  'org-mode
  '(("\\(@@latex:\\)\\(.*?\\)\\(@@\\)"
         (1 font-lock-comment-face)
