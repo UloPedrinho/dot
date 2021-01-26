@@ -495,7 +495,6 @@
   (global-hungry-delete-mode))
 
 (use-package chronos
-  :defer t
   :ensure t
   :config
   (setq chronos-shell-notify-program "mpv"

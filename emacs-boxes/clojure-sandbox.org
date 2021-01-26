@@ -2,7 +2,7 @@
 #+TITLE: Clojure sandbox
 #+DATE: Wed Nov 15 18:27:36 2017
 #+STARTUP: hidestars indent overview
- 
+
 * sandbox code
 ** Variables
 *** Emacs executable
@@ -297,6 +297,7 @@
        (clojure . t)))
     (setq org-todo-keywords '((sequence "TODO" "STARTED" "WAITING" "|" "DONE" "ABORTED" "STOPPED")))
     (setq org-todo-keyword-faces '(("TODO" . (:foreground "#4169e1" :weight bold))
+                                   ("NEXT" . (:foreground "#ffff14149393" :weight bold))
                                    ("STARTED" . (:foreground "dark orange" :weight bold))
                                    ("CURRENT" . (:foreground "#00bfff" :weight bold))
                                    ("WAITING" . (:foreground "#cd2626" :weight bold))

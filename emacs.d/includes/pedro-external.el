@@ -430,6 +430,11 @@
   :ensure org-plus-contrib
   :pin org)
 
+(use-package adaptive-wrap-prefix-mode
+  :ensure t
+  :config
+  (add-hook 'org-mode-hook #'adaptive-wrap-prefix-mode))
+
 (use-package org-pdfview
 	     :config
 	     (add-to-list 'org-file-apps '("\\.pdf\\'" . (lambda (file link) (org-pdfview-open link))))
@@ -822,13 +827,13 @@
   :ensure t
   :config
   (setq deft-directory "~/org/deft/default"
-                deft-default-extension "org"
-                deft-extensions '("org")
-                deft-use-filename-as-title t
-                deft-use-filter-string-for-filename t)
+        ;;deft-default-extension "org"
+        deft-default-extension "org"
+        deft-extensions '("org")
+        deft-use-filename-as-title t
+        deft-use-filter-string-for-filename t)
   ;; FIXME: works fine (?)
-  (add-hook 'after-change-major-mode-hook 'hack-local-variables)
-  )
+  (add-hook 'after-change-major-mode-hook 'hack-local-variables))
 
 (use-package hydra
              :ensure t
