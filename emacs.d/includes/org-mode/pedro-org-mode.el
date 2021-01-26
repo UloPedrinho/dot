@@ -76,7 +76,7 @@
 (define-key global-map "\C-cm" 'org-agenda-month-view)
 (add-hook 'org-mode-hook 'turn-on-font-lock)
 
-(setq org-extend-today-until 3)
+(setq org-extend-today-until 0)
 (setq org-agenda-start-on-weekday 1)
 (setq org-agenda-span 15)
 (setq org-agenda-start-day "-3d")
@@ -317,8 +317,9 @@ has no effect."
 ;; (defvar my-notifier-path
 ;;  "~/terminal-notifier_1.4.2/terminal-notifier.app/Contents/MacOS/terminal-notifier")
 (defun my-appt-send-notification (title msg)
-  (shell-command "play -V0 -q ~/tmp/zenTempleBell.mp3")
-  (shell-command (concat  "terminal-notifier -message " msg " -title " title)))
+  (let ((async-shell-command-buffer 'new-buffer))
+    (async-shell-command "play -V0 -q --volume 0.5 ~/tmp/music/bell.mp3" nil nil)
+    (async-shell-command (concat  "notify-send " title " "  msg) nil nil)))
 
 ;; designate the window function for my-appt-send-notification
 (defun my-appt-display (min-to-app new-time msg)
