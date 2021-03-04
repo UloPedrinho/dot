@@ -19,7 +19,10 @@ mod4 + alt + i
      i3-msg "[title=\"irc\"] scratchpad show"
 
 mod4 + alt + u
-     i3-msg "[class=\"qutebrowser\"] scratchpad show"
+     i3-msg "[title=\"eweb*\"] scratchpad show"
+
+mod4 + alt + p
+     i3-msg "[title=\"mu4e\"] scratchpad show"
 
 mod4 + ntilde ; { mod4 + ntilde, space, n, p}
      {i3-msg "[title=\"music.sh*\"] scratchpad show", music-mpv-commands.zsh play, music-mpv-commands.zsh next,music-mpv-commands.zsh prev}
