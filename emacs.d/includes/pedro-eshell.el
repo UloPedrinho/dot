@@ -18,7 +18,7 @@
 
 (setq pedro-eshell--ls-video-regexp "\\.\\(mkv\\|avi\\|mpeg\\|mpg\\|webm\\|flv\\|mp4\\)")
 (setq pedro-eshell--ls-audio-regexp "\\.\\(ogg\\|wav\\|mp3\\|m4a\\|flac\\|ape\\|mid\\)")
-(setq pedro-eshell--ls-image-regexp "\\.\\(jpg\\|jpeg\\|png\\|gif\\|xpm\\|svg\\)")
+(setq pedro-eshell--ls-image-regexp "\\.\\(jpg\\|jpeg\\|png\\|gif\\|xpm\\|svg\\|xcf\\|kra\\)")
 (setq pedro-eshell--ls-doc-regexp "\\.\\(pdf\\|epub\\|mobi\\)")
 
 (setq eshell-ls-highlight-alist nil)

@@ -31,7 +31,6 @@
                           (plain-list-item . nil)))
 (setq org-cycle-separator-lines 1)
 
-
 (setq org-agenda-tags-column -110)
 (setq org-habit-graph-column 50)
 
@@ -253,7 +252,7 @@ has no effect."
         (print (buffer-substring-no-properties  (search-forward "#+CAPTION") (search-forward "#+END")))))))
 
 ;; * org-eww
-(require 'org-eww)
+;; (require 'org-eww)
 
 ;; * org latex
 (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))

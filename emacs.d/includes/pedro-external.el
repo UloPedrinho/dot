@@ -34,7 +34,7 @@
   :ensure t
   :config
   (progn
-    (dired-rainbow-define image (:inherit 'bmkp-non-file) ("jpg" "jpeg" "png" "gif" "xpm" "svg" "tiff" "tif" "psd" "eps"))
+    (dired-rainbow-define image (:inherit 'bmkp-non-file) ("jpg" "jpeg" "png" "gif" "xpm" "svg" "xcf" "kra" "tiff" "tif" "psd" "eps"))
     (dired-rainbow-define doc (:inherit 'completions-annotations) ("pdf" "epub" "mobi" "doc" "docx"))
     (dired-rainbow-define audio (:inherit 'bmkp-no-jump) ("ogg" "wav" "mp3" "m4a" "flac" "api" "mid" "3gp"))
     (dired-rainbow-define video (:inherit 'bmkp-man) ("mkv" "avi" "mpeg" "mpg" "webm" "flv" "mp4"))
@@ -430,7 +430,11 @@
   :ensure org-plus-contrib
   :pin org)
 
-(use-package adaptive-wrap-prefix-mode
+(use-package ox-hugo
+  :ensure t
+  :after ox)
+
+(use-package adaptive-wrap
   :ensure t
   :config
   (add-hook 'org-mode-hook #'adaptive-wrap-prefix-mode))
@@ -706,8 +710,12 @@
 ;; 	     (setq httpd-root "~/tmp/tmp/deleteme/js/")
 ;; 	     :ensure t)
 
-;; (use-package web-mode
-;; 	     :ensure t)
+(use-package web-mode
+  :ensure t
+  :config
+  (setq web-mode-enable-auto-pairing t
+        web-mode-enable-auto-closing t)
+  (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode)))
 
 ;; (use-package helm-css-scss
 ;; 	     :config
@@ -867,13 +875,25 @@
 ;;   ;; (add-to-list 'company-backends #'company-yankpad)
 ;;   )
 
-(use-package eyebrowse
-	     :config
-             (add-to-list 'window-persistent-parameters '(window-side . writable))
-             (add-to-list 'window-persistent-parameters '(window-slot . writable))
-             (setq eyebrowse-mode-line-separator " ")
-	     (eyebrowse-mode t)
-	     :ensure t)
+;; (use-package eyebrowse
+;; 	     :config
+;;              (add-to-list 'window-persistent-parameters '(window-side . writable))
+;;              (add-to-list 'window-persistent-parameters '(window-slot . writable))
+;;              (setq eyebrowse-mode-line-separator " ")
+;; 	     (eyebrowse-mode t)
+;; 	     :ensure t)
+
+(use-package perspective
+    :ensure t
+    :config
+    (setq persp-initial-frame-name "1")
+    (set-face-attribute 'persp-selected-face nil  :foreground "#4876ff" :underline t)
+    (persp-mode)
+    (global-set-key (kbd "C-x C-b") 'persp-ibuffer)
+    ;;(global-set-key (kbd "C-x b") 'persp-ivy-switch-buffer)
+    ;; helm is advised so no need to set key
+    )
+
 
 (use-package buffer-move
   :ensure t)
@@ -958,20 +978,34 @@
              ("M-i n" . symbol-overlay-switch-forward)
              ("M-i p" . symbol-overlay-switch-backward)
 
+	     ;; perspective
+	     ("C-0" . (lambda () (interactive) (persp-switch "0")))
+	     ("C-1" . (lambda () (interactive) (persp-switch "1")))
+	     ("C-2" . (lambda () (interactive) (persp-switch "2")))
+	     ("C-3" . (lambda () (interactive) (persp-switch "3")))
+	     ("C-4" . (lambda () (interactive) (persp-switch "4")))
+	     ("C-5" . (lambda () (interactive) (persp-switch "5")))
+	     ("C-6" . (lambda () (interactive) (persp-switch "6")))
+	     ("C-7" . (lambda () (interactive) (persp-switch "7")))
+	     ("C-8" . (lambda () (interactive) (persp-switch "8")))
+	     ("C-9" . (lambda () (interactive) (persp-switch "9")))
+
              ;; eyebrowse
-             ("C-1" . eyebrowse-switch-to-window-config-1)
-             ("C-2" . eyebrowse-switch-to-window-config-2)
-             ("C-3" . eyebrowse-switch-to-window-config-3)
-             ("C-4" . eyebrowse-switch-to-window-config-4)
-             ("C-5" . eyebrowse-switch-to-window-config-5)
-             ("C-6" . eyebrowse-switch-to-window-config-6)
-             ("C-7" . eyebrowse-switch-to-window-config-7)
-             ("C-8" . eyebrowse-switch-to-window-config-8)
-             ("C-9" . eyebrowse-switch-to-window-config-9)
-             ("C-0" . eyebrowse-switch-to-window-config-0)
-             ("C-c C-w C-w" . eyebrowse-last-window-config)
-             ("C-c C-w C-h" . eyebrowse-prev-window-config)
-             ("C-c C-w C-l" . eyebrowse-next-window-config))
+             ;; ("C-1" . eyebrowse-switch-to-window-config-1)
+             ;; ("C-2" . eyebrowse-switch-to-window-config-2)
+             ;; ("C-3" . eyebrowse-switch-to-window-config-3)
+             ;; ("C-4" . eyebrowse-switch-to-window-config-4)
+             ;; ("C-5" . eyebrowse-switch-to-window-config-5)
+             ;; ("C-6" . eyebrowse-switch-to-window-config-6)
+             ;; ("C-7" . eyebrowse-switch-to-window-config-7)
+             ;; ("C-8" . eyebrowse-switch-to-window-config-8)
+             ;; ("C-9" . eyebrowse-switch-to-window-config-9)
+             ;; ("C-0" . eyebrowse-switch-to-window-config-0)
+             ;; ("C-c C-w C-w" . eyebrowse-last-window-config)
+             ;; ("C-c C-w C-h" . eyebrowse-prev-window-config)
+             ;; ("C-c C-w C-l" . eyebrowse-next-window-config)
+	     )
+
 
 	     :ensure t)
 

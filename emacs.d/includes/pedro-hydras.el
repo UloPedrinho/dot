@@ -100,6 +100,8 @@ _b_: Browser  _q_: Quit
   "go"
   ("e" (lambda () (interactive)
 	 (eshell current-prefix-arg)) "eshell")
+  ("v" (lambda () (interactive)
+	 (vterm current-prefix-arg)) "vterm")
   ("r" (lambda () (interactive)
 	 (let ((buffer (get-buffer "*elfeed-search*")))
 	   (if buffer
@@ -111,6 +113,7 @@ _b_: Browser  _q_: Quit
            (if buffer
                (switch-to-buffer buffer)
                (find-file (concat "~/org/pomodoro.org"))))) "pomo")
+  ("P" (dired "~/projects") "Projects")
   ("c" (lambda () (interactive) (find-file "~/org/computer/emacs/emacs-cheatsheet.org")) "cheat-sheet")
   ("b" (lambda () (interactive)
          (if (get-buffer "*org-brain*")
@@ -123,7 +126,7 @@ _b_: Browser  _q_: Quit
            (if buffer
                (switch-to-buffer buffer)
              (find-file (concat "~/org/axenda/gtd/today.org"))))) "today")
-  ("m" pedro-bmkp-main "main bmk")
+  ;; ("m" pedro-bmkp-main "main bmk")
   ("j" (org-journal-new-entry t) "journal"))
 ;;;;; outline
 ;; https://github.com/abo-abo/hydra/wiki/Emacs

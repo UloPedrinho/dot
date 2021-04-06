@@ -116,74 +116,77 @@
 ** basic
 #+NAME: user-config
 #+BEGIN_SRC emacs-lisp
-    ;;; user config
+  ;;; user config
 
-    ;;;; hide bars
-    (menu-bar-mode 0)
-    (tool-bar-mode 0)
+  ;;;; hide bars
+  (menu-bar-mode 0)
+  (tool-bar-mode 0)
 
-    ;;;; hide scrollbars
-    (scroll-bar-mode 0)
+  ;;;; hide scrollbars
+  (scroll-bar-mode 0)
 
-    ;;;; no bell ring
-    (setq ring-bell-function 'ignore)
+  ;;;; no bell ring
+  (setq ring-bell-function 'ignore)
 
-    ;;;; C-n add new line when is at bottom
-    (setq next-line-add-newlines t)
+  ;;;; C-n add new line when is at bottom
+  (setq next-line-add-newlines t)
 
-    ;;;; Closing
-    (defun ask-before-closing ()
-      "Ask whether or not to close, and then close if y was pressed"
-      (interactive)
-      (if (y-or-n-p (format "Are you sure you want to exit Emacs? "))
-          (save-buffers-kill-emacs)
-        (message "Canceled exit")))
+  ;;;; Closing
+  (defun ask-before-closing ()
+    "Ask whether or not to close, and then close if y was pressed"
+    (interactive)
+    (if (y-or-n-p (format "Are you sure you want to exit Emacs? "))
+        (save-buffers-kill-emacs)
+      (message "Canceled exit")))
 
-    ;;;; coding system
-    (prefer-coding-system 'utf-8)
-    (set-language-environment "UTF-8")
+  ;;;; coding system
+  (prefer-coding-system 'utf-8)
+  (set-language-environment "UTF-8")
 
-    ;;;; modeline 
-    ;; time
-    (setq display-time-day-and-date nil
-          display-time-24hr-format t
-          display-time-default-load-average nil)
-    ;; show file size 
-    (size-indication-mode t)
-    ;; show cursor position
-    (setq column-number-mode t)
-    (setq line-number-mode t)
+  ;;;; modeline 
+  ;; time
+  (setq display-time-day-and-date nil
+        display-time-24hr-format t
+        display-time-default-load-average nil)
+  ;; show file size 
+  (size-indication-mode t)
+  ;; show cursor position
+  (setq column-number-mode t)
+  (setq line-number-mode t)
 
-    ;;;; spaces and tabs
-    ;; whitespaces
-    (require 'whitespace)
-    (add-hook 'prog-mode-hook '(lambda () (setq show-trailing-whitespace t)))
+  ;;;; spaces and tabs
+  ;; whitespaces
+  (require 'whitespace)
+  (add-hook 'prog-mode-hook '(lambda () (setq show-trailing-whitespace t)))
 
-    ;; no tabs, only spaces
-    (setq-default indent-tabs-mode nil)
+  ;; no tabs, only spaces
+  (setq-default indent-tabs-mode nil)
 
-    ;;;; performance
-    ;; better performance
-    (setq gc-cons-threshold 10000000)
+  ;;;; performance
+  ;; better performance
+  (setq gc-cons-threshold 10000000)
 
-    ;;;; recentf
-    (require 'recentf)
-    (setq recentf-max-menu-items 100000)
-    (setq recentf-max-saved-items nil)
-    (setq recentf-auto-cleanup 'never)
-    (setq recentf-save-file (concat user-emacs-directory "var/recentf"))
-    (add-to-list 'recentf-exclude "var/lisp")
-    (add-to-list 'recentf-exclude "var/bookmarks")
+  ;;;; recentf
+  (require 'recentf)
+  (setq recentf-max-menu-items 100000)
+  (setq recentf-max-saved-items nil)
+  (setq recentf-auto-cleanup 'never)
+  (setq recentf-save-file (concat user-emacs-directory "var/recentf"))
+  (add-to-list 'recentf-exclude "var/lisp")
+  (add-to-list 'recentf-exclude "var/bookmarks")
 
-    (recentf-mode 1)
+  (recentf-mode 1)
 
-    ;;;; persistent history
-    (setq savehist-additional-variables '(kill-ring search-ring regexp-search-ring)
-          savehist-file (concat user-emacs-directory "var/history")
-          kill-ring-max 1000)
-    (setq-default history-length 1000)
-    (savehist-mode 1)
+  ;;;; persistent history
+  (setq savehist-additional-variables '(kill-ring search-ring regexp-search-ring)
+        savehist-file (concat user-emacs-directory "var/history")
+        kill-ring-max 1000)
+  (setq-default history-length 1000)
+  (savehist-mode 1)
 
+  ;;;; modeline diminish
+  (use-package diminish
+    :ensure t)
 #+END_SRC
 ** dired
 #+NAME: dired-config

@@ -7,6 +7,7 @@
         ;;("https://hnrss.org/newest" hacker)
         ("https://todayinclojure.com/rss" clojure)
         ("http://novafantasia.com/feed" sci-fi)
+        ("http://culturagalega.gal/fluxos2.php" galiza)
 ;; 	"http://www.seriecanal.com/rss.php"
 ;; 	"http://www.eldiario.es/rss/"
 ;; 	"http://esmateria.com/feed/"
@@ -88,6 +89,5 @@
 ;; (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :feed-url "hopwag\\.podbean\\.com" :add '(philosophy learn)))
 ;; (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "gciencia\\.com" :add '(science galiza)))
 (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "emacsformacosx\\.com" :add '(emacs computer mac)))
-
 (add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "youtube\\.com/c/SystemCrafters" :add '(emacs computer)))
-
+(add-hook 'elfeed-new-entry-hook (elfeed-make-tagger :entry-link "culturagalega\\.gal/fluxos2\\.php" :add '(galizaq)))

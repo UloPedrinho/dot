@@ -115,7 +115,6 @@
   (when (file-exists-p (concat user-emacs-directory "os-specific.el"))
     (load (concat user-emacs-directory "os-specific.el")))
 #+end_src
-
 * user configuration
 ** basic
 #+NAME: user-config
@@ -928,7 +927,6 @@
     (require 'projectile)
     (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
 #+end_src
-
 * packages configuration
 #+NAME: packages-config
 #+BEGIN_SRC emacs-lisp
