@@ -784,10 +784,10 @@
 
 
 ;; troubleshooting with bookmarks , "invalid bookmark file" error , end of file "^)"
-;; (use-package aggressive-indent
-;; 	     :config
-;; 	     (global-aggressive-indent-mode 1)
-;; 	     :ensure t)
+(use-package aggressive-indent
+	     :config
+	     (add-hook 'prog-mode-hook 'aggressive-indent-mode)
+	     :ensure t)
 
 (use-package lisp-extra-font-lock
   :ensure t
@@ -925,7 +925,7 @@
               ("M-m d" . deft)
 
               ;; outline
-              ("M-m \@" . hydra-outline/body)
+              ("M-m i" . hydra-outline/body)
               ;; folding
               ("M-m f" . hydra-folding/body)
               ;; go

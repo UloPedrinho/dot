@@ -158,6 +158,7 @@
 		 ))
 	       ("                         lisp"
 		(or
+                 (mode . scheme-mode)
 		 (mode . lisp-mode)
 		 (mode . emacs-lisp-mode)
 		 ))
