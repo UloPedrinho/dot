@@ -315,10 +315,14 @@ has no effect."
 ;; set up the call to terminal-notifier
 ;; (defvar my-notifier-path
 ;;  "~/terminal-notifier_1.4.2/terminal-notifier.app/Contents/MacOS/terminal-notifier")
+;; (defun my-appt-send-notification (title msg)
+;;   (let ((async-shell-command-buffer 'new-buffer))
+;;     (async-shell-command "play -V0 -q --volume 0.5 ~/tmp/music/bell.mp3" nil nil)
+;;     (async-shell-command (concat  "notify-send " title " "  msg) nil nil)))
+
 (defun my-appt-send-notification (title msg)
-  (let ((async-shell-command-buffer 'new-buffer))
-    (async-shell-command "play -V0 -q --volume 0.5 ~/tmp/music/bell.mp3" nil nil)
-    (async-shell-command (concat  "notify-send " title " "  msg) nil nil)))
+  (call-process-shell-command (concat  "notify-send \"" title "\" \"" msg "\"&") nil 0)
+  (call-process-shell-command "play -V0 -q --volume 0.5 ~/tmp/music/bell.mp3&" nil 0))
 
 ;; designate the window function for my-appt-send-notification
 (defun my-appt-display (min-to-app new-time msg)
