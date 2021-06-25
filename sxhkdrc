@@ -3,6 +3,9 @@
 mod4 + alt + e
      i3-msg "[title=\"emacs@$HOST\"] scratchpad show"
 
+mod4 + alt + u ; { e }
+     {emacsclient -c}
+
 mod4 + alt + l
      i3-msg "[class=\"glances\"] scratchpad show"
 
@@ -17,9 +20,6 @@ mod4 + alt + o
 
 mod4 + alt + i
      i3-msg "[title=\"irc\"] scratchpad show"
-
-mod4 + alt + u
-     i3-msg "[title=\"eweb*\"] scratchpad show"
 
 mod4 + alt + p
      i3-msg "[title=\"Mail\"] scratchpad show"
